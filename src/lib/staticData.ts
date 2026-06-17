@@ -1,11 +1,8 @@
 /**
  * 静态数据加载层
- * 服务端：直接读文件（fs）
- * 客户端：fetch JSON
+ * 统一用 fetch 读 /data/ 下的 JSON 文件（Edge Runtime 兼容）
+ * 注意：此文件只能用在客户端组件里（不能用在服务端组件）
  */
-
-import { promises as fs } from 'fs'
-import { join } from 'path'
 
 export interface PromptListItem {
   slug: string
@@ -39,28 +36,18 @@ export interface SearchIndex {
   docs: SearchIndexDoc[]
 }
 
-const DATA_DIR = join(process.cwd(), 'public', 'data')
+const BASE = '/data'
 
-/** 服务端：直接读文件 */
-async function readJson<T>(relativePath: string): Promise<T> {
-  const fullPath = join(DATA_DIR, relativePath)
-  const raw = await fs.readFile(fullPath, 'utf-8')
-  return JSON.parse(raw) as T
-}
-
-/** 客户端：fetch */
-async function fetchJson<T>(relativePath: string): Promise<T> {
-  const res = await fetch(`/data/${relativePath}`)
-  if (!res.ok) throw new Error(`Failed to fetch /data/${relativePath}`)
+/** 统一用 fetch 读 JSON（客户端/Edge Runtime 通用） */
+async function fetchJson<T>(path: string): Promise<T> {
+  const res = await fetch(`${BASE}/${path}`)
+  if (!res.ok) throw new Error(`Failed to fetch /data/${path}`)
   return res.json() as Promise<T>
 }
 
-// 自动判断环境
-const load = typeof window === 'undefined' ? readJson : fetchJson
-
 /** 加载元数据 */
 export async function loadMeta(): Promise<MetaData> {
-  return load<MetaData>('meta.json')
+  return fetchJson<MetaData>('meta.json')
 }
 
 /** 加载列表分片 */
@@ -69,7 +56,7 @@ export async function loadListChunk(
   sort: 'latest' | 'hottest' = 'latest'
 ): Promise<PromptListItem[]> {
   try {
-    return await load<PromptListItem[]>(`lists/${sort}-${page}.json`)
+    return await fetchJson<PromptListItem[]>(`lists/${sort}-${page}.json`)
   } catch {
     return []
   }
@@ -77,7 +64,7 @@ export async function loadListChunk(
 
 /** 加载搜索索引 */
 export async function loadSearchIndex(): Promise<SearchIndex> {
-  return load<SearchIndex>('search-index.json')
+  return fetchJson<SearchIndex>('search-index.json')
 }
 
 /** 前端搜索（基于索引过滤） */
@@ -122,7 +109,7 @@ export async function loadItemsByCategory(
 /** 加载详情 */
 export async function loadDetail(slug: string): Promise<any> {
   try {
-    return await load<any>(`details/${slug}.json`)
+    return await fetchJson<any>(`details/${slug}.json`)
   } catch {
     return null
   }

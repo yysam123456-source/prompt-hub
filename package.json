@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "next dev -p 3000",
     "build": "next build",
-    "start": "next start",
-    "export": "next build && next export"
+    "start": "next start"
   },
   "dependencies": {
     "next": "^16.1.0-canary.19",

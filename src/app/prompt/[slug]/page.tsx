@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { loadDetail } from '@/lib/staticData'
 
+export const runtime = 'edge'
+
 interface Props {
   params: Promise<{ slug: string }>
 }
