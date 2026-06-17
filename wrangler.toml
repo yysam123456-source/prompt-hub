@@ -1,0 +1,12 @@
+name = "prompt-hub"
+compatibility_date = "2024-01-01"
+pages_build_output_dir = ".next"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "prompt-hub-db"
+database_id = "3cda88c1-909a-4096-8614-631344c54709"
+
+# 环境变量（可选）
+[vars]
+NEXT_PUBLIC_API_URL = "https://your-domain.pages.dev"
