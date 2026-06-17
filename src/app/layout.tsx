@@ -2,8 +2,12 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Prompt Hub - AI生图提示词库',
-  description: '3.2万条AI生图提示词，免费开源，直接抄作业就能出图',
+  title: {
+    default: 'Prompt Hub - AI 绘画提示词库',
+    template: '%s - Prompt Hub',
+  },
+  description: '探索数万条 AI 绘画提示词，支持 Midjourney、Stable Diffusion 等模型',
+  keywords: ['AI', 'prompt', 'Midjourney', 'Stable Diffusion', '提示词', 'AI绘画'],
 }
 
 export default function RootLayout({
@@ -13,15 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="zh-CN">
-      <head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body style={{ fontFamily: 'Inter, sans-serif' }}>
-        {children}
-      </body>
+      <body className="antialised">{children}</body>
     </html>
   )
 }

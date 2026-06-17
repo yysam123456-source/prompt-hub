@@ -1,13 +1,42 @@
-node_modules/
-.next/
-.vercel/
-.open-next/
-.wrangler/
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# build outputs
+/.next/
+/out/
+/dist/
+/build/
+
+# data - details are too many, commit meta + list chunks only
+public/data/details/
+prompts_data/
+crawl*.log
+batch_crawl.py
+build_index.py
+
+# testing
+/coverage/
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+
+# typescript
 *.tsbuildinfo
-prompts_all.json
-prompt-hub-db.sqlite
-prompts_json/
-scrape_*.py
-download_*.sh
-import_to_d1.py
-merge_prompts.py
+next-env.d.ts
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
