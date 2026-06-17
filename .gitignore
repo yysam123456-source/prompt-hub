@@ -2,12 +2,14 @@
 /node_modules
 /.pnp
 .pnp.js
+.vercel/
 
 # build outputs
 /.next/
 /out/
 /dist/
 /build/
+.open-next/
 
 # data - details are too many, commit meta + list chunks only
 public/data/details/
