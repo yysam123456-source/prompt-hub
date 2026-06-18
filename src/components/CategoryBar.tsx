@@ -4,17 +4,17 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 
-export default function CategoryBar({ currentCategory }: { currentCategory?: string }) {
+export default function CategoryBar({ currentCategory, hideChinese }: { currentCategory?: string, hideChinese?: boolean }) {
   const [categories, setCategories] = useState<any[]>([])
 
   useEffect(() => {
-    fetch('/data/meta.json')
+    fetch('/api/categories')
       .then(res => res.json())
-      .then(data => setCategories(data.categories || []))
+      .then(data => setCategories(data || []))
       .catch(err => console.error('Failed to load categories', err))
   }, [])
 
-  const allCategories = [{ slug: '', name_zh: '全部', count: 0 }, ...categories]
+  const allCategories = [{ slug: '', name_en: 'All', name_zh: '全部' }, ...categories]
 
   return (
     <motion.div
@@ -24,7 +24,8 @@ export default function CategoryBar({ currentCategory }: { currentCategory?: str
       className="flex flex-wrap gap-2 justify-center"
     >
       {allCategories.slice(0, 17).map((cat: any, idx: number) => {
-        const isActive = !currentCategory && !cat.slug || currentCategory === cat.slug
+        const isActive = (!currentCategory && !cat.slug) || currentCategory === cat.slug
+        const displayName = hideChinese ? (cat.name_en || cat.name_zh) : (cat.name_zh || cat.name_en)
         return (
           <motion.div
             key={cat.slug || 'all'}
@@ -40,7 +41,7 @@ export default function CategoryBar({ currentCategory }: { currentCategory?: str
                   : 'border border-zinc-800 bg-zinc-900/80 text-zinc-400 hover:border-purple-500/50 hover:text-purple-300'
               }`}
             >
-              {cat.name_zh} {cat.count ? `(${cat.count})` : ''}
+              {displayName} {(cat as any).count ? `(${(cat as any).count})` : ''}
             </Link>
           </motion.div>
         )

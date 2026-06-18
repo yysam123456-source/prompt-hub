@@ -20,15 +20,15 @@ function CategoryContent() {
   useEffect(() => {
     async function load() {
       try {
-        // 从 API 获取分类列表（用于分类名称）
+        // Get category list from API (for category name)
         if (slug) {
           const catRes = await fetch('/api/categories')
           const catData = await catRes.json()
           const cat = (catData || []).find((c: any) => c.slug === slug)
-          if (cat) setCategoryName(cat.name_zh)
+          if (cat) setCategoryName(cat.name_en || cat.name_zh)
         }
 
-        // 改用 API 代理，服务器端过滤 + 分页
+        // Use API proxy for server-side filtering + pagination
         const url = new URL('/api/prompts', window.location.origin)
         if (slug) url.searchParams.set('category', slug)
         url.searchParams.set('page', String(currentPage))
@@ -52,7 +52,7 @@ function CategoryContent() {
 
   return (
     <main className="min-h-screen bg-zinc-950">
-      {/* 导航栏 */}
+      {/* Navigation bar */}
       <nav className="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-md">
         <div className="mx-auto max-w-7xl flex items-center gap-4 px-4 py-3">
           <Link href="/" className="flex items-center gap-2 shrink-0">
@@ -69,26 +69,26 @@ function CategoryContent() {
               <input
                 name="q"
                 type="text"
-                placeholder="搜索..."
+                placeholder="Search..."
                 className="w-full rounded-xl border border-zinc-800 bg-zinc-900/80 py-2 pl-10 pr-4 text-sm text-zinc-100 placeholder-zinc-500 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500/20"
               />
             </div>
             <button type="submit" className="rounded-xl bg-purple-600 px-4 py-2 text-sm text-white transition-colors hover:bg-purple-700">
-              搜索
+              Search
             </button>
           </form>
         </div>
       </nav>
 
       <div className="mx-auto max-w-7xl px-4 py-12">
-        {/* 分类导航 */}
-        <CategoryBar currentCategory={slug || undefined} />
+        {/* Category navigation */}
+        <CategoryBar currentCategory={slug || undefined} hideChinese />
 
         <div className="mb-12 mt-8">
           <h1 className="text-3xl font-bold text-zinc-100 mb-2">
-            {categoryName || '全部分类'}
+            {categoryName || 'All Categories'}
           </h1>
-          <p className="text-zinc-400">共 {total} 条提示词</p>
+          <p className="text-zinc-400">{total} prompts</p>
         </div>
 
         {loading ? (
@@ -99,7 +99,7 @@ function CategoryContent() {
           </div>
         ) : (
           <>
-            <PromptGrid items={items} />
+            <PromptGrid items={items} hideChinese />
 
             {totalPages > 1 && (
               <div className="flex justify-center gap-2 mt-12">
@@ -108,18 +108,18 @@ function CategoryContent() {
                     href={`/category?slug=${slug}&page=${currentPage - 1}`}
                     className="rounded-xl border border-zinc-800 bg-zinc-900/80 px-4 py-2 text-sm text-zinc-400 transition-colors hover:border-purple-500/50 hover:text-purple-300"
                   >
-                    上一页
+                    ← Previous
                   </Link>
                 )}
                 <span className="rounded-xl border border-zinc-800 px-4 py-2 text-sm text-zinc-500">
-                  第 {currentPage} / {totalPages} 页
+                  Page {currentPage} / {totalPages}
                 </span>
                 {currentPage < totalPages && (
                   <Link
                     href={`/category?slug=${slug}&page=${currentPage + 1}`}
                     className="rounded-xl border border-zinc-800 bg-zinc-900/80 px-4 py-2 text-sm text-zinc-400 transition-colors hover:border-purple-500/50 hover:text-purple-300"
                   >
-                    下一页
+                    Next →
                   </Link>
                 )}
               </div>

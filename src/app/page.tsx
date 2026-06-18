@@ -10,16 +10,16 @@ import ShinyButton from '@/components/animata/button/shiny-button'
 import CategoryBar from '@/components/CategoryBar'
 import PromptGrid from '@/components/PromptGrid'
 
-// ======== Hero 区 =======
+// ======== Hero Section =======
 function HeroSection() {
   return (
     <section className="relative overflow-hidden">
-      {/* 流星背景 */}
+      {/* Meteor background */}
       <AnimatedBeam beamCount={8} />
 
-      {/* Hero 内容 */}
+      {/* Hero content */}
       <div className="relative z-10 flex min-h-[70vh] flex-col items-center justify-center px-4 py-24 text-center">
-        {/* 标签 */}
+        {/* Badge */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -30,37 +30,37 @@ function HeroSection() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-purple-400 opacity-75"></span>
             <span className="relative inline-flex h-2 w-2 rounded-full bg-purple-400"></span>
           </span>
-          32,000+ 精选提示词免费使用
+          32,000+ curated prompts, free to use
         </motion.div>
 
-        {/* 主标题 */}
+        {/* Main title */}
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           className="mb-6 text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl"
         >
-          <span className="gradient-text">AI 提示词</span>
+          <span className="gradient-text">AI Prompts</span>
           <br />
           <AnimatedText
-            text="探索无限可能"
+            text="Explore Infinite Possibilities"
             className="text-zinc-100"
           />
         </motion.h1>
 
-        {/* 副标题 */}
+        {/* Subtitle */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
           className="mb-10 max-w-2xl text-lg text-zinc-400"
         >
-          免费使用超过 32,000 条高质量 AI 绘画提示词
+          Explore over 32,000 high-quality AI art prompts
           <br className="hidden sm:block" />
-          支持 Midjourney、Stable Diffusion、DALL-E 等主流模型
+          Supports Midjourney, Stable Diffusion, DALL-E and other mainstream models
         </motion.p>
 
-        {/* 搜索框 */}
+        {/* Search box */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -85,24 +85,24 @@ function HeroSection() {
               <input
                 name="q"
                 type="text"
-                placeholder="搜索提示词... 如：赛博朋克、奇幻风景"
+                placeholder="Search prompts... e.g. cyberpunk, fantasy landscape"
                 className="w-full rounded-2xl border border-zinc-800 bg-zinc-900/80 py-4 pl-12 pr-6 text-sm text-zinc-100 placeholder-zinc-500 backdrop-blur-sm focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20"
               />
             </div>
             <ShinyButton type="submit" className="rounded-2xl px-8 py-4 text-base">
-              搜索
+              Search
             </ShinyButton>
           </form>
         </motion.div>
 
-        {/* 快速标签 */}
+        {/* Quick tags */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 1 }}
           className="mt-8 flex flex-wrap justify-center gap-2"
         >
-          {['赛博朋克', '奇幻风景', '人像摄影', '科幻城市', '水彩画'].map((tag) => (
+          {['cyberpunk', 'fantasy landscape', 'portrait photography', 'sci-fi city', 'watercolor'].map((tag) => (
             <Link
               key={tag}
               href={`/search?q=${encodeURIComponent(tag)}`}
@@ -117,7 +117,7 @@ function HeroSection() {
   )
 }
 
-// ======== 分类区（Bento Grid）========
+// ======== Category Section (Bento Grid) =======
 function CategorySection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
@@ -132,20 +132,20 @@ function CategorySection() {
           className="mb-12 text-center"
         >
           <h2 className="text-3xl font-bold text-zinc-100 sm:text-4xl">
-            探索 <span className="gradient-text">分类</span>
+            Explore <span className="gradient-text">Categories</span>
           </h2>
           <p className="mt-3 text-zinc-400">
-            按类别浏览提示词，找到你需要的创作灵感
+            Browse prompts by category, find the creative inspiration you need
           </p>
         </motion.div>
 
-        <CategoryBar />
+        <CategoryBar hideChinese />
       </div>
     </section>
   )
 }
 
-// ======== 最新提示词 =======
+// ======== Latest Prompts =======
 function LatestSection({ items }: { items: any[] }) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
@@ -161,25 +161,25 @@ function LatestSection({ items }: { items: any[] }) {
         >
           <div>
             <h2 className="text-3xl font-bold text-zinc-100 sm:text-4xl">
-              🆕 最新提示词
+              🆕 Latest Prompts
             </h2>
-            <p className="mt-2 text-zinc-400">刚刚加入库中的精选提示词</p>
+            <p className="mt-2 text-zinc-400">Freshly added curated prompts</p>
           </div>
           <Link
             href="/search"
             className="text-sm text-purple-400 transition-colors hover:text-purple-300"
           >
-            查看全部 →
+            View All →
           </Link>
         </motion.div>
 
-        <PromptGrid items={items} />
+        <PromptGrid items={items} hideChinese />
       </div>
     </section>
   )
 }
 
-// ======== 热门提示词 =======
+// ======== Hottest Prompts =======
 function HottestSection({ items }: { items: any[] }) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
@@ -195,25 +195,25 @@ function HottestSection({ items }: { items: any[] }) {
         >
           <div>
             <h2 className="text-3xl font-bold text-zinc-100 sm:text-4xl">
-              🔥 热门提示词
+              🔥 Hottest Prompts
             </h2>
-            <p className="mt-2 text-zinc-400">社区最受欢迎的提示词</p>
+            <p className="mt-2 text-zinc-400">Most popular prompts in the community</p>
           </div>
           <Link
             href="/search?sort=hot"
             className="text-sm text-purple-400 transition-colors hover:text-purple-300"
           >
-            查看全部 →
+            View All →
           </Link>
         </motion.div>
 
-        <PromptGrid items={items} />
+        <PromptGrid items={items} hideChinese />
       </div>
     </section>
   )
 }
 
-// ======== CTA 区 =======
+// ======== CTA Section =======
 function CTASection() {
   return (
     <section className="relative overflow-hidden px-4 py-24">
@@ -226,8 +226,7 @@ function CTASection() {
           transition={{ duration: 0.6 }}
           className="mb-6 text-4xl font-bold text-zinc-100 sm:text-5xl"
         >
-          开始你的
-          <span className="gradient-text"> AI 创作之旅</span>
+          Start Your <span className="gradient-text">AI Creative Journey</span>
         </motion.h2>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -236,7 +235,7 @@ function CTASection() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mb-10 text-lg text-zinc-400"
         >
-          免费使用，无需注册，即刻开始探索
+          Free to use, no registration required. Start exploring now.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -247,7 +246,7 @@ function CTASection() {
         >
           <Link href="/search">
             <ShinyButton className="rounded-2xl px-10 py-4 text-lg">
-              开始探索
+              Start Exploring
             </ShinyButton>
           </Link>
         </motion.div>
@@ -268,14 +267,14 @@ function Footer() {
           <span className="text-lg font-bold text-zinc-100">Prompt Hub</span>
         </div>
         <p className="text-sm text-zinc-500">
-          © 2026 Prompt Hub. 免费 AI 提示词库。
+          © 2026 Prompt Hub. Free AI Prompt Library.
         </p>
         <div className="flex gap-4">
           <a href="#" className="text-zinc-500 transition-colors hover:text-purple-400">
             GitHub
           </a>
           <a href="#" className="text-zinc-500 transition-colors hover:text-purple-400">
-            关于
+            About
           </a>
         </div>
       </div>
@@ -283,7 +282,7 @@ function Footer() {
   )
 }
 
-// ======== 主页面 =======
+// ======== Main Page =======
 export default function HomePage() {
   const [latest, setLatest] = useState<any[]>([])
   const [hottest, setHottest] = useState<any[]>([])
@@ -310,7 +309,7 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-zinc-950">
-      {/* 导航栏 */}
+      {/* Navigation bar */}
       <nav className="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-md">
         <div className="mx-auto max-w-7xl flex items-center gap-4 px-4 py-3">
           <Link href="/" className="flex items-center gap-2 shrink-0">
@@ -327,12 +326,12 @@ export default function HomePage() {
               <input
                 name="q"
                 type="text"
-                placeholder="搜索提示词..."
+                placeholder="Search prompts..."
                 className="w-full rounded-xl border border-zinc-800 bg-zinc-900/80 py-2 pl-10 pr-4 text-sm text-zinc-100 placeholder-zinc-500 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500/20"
               />
             </div>
             <button type="submit" className="rounded-xl bg-purple-600 px-4 py-2 text-sm text-white transition-colors hover:bg-purple-700">
-              搜索
+              Search
             </button>
           </form>
         </div>
@@ -341,15 +340,15 @@ export default function HomePage() {
       {/* Hero */}
       <HeroSection />
 
-      {/* 分割线 */}
+      {/* Divider */}
       <div className="mx-auto max-w-7xl border-t border-zinc-800/50" />
 
-      {/* 分类 */}
+      {/* Categories */}
       <CategorySection />
 
       <div className="mx-auto max-w-7xl border-t border-zinc-800/50" />
 
-      {/* 最新 */}
+      {/* Latest */}
       {loading ? (
         <section className="px-4 py-20">
           <div className="mx-auto max-w-7xl">
@@ -366,7 +365,7 @@ export default function HomePage() {
 
       <div className="mx-auto max-w-7xl border-t border-zinc-800/50" />
 
-      {/* 热门 */}
+      {/* Hottest */}
       {!loading && <HottestSection items={hottest} />}
 
       <div className="border-t border-zinc-800/50" />
