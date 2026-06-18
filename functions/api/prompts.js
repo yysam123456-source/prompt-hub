@@ -13,10 +13,13 @@ export async function onRequestGet(context) {
   if (q) apiUrl += `&q=${encodeURIComponent(q)}`;
 
   try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 8000);
     const resp = await fetch(apiUrl, {
       headers: { 'User-Agent': 'Mozilla/5.0' },
-      signal: AbortSignal.timeout(8000)  // 8秒超时
+      signal: controller.signal
     });
+    clearTimeout(timer);
     const data = await resp.json();
 
     return new Response(JSON.stringify(data), {
