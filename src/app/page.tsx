@@ -292,13 +292,13 @@ export default function HomePage() {
   useEffect(() => {
     async function load() {
       try {
-        const res1 = await fetch('/data/lists/latest-1.json')
+        const res1 = await fetch('/api/prompts?page=1&pageSize=20&sort=latest')
         const latestData = await res1.json()
-        setLatest(latestData)
+        setLatest(latestData.items || [])
 
-        const res2 = await fetch('/data/lists/hottest-1.json')
+        const res2 = await fetch('/api/prompts?page=1&pageSize=20&sort=hot')
         const hottestData = await res2.json()
-        setHottest(hottestData)
+        setHottest(hottestData.items || [])
       } catch (e) {
         console.error('Failed to load home data', e)
       } finally {

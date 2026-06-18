@@ -15,10 +15,24 @@ function PromptDetailContent() {
     if (!slug) return
     async function load() {
       try {
-        const res = await fetch(`/data/details/${slug}.json`)
+        const res = await fetch(`/api/prompts/${slug}`)
         if (res.ok) {
           const data = await res.json()
-          setDetail(data)
+          // 适配 API 返回格式
+          const transformed = {
+            title_zh: data.title?.zh || data.title?.en || '',
+            title_en: data.title?.en || '',
+            prompt: data.prompt?.zh || data.prompt?.en || '',
+            category_name_zh: data.category?.name?.zh || '',
+            tags: data.tags?.map((t: any) => t.name?.zh || t.name?.en || '') || [],
+            primary_image: data.primaryImage || {},
+            view_count: data.viewCount || 0,
+            like_count: data.likeCount || 0,
+            sourceUrl: data.sourceUrl || '',
+          }
+          setDetail(transformed)
+        } else if (res.status === 404) {
+          setDetail(null)
         }
       } catch (e) {
         console.error('Failed to load detail', e)
@@ -149,7 +163,23 @@ function PromptDetailContent() {
                 {detail.prompt}
               </pre>
               <button
-                onClick={() => navigator.clipboard.writeText(detail.prompt)}
+                onClick={async () => {
+                  const text = detail.prompt;
+                  if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(text);
+                  } else {
+                    // Fallback for non-HTTPS or older browsers
+                    const textarea = document.createElement('textarea');
+                    textarea.value = text;
+                    textarea.style.position = 'fixed';
+                    textarea.style.opacity = '0';
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                  }
+                  alert('已复制到剪贴板！');
+                }}
                 className="absolute right-4 top-4 rounded-lg border border-zinc-800 bg-zinc-900/80 px-3 py-1.5 text-xs text-zinc-400 transition-colors hover:border-purple-500/50 hover:text-purple-300"
               >
                 📋 复制

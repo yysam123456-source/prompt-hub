@@ -1,46 +1,37 @@
 'use client'
 
-
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import CategoryBar from '@/components/CategoryBar'
 import PromptGrid from '@/components/PromptGrid'
 
 interface Props {
-  searchParams: { q?: string; category?: string }
+  searchParams: { q?: string; category?: string; page?: string }
 }
 
 export default function SearchPage({ searchParams }: Props) {
   const [results, setResults] = useState<any[]>([])
+  const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
 
   const query = searchParams.q || ''
   const category = searchParams.category || ''
+  const currentPage = parseInt(searchParams.page || '1', 10) || 1
+  const pageSize = 20
 
   useEffect(() => {
     async function search() {
       try {
-        const res = await fetch('/data/search-index.json')
-        const index = await res.json()
-        const q = query.toLowerCase().trim()
-        const filtered = (index.docs || []).filter((doc: any) => {
-          if (category && doc.c !== category) return false
-          if (q && !doc.t.toLowerCase().includes(q)) return false
-          return true
-        })
-        // 加载详情
-        const items = await Promise.all(
-          filtered.slice(0, 100).map(async (doc: any) => {
-            try {
-              const res = await fetch(`/data/details/${doc.id}.json`)
-              if (!res.ok) return null
-              return await res.json()
-            } catch {
-              return null
-            }
-          })
-        )
-        setResults(items.filter(Boolean))
+        const url = new URL('/api/prompts', window.location.origin)
+        if (query) url.searchParams.set('q', query)
+        if (category) url.searchParams.set('category', category)
+        url.searchParams.set('page', String(currentPage))
+        url.searchParams.set('pageSize', String(pageSize))
+        
+        const res = await fetch(url.toString())
+        const data = await res.json()
+        setResults(data.items || [])
+        setTotal(data.total || (data.items || []).length)
       } catch (e) {
         console.error('Search failed', e)
       } finally {
@@ -52,45 +43,85 @@ export default function SearchPage({ searchParams }: Props) {
     } else {
       setLoading(false)
     }
-  }, [query, category])
+  }, [query, category, currentPage])
+
+  const totalPages = Math.ceil(total / pageSize)
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-zinc-950">
       {/* 顶部搜索栏 */}
-      <div className="bg-white border-b border-gray-100 px-4 py-3 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto flex items-center gap-4">
-          <Link href="/" className="text-xl font-bold text-blue-600 shrink-0">Prompt Hub</Link>
+      <div className="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-md">
+        <div className="mx-auto max-w-7xl flex items-center gap-4 px-4 py-3">
+          <Link href="/" className="flex items-center gap-2 shrink-0">
+            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-sm">
+              P
+            </div>
+            <span className="text-lg font-bold text-zinc-100">Prompt Hub</span>
+          </Link>
           <form action="/search" method="GET" className="flex gap-2 flex-1 max-w-2xl">
-            <input
-              name="q"
-              type="text"
-              defaultValue={query}
-              placeholder="搜索提示词..."
-              className="flex-1 px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700">搜索</button>
+            <div className="relative flex-1">
+              <svg className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                name="q"
+                type="text"
+                defaultValue={query}
+                placeholder="搜索提示词..."
+                className="w-full rounded-xl border border-zinc-800 bg-zinc-900/80 py-2 pl-10 pr-4 text-sm text-zinc-100 placeholder-zinc-500 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500/20"
+              />
+            </div>
+            <button type="submit" className="rounded-xl bg-purple-600 px-4 py-2 text-sm text-white transition-colors hover:bg-purple-700">
+              搜索
+            </button>
           </form>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">
+      <div className="mx-auto max-w-7xl px-4 py-12">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-zinc-100 mb-2">
             {query ? `搜索结果：${query}` : '全部提示词'}
           </h1>
-          <p className="text-gray-500 mt-1">共找到 {results.length} 条结果</p>
+          <p className="text-zinc-400">共找到 {total} 条结果</p>
         </div>
 
         <CategoryBar currentCategory={category} />
 
         {loading ? (
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-6">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 mt-8">
             {[...Array(20)].map((_, i) => (
-              <div key={i} className="aspect-square bg-gray-100 rounded-xl animate-pulse" />
+              <div key={i} className="aspect-square rounded-2xl bg-zinc-900 animate-pulse" />
             ))}
           </div>
         ) : (
-          <PromptGrid items={results} />
+          <>
+            <PromptGrid items={results} />
+
+            {totalPages > 1 && (
+              <div className="flex justify-center gap-2 mt-12">
+                {currentPage > 1 && (
+                  <Link
+                    href={`/search?q=${query}&category=${category}&page=${currentPage - 1}`}
+                    className="rounded-xl border border-zinc-800 bg-zinc-900/80 px-4 py-2 text-sm text-zinc-400 transition-colors hover:border-purple-500/50 hover:text-purple-300"
+                  >
+                    上一页
+                  </Link>
+                )}
+                <span className="rounded-xl border border-zinc-800 px-4 py-2 text-sm text-zinc-500">
+                  第 {currentPage} / {totalPages} 页
+                </span>
+                {currentPage < totalPages && (
+                  <Link
+                    href={`/search?q=${query}&category=${category}&page=${currentPage + 1}`}
+                    className="rounded-xl border border-zinc-800 bg-zinc-900/80 px-4 py-2 text-sm text-zinc-400 transition-colors hover:border-purple-500/50 hover:text-purple-300"
+                  >
+                    下一页
+                  </Link>
+                )}
+              </div>
+            )}
+          </>
         )}
       </div>
     </main>

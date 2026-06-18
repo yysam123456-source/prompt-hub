@@ -2,24 +2,16 @@
 /node_modules
 /.pnp
 .pnp.js
-.vercel/
-
-# build outputs
-/.next/
-/out/
-/dist/
-/build/
-.open-next/
-
-# data - details are too many, commit meta + list chunks only
-public/data/details/
-prompts_data/
-crawl*.log
-batch_crawl.py
-build_index.py
 
 # testing
-/coverage/
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# wrangler cache
+.wrangler/
 
 # misc
 .DS_Store
@@ -33,12 +25,12 @@ yarn-error.log*
 # local env files
 .env*.local
 
+# vercel
+.vercel
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
 
-# IDE
-.idea
-.vscode
-*.swp
-*.swo
+# data files (use API proxy instead)
+public/data/

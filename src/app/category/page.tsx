@@ -1,14 +1,13 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useState, Suspense } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import PromptGrid from '@/components/PromptGrid'
 import CategoryBar from '@/components/CategoryBar'
 
 function CategoryContent() {
-  const searchParams = useSearchParams()
+  const searchParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '')
   const slug = searchParams.get('slug')
   const [items, setItems] = useState<any[]>([])
   const [total, setTotal] = useState(0)
@@ -21,29 +20,25 @@ function CategoryContent() {
   useEffect(() => {
     async function load() {
       try {
-        // 加载分类元数据
+        // 从 API 获取分类列表（用于分类名称）
         if (slug) {
-          const metaRes = await fetch('/data/meta.json')
-          const meta = await metaRes.json()
-          const cat = (meta.categories || []).find((c: any) => c.slug === slug)
+          const catRes = await fetch('/api/categories')
+          const catData = await catRes.json()
+          const cat = (catData || []).find((c: any) => c.slug === slug)
           if (cat) setCategoryName(cat.name_zh)
         }
 
-        // 加载所有列表数据，过滤出当前分类
-        const allItems: any[] = []
-        for (let p = 1; p <= 50; p++) {
-          const res = await fetch(`/data/lists/latest-${p}.json`)
-          if (!res.ok) break
-          const chunk = await res.json()
-          if (chunk.length === 0) break
-          allItems.push(...chunk)
-        }
-        const filtered = slug
-          ? allItems.filter((item: any) => item.category_slug === slug)
-          : allItems
-        setTotal(filtered.length)
-        const startIdx = (currentPage - 1) * pageSize
-        setItems(filtered.slice(startIdx, startIdx + pageSize))
+        // 改用 API 代理，服务器端过滤 + 分页
+        const url = new URL('/api/prompts', window.location.origin)
+        if (slug) url.searchParams.set('category', slug)
+        url.searchParams.set('page', String(currentPage))
+        url.searchParams.set('pageSize', String(pageSize))
+        
+        const res = await fetch(url.toString())
+        const data = await res.json()
+        const fetchedItems = data.items || []
+        setItems(fetchedItems)
+        setTotal(data.total || fetchedItems.length)
       } catch (e) {
         console.error('Failed to load category data', e)
       } finally {
@@ -137,13 +132,5 @@ function CategoryContent() {
 }
 
 export default function CategoryPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-        <div className="h-12 w-12 animate-spin rounded-full border-4 border-purple-500 border-t-transparent" />
-      </div>
-    }>
-      <CategoryContent />
-    </Suspense>
-  )
+  return <CategoryContent />
 }
