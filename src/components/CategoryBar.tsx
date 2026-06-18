@@ -4,48 +4,49 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 
-export default function CategoryBar({ currentCategory, hideChinese }: { currentCategory?: string, hideChinese?: boolean }) {
-  const [categories, setCategories] = useState<any[]>([])
+// CategoryBar: accepts categories as props (fetched by parent)
+export default function CategoryBar({ categories }: { categories?: any[] }) {
+  const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
-    fetch('/api/categories')
-      .then(res => res.json())
-      .then(data => setCategories(data || []))
-      .catch(err => console.error('Failed to load categories', err))
+    setIsClient(true)
   }, [])
 
-  const allCategories = [{ slug: '', name_en: 'All', name_zh: '全部' }, ...categories]
+  if (!isClient) return null
+
+  const cats = categories || []
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className="flex flex-wrap gap-2 justify-center"
-    >
-      {allCategories.slice(0, 17).map((cat: any, idx: number) => {
-        const isActive = (!currentCategory && !cat.slug) || currentCategory === cat.slug
-        const displayName = hideChinese ? (cat.name_en || cat.name_zh) : (cat.name_zh || cat.name_en)
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+      {cats.map((cat: any, idx: number) => {
+        const href = `/category?slug=${cat.slug}`
         return (
           <motion.div
-            key={cat.slug || 'all'}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3, delay: idx * 0.03 }}
+            key={cat.slug}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: (idx % 5) * 0.08 }}
           >
             <Link
-              href={cat.slug ? `/search?category=${cat.slug}` : '/search'}
-              className={`inline-block rounded-full px-4 py-2 text-sm transition-all duration-300 ${
-                isActive
-                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/25'
-                  : 'border border-zinc-800 bg-zinc-900/80 text-zinc-400 hover:border-purple-500/50 hover:text-purple-300'
-              }`}
+              href={href}
+              className="group block rounded-2xl border border-zinc-800 bg-zinc-900/80 p-6 transition-all duration-300 hover:border-purple-500/50 hover:shadow-lg hover:shadow-purple-500/10"
             >
-              {displayName} {(cat as any).count ? `(${(cat as any).count})` : ''}
+              <div className="mb-3 text-3xl">
+                {cat.slug === 'stable-diffusion' ? '🎨'
+                  : cat.slug === 'midjourney' ? '🌌'
+                  : cat.slug === 'dall-e' ? '🖼️'
+                  : cat.slug === 'leonardo' ? '✨'
+                  : cat.slug === 'firefly' ? '🔥'
+                  : '💡'}
+              </div>
+              <h3 className="font-semibold text-zinc-100 group-hover:text-purple-400 transition-colors">
+                {cat.name}
+              </h3>
             </Link>
           </motion.div>
         )
       })}
-    </motion.div>
+    </div>
   )
 }

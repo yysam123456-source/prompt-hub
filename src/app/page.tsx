@@ -10,7 +10,7 @@ import ShinyButton from '@/components/animata/button/shiny-button'
 import CategoryBar from '@/components/CategoryBar'
 import PromptGrid from '@/components/PromptGrid'
 
-// ======== Hero Section =======
+// ======== Hero Section ========
 function HeroSection() {
   return (
     <section className="relative overflow-hidden">
@@ -30,7 +30,7 @@ function HeroSection() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-purple-400 opacity-75"></span>
             <span className="relative inline-flex h-2 w-2 rounded-full bg-purple-400"></span>
           </span>
-          32,000+ curated prompts, free to use
+          1,000+ curated English prompts, free to use
         </motion.div>
 
         {/* Main title */}
@@ -55,9 +55,7 @@ function HeroSection() {
           transition={{ duration: 0.6, delay: 0.5 }}
           className="mb-10 max-w-2xl text-lg text-zinc-400"
         >
-          Explore over 32,000 high-quality AI art prompts
-          <br className="hidden sm:block" />
-          Supports Midjourney, Stable Diffusion, DALL-E and other mainstream models
+          Explore high-quality AI art prompts for Midjourney, Stable Diffusion and more
         </motion.p>
 
         {/* Search box */}
@@ -102,7 +100,7 @@ function HeroSection() {
           transition={{ duration: 0.6, delay: 1 }}
           className="mt-8 flex flex-wrap justify-center gap-2"
         >
-          {['cyberpunk', 'fantasy landscape', 'portrait photography', 'sci-fi city', 'watercolor'].map((tag) => (
+          {['cyberpunk', 'fantasy', 'portrait', 'sci-fi', 'watercolor'].map((tag) => (
             <Link
               key={tag}
               href={`/search?q=${encodeURIComponent(tag)}`}
@@ -117,8 +115,8 @@ function HeroSection() {
   )
 }
 
-// ======== Category Section (Bento Grid) =======
-function CategorySection() {
+// ======== Category Section (Bento Grid) ========
+function CategorySection({ categories }: { categories: any[] }) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
 
@@ -139,13 +137,13 @@ function CategorySection() {
           </p>
         </motion.div>
 
-        <CategoryBar hideChinese />
+        <CategoryBar categories={categories} />
       </div>
     </section>
   )
 }
 
-// ======== Latest Prompts =======
+// ======== Latest Prompts ========
 function LatestSection({ items }: { items: any[] }) {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
@@ -173,47 +171,13 @@ function LatestSection({ items }: { items: any[] }) {
           </Link>
         </motion.div>
 
-        <PromptGrid items={items} hideChinese />
+        <PromptGrid items={items} />
       </div>
     </section>
   )
 }
 
-// ======== Hottest Prompts =======
-function HottestSection({ items }: { items: any[] }) {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: '-100px' })
-
-  return (
-    <section ref={ref} className="px-4 py-20">
-      <div className="mx-auto max-w-7xl">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="mb-12 flex items-end justify-between"
-        >
-          <div>
-            <h2 className="text-3xl font-bold text-zinc-100 sm:text-4xl">
-              🔥 Hottest Prompts
-            </h2>
-            <p className="mt-2 text-zinc-400">Most popular prompts in the community</p>
-          </div>
-          <Link
-            href="/search?sort=hot"
-            className="text-sm text-purple-400 transition-colors hover:text-purple-300"
-          >
-            View All →
-          </Link>
-        </motion.div>
-
-        <PromptGrid items={items} hideChinese />
-      </div>
-    </section>
-  )
-}
-
-// ======== CTA Section =======
+// ======== CTA Section ========
 function CTASection() {
   return (
     <section className="relative overflow-hidden px-4 py-24">
@@ -255,7 +219,7 @@ function CTASection() {
   )
 }
 
-// ======== Footer =======
+// ======== Footer ========
 function Footer() {
   return (
     <footer className="border-t border-zinc-800 px-4 py-12">
@@ -270,7 +234,7 @@ function Footer() {
           © 2026 Prompt Hub. Free AI Prompt Library.
         </p>
         <div className="flex gap-4">
-          <a href="#" className="text-zinc-500 transition-colors hover:text-purple-400">
+          <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-zinc-500 transition-colors hover:text-purple-400">
             GitHub
           </a>
           <a href="#" className="text-zinc-500 transition-colors hover:text-purple-400">
@@ -282,30 +246,42 @@ function Footer() {
   )
 }
 
-// ======== Main Page =======
+// ======== Main Page ========
 export default function HomePage() {
-  const [latest, setLatest] = useState<any[]>([])
-  const [hottest, setHottest] = useState<any[]>([])
+  const [allPrompts, setAllPrompts] = useState<any[]>([])
+  const [categories, setCategories] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function load() {
       try {
-        const res1 = await fetch('/api/prompts?page=1&pageSize=20&sort=latest')
-        const latestData = await res1.json()
-        setLatest(latestData.items || [])
+        const res = await fetch('/data/prompts.json')
+        const data = await res.json()
+        const items = data.items || []
+        setAllPrompts(items)
 
-        const res2 = await fetch('/api/prompts?page=1&pageSize=20&sort=hot')
-        const hottestData = await res2.json()
-        setHottest(hottestData.items || [])
+        // Extract unique categories
+        const catMap = new Map()
+        items.forEach((item: any) => {
+          const cat = item.category || 'other'
+          if (!catMap.has(cat)) {
+            catMap.set(cat, { slug: cat, name: cat.replace(/-/g, ' ') })
+          }
+        })
+        setCategories(Array.from(catMap.values()))
       } catch (e) {
-        console.error('Failed to load home data', e)
+        console.error('Failed to load data', e)
       } finally {
         setLoading(false)
       }
     }
     load()
   }, [])
+
+  // Latest: first 20 items
+  const latest = allPrompts.slice(0, 20)
+  // Hottest: sorted by viewCount desc, first 20
+  const hottest = [...allPrompts].sort((a: any, b: any) => (b.viewCount || 0) - (a.viewCount || 0)).slice(0, 20)
 
   return (
     <main className="min-h-screen bg-zinc-950">
@@ -344,7 +320,7 @@ export default function HomePage() {
       <div className="mx-auto max-w-7xl border-t border-zinc-800/50" />
 
       {/* Categories */}
-      <CategorySection />
+      <CategorySection categories={categories} />
 
       <div className="mx-auto max-w-7xl border-t border-zinc-800/50" />
 
@@ -366,7 +342,7 @@ export default function HomePage() {
       <div className="mx-auto max-w-7xl border-t border-zinc-800/50" />
 
       {/* Hottest */}
-      {!loading && <HottestSection items={hottest} />}
+      {!loading && <LatestSection items={hottest} />}
 
       <div className="border-t border-zinc-800/50" />
 

@@ -1,58 +1,65 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import { useEffect, useState, useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
 import PromptGrid from '@/components/PromptGrid'
-import CategoryBar from '@/components/CategoryBar'
 
-function CategoryContent() {
-  const searchParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '')
-  const slug = searchParams.get('slug')
-  const [items, setItems] = useState<any[]>([])
-  const [total, setTotal] = useState(0)
+// Client-side category filtering: fetches from /data/prompts.json
+export default function CategoryPage({ searchParams }: { searchParams?: { slug?: string } }) {
+  const categorySlug = searchParams?.slug || ''
+  const [allPrompts, setAllPrompts] = useState<any[]>([])
+  const [results, setResults] = useState<any[]>([])
+  const [categories, setCategories] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
-  const [categoryName, setCategoryName] = useState('')
 
-  const currentPage = parseInt(searchParams.get('page') || '1', 10) || 1
-  const pageSize = 20
-
+  // Load all prompts on mount
   useEffect(() => {
     async function load() {
       try {
-        // Get category list from API (for category name)
-        if (slug) {
-          const catRes = await fetch('/api/categories')
-          const catData = await catRes.json()
-          const cat = (catData || []).find((c: any) => c.slug === slug)
-          if (cat) setCategoryName(cat.name_en || cat.name_zh)
-        }
-
-        // Use API proxy for server-side filtering + pagination
-        const url = new URL('/api/prompts', window.location.origin)
-        if (slug) url.searchParams.set('category', slug)
-        url.searchParams.set('page', String(currentPage))
-        url.searchParams.set('pageSize', String(pageSize))
-        
-        const res = await fetch(url.toString())
+        const res = await fetch('/data/prompts.json')
         const data = await res.json()
-        const fetchedItems = data.items || []
-        setItems(fetchedItems)
-        setTotal(data.total || fetchedItems.length)
+        const items = data.items || []
+        setAllPrompts(items)
+
+        // Extract unique categories
+        const catMap = new Map()
+        items.forEach((item: any) => {
+          const cat = item.category || 'other'
+          if (!catMap.has(cat)) {
+            catMap.set(cat, {
+              slug: cat,
+              name: cat.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())
+            })
+          }
+        })
+        setCategories(Array.from(catMap.values()))
       } catch (e) {
-        console.error('Failed to load category data', e)
+        console.error('Failed to load prompts', e)
       } finally {
         setLoading(false)
       }
     }
     load()
-  }, [slug, currentPage])
+  }, [])
 
-  const totalPages = Math.ceil(total / pageSize)
+  // Filter when allPrompts or categorySlug changes
+  useEffect(() => {
+    if (!categorySlug) {
+      setResults(allPrompts)
+      return
+    }
+    const filtered = (allPrompts || []).filter((item: any) =>
+      (item.category || '').toLowerCase() === categorySlug.toLowerCase()
+    )
+    setResults(filtered)
+  }, [allPrompts, categorySlug])
+
+  const currentCategory = categories.find((c: any) => c.slug === categorySlug)
 
   return (
     <main className="min-h-screen bg-zinc-950">
-      {/* Navigation bar */}
+      {/* Navigation */}
       <nav className="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-md">
         <div className="mx-auto max-w-7xl flex items-center gap-4 px-4 py-3">
           <Link href="/" className="flex items-center gap-2 shrink-0">
@@ -61,36 +68,57 @@ function CategoryContent() {
             </div>
             <span className="text-lg font-bold text-zinc-100">Prompt Hub</span>
           </Link>
-          <form action="/search" method="GET" className="flex gap-2 flex-1 max-w-2xl">
-            <div className="relative flex-1">
-              <svg className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              <input
-                name="q"
-                type="text"
-                placeholder="Search..."
-                className="w-full rounded-xl border border-zinc-800 bg-zinc-900/80 py-2 pl-10 pr-4 text-sm text-zinc-100 placeholder-zinc-500 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500/20"
-              />
-            </div>
-            <button type="submit" className="rounded-xl bg-purple-600 px-4 py-2 text-sm text-white transition-colors hover:bg-purple-700">
-              Search
-            </button>
-          </form>
         </div>
       </nav>
 
       <div className="mx-auto max-w-7xl px-4 py-12">
-        {/* Category navigation */}
-        <CategoryBar currentCategory={slug || undefined} hideChinese />
-
-        <div className="mb-12 mt-8">
-          <h1 className="text-3xl font-bold text-zinc-100 mb-2">
-            {categoryName || 'All Categories'}
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-10"
+        >
+          <h1 className="text-3xl font-bold text-zinc-100 sm:text-4xl">
+            {currentCategory ? currentCategory.name : 'All Categories'}
           </h1>
-          <p className="text-zinc-400">{total} prompts</p>
-        </div>
+          <p className="mt-2 text-zinc-400">
+            {loading ? 'Loading...' : `${results.length} prompt(s) in this category`}
+          </p>
+        </motion.div>
 
+        {/* Category filter tabs */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="mb-10 flex flex-wrap gap-2"
+        >
+          <Link
+            href="/category"
+            className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${
+              !categorySlug
+                ? 'border-purple-500 bg-purple-500/20 text-purple-300'
+                : 'border-zinc-800 bg-zinc-900/60 text-zinc-400 hover:border-purple-500/50 hover:text-purple-300'
+            }`}
+          >
+            All
+          </Link>
+          {categories.map((cat: any) => (
+            <Link
+              key={cat.slug}
+              href={`/category?slug=${cat.slug}`}
+              className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${
+                categorySlug === cat.slug
+                  ? 'border-purple-500 bg-purple-500/20 text-purple-300'
+                  : 'border-zinc-800 bg-zinc-900/60 text-zinc-400 hover:border-purple-500/50 hover:text-purple-300'
+              }`}
+            >
+              {cat.name}
+            </Link>
+          ))}
+        </motion.div>
+
+        {/* Results */}
         {loading ? (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
             {[...Array(20)].map((_, i) => (
@@ -98,39 +126,9 @@ function CategoryContent() {
             ))}
           </div>
         ) : (
-          <>
-            <PromptGrid items={items} hideChinese />
-
-            {totalPages > 1 && (
-              <div className="flex justify-center gap-2 mt-12">
-                {currentPage > 1 && (
-                  <Link
-                    href={`/category?slug=${slug}&page=${currentPage - 1}`}
-                    className="rounded-xl border border-zinc-800 bg-zinc-900/80 px-4 py-2 text-sm text-zinc-400 transition-colors hover:border-purple-500/50 hover:text-purple-300"
-                  >
-                    ← Previous
-                  </Link>
-                )}
-                <span className="rounded-xl border border-zinc-800 px-4 py-2 text-sm text-zinc-500">
-                  Page {currentPage} / {totalPages}
-                </span>
-                {currentPage < totalPages && (
-                  <Link
-                    href={`/category?slug=${slug}&page=${currentPage + 1}`}
-                    className="rounded-xl border border-zinc-800 bg-zinc-900/80 px-4 py-2 text-sm text-zinc-400 transition-colors hover:border-purple-500/50 hover:text-purple-300"
-                  >
-                    Next →
-                  </Link>
-                )}
-              </div>
-            )}
-          </>
+          <PromptGrid items={results} />
         )}
       </div>
     </main>
   )
-}
-
-export default function CategoryPage() {
-  return <CategoryContent />
 }
