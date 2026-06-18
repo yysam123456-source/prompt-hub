@@ -1,0 +1,149 @@
+'use client'
+
+import Link from 'next/link'
+import { useEffect, useState, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { motion } from 'framer-motion'
+import PromptGrid from '@/components/PromptGrid'
+import CategoryBar from '@/components/CategoryBar'
+
+function CategoryContent() {
+  const searchParams = useSearchParams()
+  const slug = searchParams.get('slug')
+  const [items, setItems] = useState<any[]>([])
+  const [total, setTotal] = useState(0)
+  const [loading, setLoading] = useState(true)
+  const [categoryName, setCategoryName] = useState('')
+
+  const currentPage = parseInt(searchParams.get('page') || '1', 10) || 1
+  const pageSize = 20
+
+  useEffect(() => {
+    async function load() {
+      try {
+        // 加载分类元数据
+        if (slug) {
+          const metaRes = await fetch('/data/meta.json')
+          const meta = await metaRes.json()
+          const cat = (meta.categories || []).find((c: any) => c.slug === slug)
+          if (cat) setCategoryName(cat.name_zh)
+        }
+
+        // 加载所有列表数据，过滤出当前分类
+        const allItems: any[] = []
+        for (let p = 1; p <= 50; p++) {
+          const res = await fetch(`/data/lists/latest-${p}.json`)
+          if (!res.ok) break
+          const chunk = await res.json()
+          if (chunk.length === 0) break
+          allItems.push(...chunk)
+        }
+        const filtered = slug
+          ? allItems.filter((item: any) => item.category_slug === slug)
+          : allItems
+        setTotal(filtered.length)
+        const startIdx = (currentPage - 1) * pageSize
+        setItems(filtered.slice(startIdx, startIdx + pageSize))
+      } catch (e) {
+        console.error('Failed to load category data', e)
+      } finally {
+        setLoading(false)
+      }
+    }
+    load()
+  }, [slug, currentPage])
+
+  const totalPages = Math.ceil(total / pageSize)
+
+  return (
+    <main className="min-h-screen bg-zinc-950">
+      {/* 导航栏 */}
+      <nav className="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-md">
+        <div className="mx-auto max-w-7xl flex items-center gap-4 px-4 py-3">
+          <Link href="/" className="flex items-center gap-2 shrink-0">
+            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-sm">
+              P
+            </div>
+            <span className="text-lg font-bold text-zinc-100">Prompt Hub</span>
+          </Link>
+          <form action="/search" method="GET" className="flex gap-2 flex-1 max-w-2xl">
+            <div className="relative flex-1">
+              <svg className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                name="q"
+                type="text"
+                placeholder="搜索..."
+                className="w-full rounded-xl border border-zinc-800 bg-zinc-900/80 py-2 pl-10 pr-4 text-sm text-zinc-100 placeholder-zinc-500 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500/20"
+              />
+            </div>
+            <button type="submit" className="rounded-xl bg-purple-600 px-4 py-2 text-sm text-white transition-colors hover:bg-purple-700">
+              搜索
+            </button>
+          </form>
+        </div>
+      </nav>
+
+      <div className="mx-auto max-w-7xl px-4 py-12">
+        {/* 分类导航 */}
+        <CategoryBar currentCategory={slug || undefined} />
+
+        <div className="mb-12 mt-8">
+          <h1 className="text-3xl font-bold text-zinc-100 mb-2">
+            {categoryName || '全部分类'}
+          </h1>
+          <p className="text-zinc-400">共 {total} 条提示词</p>
+        </div>
+
+        {loading ? (
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            {[...Array(20)].map((_, i) => (
+              <div key={i} className="aspect-square rounded-2xl bg-zinc-900 animate-pulse" />
+            ))}
+          </div>
+        ) : (
+          <>
+            <PromptGrid items={items} />
+
+            {totalPages > 1 && (
+              <div className="flex justify-center gap-2 mt-12">
+                {currentPage > 1 && (
+                  <Link
+                    href={`/category?slug=${slug}&page=${currentPage - 1}`}
+                    className="rounded-xl border border-zinc-800 bg-zinc-900/80 px-4 py-2 text-sm text-zinc-400 transition-colors hover:border-purple-500/50 hover:text-purple-300"
+                  >
+                    上一页
+                  </Link>
+                )}
+                <span className="rounded-xl border border-zinc-800 px-4 py-2 text-sm text-zinc-500">
+                  第 {currentPage} / {totalPages} 页
+                </span>
+                {currentPage < totalPages && (
+                  <Link
+                    href={`/category?slug=${slug}&page=${currentPage + 1}`}
+                    className="rounded-xl border border-zinc-800 bg-zinc-900/80 px-4 py-2 text-sm text-zinc-400 transition-colors hover:border-purple-500/50 hover:text-purple-300"
+                  >
+                    下一页
+                  </Link>
+                )}
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </main>
+  )
+}
+
+export default function CategoryPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-purple-500 border-t-transparent" />
+      </div>
+    }>
+      <CategoryContent />
+    </Suspense>
+  )
+}
