@@ -77,6 +77,18 @@
   100% { opacity: 1; }
 }
 
+/* Image loading shimmer skeleton */
+.image-loading-shimmer {
+  background: linear-gradient(110deg, #1a1a2e 25%, #2a2a3e 37%, #1a1a2e 63%);
+  background-size: 200% 100%;
+  animation: shimmer-skeleton 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmer-skeleton {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 .animate-fade-in {
   animation: fade-in 0.5s ease-out forwards;
 }

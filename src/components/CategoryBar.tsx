@@ -50,25 +50,29 @@ function CategoryCard({ cat, idx }: { cat: CategoryWithImage; idx: number }) {
         className="group block rounded-2xl border border-zinc-800 overflow-hidden transition-all duration-300 hover:border-purple-500/50 hover:shadow-lg hover:shadow-purple-500/10 hover:-translate-y-1"
         style={{ aspectRatio: '1 / 1' }}
       >
-        <div className={`relative w-full h-full bg-gradient-to-br ${config.gradient}`}>
-          {/* Real image with error handling */}
+        <div className={`relative w-full h-full bg-zinc-900`}>
+          {/* Shimmer loading - shows while image is loading */}
           {cat.imageUrl && !imgFailed && (
-            <>
-              <img
-                src={cat.imageUrl}
-                alt={`${config.name} category`}
-                loading="lazy"
-                className="absolute inset-0 w-full h-full object-cover"
-                onError={() => setImgFailed(true)}
-              />
-              {/* Dark overlay for text readability */}
-              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors" />
-            </>
+            <div className="absolute inset-0 image-loading-shimmer z-10" />
           )}
 
-          {/* Fallback when no image or image failed */}
+          {/* Real image with error handling */}
+          {cat.imageUrl && !imgFailed && (
+            <img
+              src={cat.imageUrl}
+              alt={`${config.name} category`}
+              loading="lazy"
+              className="absolute inset-0 w-full h-full object-cover"
+              onError={() => setImgFailed(true)}
+            />
+          )}
+
+          {/* Dark overlay for text readability */}
+          <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors" />
+
+          {/* Fallback when no image or image failed - show gradient bg */}
           {(!cat.imageUrl || imgFailed) && (
-            <div className="absolute inset-0 flex items-center justify-center">
+            <div className={`absolute inset-0 bg-gradient-to-br ${config.gradient} flex items-center justify-center`}>
               <span className="text-5xl opacity-50 drop-shadow-lg">{config.fallbackEmoji}</span>
             </div>
           )}

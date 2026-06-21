@@ -68,29 +68,29 @@ function PromptCard({ item, index }: { item: any; index: number }) {
         className="group block overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/80 transition-all duration-300 hover:border-purple-500/50 hover:shadow-xl hover:shadow-purple-500/10 hover:-translate-y-1"
       >
         {/* Image area */}
-        <div className={`relative aspect-square overflow-hidden bg-gradient-to-br ${config.gradient}`}>
+        <div className={`relative aspect-square overflow-hidden bg-zinc-900`}>
+          {/* Shimmer loading skeleton - shows while image is loading */}
+          {imageUrl && !imgFailed && !imgLoaded && (
+            <div className="absolute inset-0 image-loading-shimmer z-10" />
+          )}
+
           {/* Real image */}
           {imageUrl && !imgFailed ? (
-            <>
-              <img
-                src={imageUrl}
-                alt={item.primaryImage?.altText || title}
-                loading="lazy"
-                className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
-                onLoad={() => setImgLoaded(true)}
-                onError={() => setImgFailed(true)}
-              />
-              {/* Loading skeleton */}
-              {!imgLoaded && (
-                <div className="absolute inset-0 animate-pulse bg-zinc-800/50" />
-              )}
-            </>
+            <img
+              src={imageUrl}
+              alt={item.primaryImage?.altText || title}
+              loading="lazy"
+              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
+              onLoad={() => setImgLoaded(true)}
+              onError={() => setImgFailed(true)}
+            />
           ) : null}
 
           {/* Fallback when no image or image failed */}
           {(imgFailed || !imageUrl) && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br bg-zinc-800">
-              <span className="text-6xl opacity-40 drop-shadow-lg">{config.emoji}</span>
+            <div className={`absolute inset-0 bg-gradient-to-br ${config.gradient} flex flex-col items-center justify-center`}>
+              <span className="text-5xl opacity-50 drop-shadow-lg">{config.emoji}</span>
+              <span className="text-[10px] text-zinc-400 mt-1 opacity-60">No image</span>
             </div>
           )}
 
