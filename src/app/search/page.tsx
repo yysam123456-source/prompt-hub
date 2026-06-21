@@ -1,13 +1,14 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { motion, useInView } from 'framer-motion'
 import PromptGrid from '@/components/PromptGrid'
+import { useSearchParams } from 'next/navigation'
 
-// Client-side search: fetches from /data/prompts.json
-export default function SearchPage({ searchParams }: { searchParams?: { q?: string } }) {
-  const query = searchParams?.q || ''
+function SearchContent() {
+  const searchParams = useSearchParams()
+  const query = searchParams.get('q') || ''
   const [allPrompts, setAllPrompts] = useState<any[]>([])
   const [results, setResults] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -65,7 +66,7 @@ export default function SearchPage({ searchParams }: { searchParams?: { q?: stri
             <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-sm">
               P
             </div>
-            <span className="text-lg font-bold text-zinc-100">Prompt Hub</span>
+            <span className="text-lg font-bold text-zinc-100">ImgPrompt</span>
           </Link>
           <form onSubmit={handleSearch} className="flex gap-2 flex-1 max-w-2xl">
             <div className="relative flex-1">
@@ -114,5 +115,13 @@ export default function SearchPage({ searchParams }: { searchParams?: { q?: stri
         )}
       </div>
     </main>
+  )
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-zinc-950 flex items-center justify-center text-zinc-400">Loading...</div>}>
+      <SearchContent />
+    </Suspense>
   )
 }

@@ -1,13 +1,14 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { motion, useInView } from 'framer-motion'
 import PromptGrid from '@/components/PromptGrid'
+import { useSearchParams } from 'next/navigation'
 
-// Client-side category filtering: fetches from /data/prompts.json
-export default function CategoryPage({ searchParams }: { searchParams?: { slug?: string } }) {
-  const categorySlug = searchParams?.slug || ''
+function CategoryContent() {
+  const searchParams = useSearchParams()
+  const categorySlug = searchParams.get('slug') || ''
   const [allPrompts, setAllPrompts] = useState<any[]>([])
   const [results, setResults] = useState<any[]>([])
   const [categories, setCategories] = useState<any[]>([])
@@ -66,7 +67,7 @@ export default function CategoryPage({ searchParams }: { searchParams?: { slug?:
             <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-sm">
               P
             </div>
-            <span className="text-lg font-bold text-zinc-100">Prompt Hub</span>
+            <span className="text-lg font-bold text-zinc-100">ImgPrompt</span>
           </Link>
         </div>
       </nav>
@@ -130,5 +131,13 @@ export default function CategoryPage({ searchParams }: { searchParams?: { slug?:
         )}
       </div>
     </main>
+  )
+}
+
+export default function CategoryPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-zinc-950 flex items-center justify-center text-zinc-400">Loading...</div>}>
+      <CategoryContent />
+    </Suspense>
   )
 }
