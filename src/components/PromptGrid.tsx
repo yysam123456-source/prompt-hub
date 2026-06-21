@@ -63,8 +63,8 @@ function PromptCard({ item, index }: { item: any; index: number }) {
       viewport={{ once: true }}
       transition={{ duration: 0.4, delay: (index % 12) * 0.05 }}
     >
-      <Link
-        href={`/prompt?slug=${item.slug}`}
+        <Link
+          href={`/prompt/${item.slug}`}
         className="group block overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/80 transition-all duration-300 hover:border-purple-500/50 hover:shadow-xl hover:shadow-purple-500/10 hover:-translate-y-1"
       >
         {/* Image area */}
