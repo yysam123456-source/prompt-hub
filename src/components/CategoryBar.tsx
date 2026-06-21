@@ -4,19 +4,91 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 
-const CATEGORY_CONFIG: Record<string, { name: string; emoji: string; gradient: string }> = {
-  'portrait':     { name: 'Portrait',     emoji: '👤',  gradient: 'from-rose-600 to-pink-700' },
-  'landscape':    { name: 'Landscape',    emoji: '🏔️',  gradient: 'from-emerald-600 to-teal-700' },
-  'fantasy':      { name: 'Fantasy',      emoji: '🐉',  gradient: 'from-violet-600 to-purple-700' },
-  'sci-fi':       { name: 'Sci-Fi',       emoji: '🚀',  gradient: 'from-blue-600 to-cyan-700' },
-  'anime':        { name: 'Anime',        emoji: '🎌',  gradient: 'from-pink-600 to-rose-700' },
-  'abstract':     { name: 'Abstract',     emoji: '🎨',  gradient: 'from-amber-600 to-orange-700' },
-  'architecture': { name: 'Architecture', emoji: '🏛️',  gradient: 'from-stone-600 to-zinc-700' },
-  'animal':       { name: 'Animal',       emoji: '🦁',  gradient: 'from-lime-600 to-green-700' },
-  'food':         { name: 'Food',         emoji: '🍜',  gradient: 'from-red-600 to-amber-700' },
-  'fashion':      { name: 'Fashion',      emoji: '👗',  gradient: 'from-fuchsia-600 to-pink-700' },
-  'horror':       { name: 'Horror',       emoji: '👻',  gradient: 'from-gray-800 to-black' },
-  'cyberpunk':    { name: 'Cyberpunk',    emoji: '🌆',  gradient: 'from-yellow-600 to-amber-700' },
+// Category visual config - gradients as fallback when real image fails
+const CATEGORY_CONFIG: Record<string, { name: string; gradient: string; fallbackEmoji: string }> = {
+  'portrait':     { name: 'Portrait',     gradient: 'from-rose-600/90 to-pink-900/90',   fallbackEmoji: '👤' },
+  'landscape':    { name: 'Landscape',    gradient: 'from-emerald-600/90 to-teal-900/90',  fallbackEmoji: '🏔️' },
+  'fantasy':      { name: 'Fantasy',      gradient: 'from-violet-600/90 to-purple-900/90', fallbackEmoji: '🐉' },
+  'sci-fi':       { name: 'Sci-Fi',       gradient: 'from-blue-600/90 to-cyan-900/90',     fallbackEmoji: '🚀' },
+  'anime':        { name: 'Anime',        gradient: 'from-pink-600/90 to-rose-900/90',     fallbackEmoji: '🎌' },
+  'abstract':     { name: 'Abstract',     gradient: 'from-amber-600/90 to-orange-900/90',  fallbackEmoji: '🎨' },
+  'architecture': { name: 'Architecture', gradient: 'from-stone-600/90 to-zinc-900/90',    fallbackEmoji: '🏛️' },
+  'animal':       { name: 'Animal',       gradient: 'from-lime-600/90 to-green-900/90',    fallbackEmoji: '🦁' },
+  'food':         { name: 'Food',         gradient: 'from-red-600/90 to-amber-900/90',     fallbackEmoji: '🍜' },
+  'fashion':      { name: 'Fashion',      gradient: 'from-fuchsia-600/90 to-pink-900/90',  fallbackEmoji: '👗' },
+  'horror':       { name: 'Horror',       gradient: 'from-gray-800/95 to-black/95',        fallbackEmoji: '👻' },
+  'cyberpunk':    { name: 'Cyberpunk',    gradient: 'from-yellow-600/90 to-amber-900/90',   fallbackEmoji: '🌆' },
+}
+
+export interface CategoryWithImage {
+  slug: string
+  name: string
+  count?: number
+  imageUrl?: string
+}
+
+function CategoryCard({ cat, idx }: { cat: CategoryWithImage; idx: number }) {
+  const [imgFailed, setImgFailed] = useState(false)
+
+  const config = CATEGORY_CONFIG[cat.slug] || {
+    name: cat.slug,
+    gradient: 'from-zinc-700/90 to-zinc-900/90',
+    fallbackEmoji: '💡',
+  }
+  const href = `/category?slug=${cat.slug}`
+  const hasRealImage = !!cat.imageUrl && !imgFailed
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.4, delay: (idx % 6) * 0.06 }}
+    >
+      <Link
+        href={href}
+        className="group block rounded-2xl border border-zinc-800 overflow-hidden transition-all duration-300 hover:border-purple-500/50 hover:shadow-lg hover:shadow-purple-500/10 hover:-translate-y-1"
+        style={{ aspectRatio: '1 / 1' }}
+      >
+        <div className={`relative w-full h-full bg-gradient-to-br ${config.gradient}`}>
+          {/* Real image with error handling */}
+          {cat.imageUrl && !imgFailed && (
+            <>
+              <img
+                src={cat.imageUrl}
+                alt={`${config.name} category`}
+                loading="lazy"
+                className="absolute inset-0 w-full h-full object-cover"
+                onError={() => setImgFailed(true)}
+              />
+              {/* Dark overlay for text readability */}
+              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors" />
+            </>
+          )}
+
+          {/* Fallback when no image or image failed */}
+          {(!cat.imageUrl || imgFailed) && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-5xl opacity-50 drop-shadow-lg">{config.fallbackEmoji}</span>
+            </div>
+          )}
+
+          {/* Content overlay */}
+          <div className="relative z-10 flex flex-col justify-end h-full p-4">
+            <h3 className="font-semibold text-white text-sm drop-shadow-lg">
+              {cat.name || config.name}
+            </h3>
+
+            {'count' in cat && cat.count !== undefined && (
+              <p className="text-xs text-white/70 mt-1 drop-shadow">
+                {cat.count} prompts
+              </p>
+            )}
+          </div>
+        </div>
+      </Link>
+    </motion.div>
+  )
 }
 
 export default function CategoryBar({ categories }: { categories?: any[] }) {
@@ -28,43 +100,18 @@ export default function CategoryBar({ categories }: { categories?: any[] }) {
 
   if (!isClient) return null
 
-  const cats = categories || []
+  const cats: CategoryWithImage[] = (categories || []).map((cat: any) => ({
+    slug: cat.slug || cat,
+    name: cat.name || cat,
+    count: cat.count,
+    imageUrl: cat.imageUrl,
+  }))
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-      {cats.map((cat: any, idx: number) => {
-        const slug = cat.slug || cat
-        const config = CATEGORY_CONFIG[slug] || { name: slug, emoji: '💡', gradient: 'from-zinc-700 to-zinc-900' }
-        const href = `/category?slug=${slug}`
-
-        return (
-          <motion.div
-            key={slug}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: (idx % 6) * 0.06 }}
-          >
-            <Link
-              href={href}
-              className={`group block rounded-2xl border border-zinc-800 bg-gradient-to-br ${config.gradient} p-5 transition-all duration-300 hover:border-purple-500/50 hover:shadow-lg hover:shadow-purple-500/10 hover:-translate-y-1`}
-            >
-              {/* Emoji */}
-              <div className="text-4xl mb-3 drop-shadow-md">{config.emoji}</div>
-
-              {/* Name */}
-              <h3 className="font-semibold text-white group-hover:text-purple-200 transition-colors text-sm">
-                {cat.name || config.name}
-              </h3>
-
-              {/* Item count if available */}
-              {'count' in cat && (
-                <p className="text-xs text-white/60 mt-1">{cat.count} prompts</p>
-              )}
-            </Link>
-          </motion.div>
-        )
-      })}
+      {cats.map((cat: CategoryWithImage, idx: number) => (
+        <CategoryCard key={cat.slug} cat={cat} idx={idx} />
+      ))}
     </div>
   )
 }

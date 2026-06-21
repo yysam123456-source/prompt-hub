@@ -89,8 +89,8 @@ function PromptCard({ item, index }: { item: any; index: number }) {
 
           {/* Fallback when no image or image failed */}
           {(imgFailed || !imageUrl) && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-5xl opacity-60">{config.emoji}</span>
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br bg-zinc-800">
+              <span className="text-6xl opacity-40 drop-shadow-lg">{config.emoji}</span>
             </div>
           )}
 

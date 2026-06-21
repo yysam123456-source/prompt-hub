@@ -260,12 +260,16 @@ export default function HomePage() {
         const items = data.items || []
         setAllPrompts(items)
 
-        // Extract unique categories
+        // Extract unique categories with sample images
         const catMap = new Map()
         items.forEach((item: any) => {
           const cat = item.category || 'other'
           if (!catMap.has(cat)) {
-            catMap.set(cat, { slug: cat, name: cat.replace(/-/g, ' ') })
+            catMap.set(cat, {
+              slug: cat,
+              name: cat.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()),
+              imageUrl: item.primaryImage?.remoteUrl || undefined,
+            })
           }
         })
         setCategories(Array.from(catMap.values()))
