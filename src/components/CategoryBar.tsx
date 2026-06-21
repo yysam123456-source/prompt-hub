@@ -29,6 +29,7 @@ export interface CategoryWithImage {
 
 function CategoryCard({ cat, idx }: { cat: CategoryWithImage; idx: number }) {
   const [imgFailed, setImgFailed] = useState(false)
+  const [imgLoaded, setImgLoaded] = useState(false)
 
   const config = CATEGORY_CONFIG[cat.slug] || {
     name: cat.slug,
@@ -51,8 +52,8 @@ function CategoryCard({ cat, idx }: { cat: CategoryWithImage; idx: number }) {
         style={{ aspectRatio: '1 / 1' }}
       >
         <div className={`relative w-full h-full bg-zinc-900`}>
-          {/* Shimmer loading - shows while image is loading */}
-          {cat.imageUrl && !imgFailed && (
+          {/* Shimmer loading - only shows while image is loading */}
+          {cat.imageUrl && !imgFailed && !imgLoaded && (
             <div className="absolute inset-0 image-loading-shimmer z-10" />
           )}
 
@@ -62,7 +63,8 @@ function CategoryCard({ cat, idx }: { cat: CategoryWithImage; idx: number }) {
               src={cat.imageUrl}
               alt={`${config.name} category`}
               loading="lazy"
-              className="absolute inset-0 w-full h-full object-cover"
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
+              onLoad={() => setImgLoaded(true)}
               onError={() => setImgFailed(true)}
             />
           )}
