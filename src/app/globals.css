@@ -844,3 +844,60 @@
 .cta-glow-text {
   text-shadow: 0 0 20px rgba(168,85,247,0.3), 0 0 40px rgba(168,85,247,0.15);
 }
+
+/* ======== Step Icon Animations ======== */
+
+/* Slow spin for outer glow ring */
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Pulse ring around icon */
+.animate-pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@keyframes pulse-ring {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4); }
+  50% { opacity: 0.7; box-shadow: 0 0 0 10px rgba(139, 92, 246, 0); }
+}
+
+/* Floating particles */
+.step-particle {
+  animation: float-particle 3s ease-in-out infinite;
+}
+@keyframes float-particle {
+  0%, 100% { opacity: 0.3; transform: translateY(0) scale(1); }
+  50% { opacity: 0.9; transform: translateY(-12px) scale(1.5); }
+}
+
+/* Badge pop-in animation */
+.animate-badge-pop {
+  animation: badge-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: inherit;
+}
+@keyframes badge-pop {
+  from { opacity: 0; transform: scale(0) rotate(-20deg); }
+  to { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+/* Connecting line flow animation */
+.animate-line-flow {
+  animation: line-flow 2s ease-in-out infinite;
+}
+@keyframes line-flow {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+
+/* Ping slow (for status dot) */
+.animate-ping-slow {
+  animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+@keyframes ping-slow {
+  from { transform: scale(1); opacity: 0.7; }
+  to { transform: scale(2.5); opacity: 0; }
+}

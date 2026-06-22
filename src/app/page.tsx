@@ -200,46 +200,106 @@ function CategoriesSection({ categories, categoryImages }: { categories: Categor
   )
 }
 
+// ======== Animated Step Icon (inline SVG) ========
+function StepIcon({ type }: { type: 'search' | 'copy' | 'create' }) {
+  const icons: Record<string, { path: string; grad: string }> = {
+    search: {
+      path: 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z',
+      grad: 'from-violet-400 to-purple-600',
+    },
+    copy: {
+      path: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
+      grad: 'from-cyan-400 to-blue-600',
+    },
+    create: {
+      path: 'M4.098 19.902a3.75 3.75 0 005.304 0l6.401-6.402M6.75 17.25l4.872-4.872m0 0a3.75 3.75 0 01-5.376-5.376l-3.5 3.5c-.83.83-.83 2.178 0 3.007L10.5 20.25M16.122 3.878a3.75 3.75 0 015.376 5.376l-2 2M19.5 6.75l-2.122 2.122',
+      grad: 'from-pink-400 to-rose-600',
+    },
+  }
+  const cfg = icons[type]
+
+  return (
+    <div className="step-icon-wrapper relative mx-auto mb-7 flex h-24 w-24 items-center justify-center">
+      {/* Outer rotating glow ring */}
+      <div className="absolute inset-0 rounded-full animate-spin-slow opacity-30"
+        style={{
+          background: `conic-gradient(from 0deg, transparent, rgba(168,85,247,0.4), transparent)`,
+        }}
+      />
+      {/* Middle pulsing ring */}
+      <div className="absolute inset-1 rounded-full border-2 animate-pulse-ring" style={{ borderColor: type === 'search' ? '#8b5cf6' : type === 'copy' ? '#06b6d4' : '#ec4899' }} />
+      {/* Inner gradient circle */}
+      <div className={`relative z-10 flex h-18 w-18 items-center justify-center rounded-full bg-gradient-to-br ${cfg.grad} shadow-lg`}>
+        <svg className="h-8 w-8 text-white drop-shadow-md" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d={cfg.path} />
+        </svg>
+      </div>
+      {/* Floating particles */}
+      <span className="step-particle absolute -top-1 left-1/2 h-1.5 w-1.5 rounded-full bg-purple-400/60 animate-float-particle" style={{ animationDelay: '0s' }} />
+      <span className="step-particle absolute top-1/2 -right-1 h-1 w-1 rounded-full bg-cyan-400/60 animate-float-particle" style={{ animationDelay: '0.5s' }} />
+      <span className="step-particle absolute bottom-1 left-1/3 h-1.5 w-1.5 rounded-full bg-pink-400/60 animate-float-particle" style={{ animationDelay: '1s' }} />
+    </div>
+  )
+}
+
 // ======== How To Use Section ========
 function HowToUseSection() {
   const steps = [
-    { icon: '🔍', title: 'Search & Browse', desc: 'Enter keywords or browse categories to discover prompts' },
-    { icon: '📋', title: 'Copy Prompt', desc: 'Click any card to view & copy the full prompt instantly' },
-    { icon: '🎨', title: 'Create Art', desc: 'Paste into GPT Image 2 and watch the magic happen' },
+    { type: 'search', title: 'Search & Browse', desc: 'Enter keywords or browse categories to discover the perfect prompt for your creative vision' },
+    { type: 'copy', title: 'Copy Prompt', desc: 'Click any card to view details and copy the full prompt instantly with one click' },
+    { type: 'create', title: 'Create Art', desc: 'Paste into GPT Image 2, Midjourney, or DALL-E and watch the magic unfold' },
   ]
 
   return (
-    <section className="relative px-4 py-28 bg-[#0a0a1e]">
-      <MeshGradient intensity="subtle" className="opacity-25" />
+    <section className="relative px-4 py-28 bg-[#0a0a1e] overflow-hidden">
+      <MeshGradient intensity="subtle" className="opacity-30" />
+
+      {/* Decorative grid lines */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none" />
 
       <div className="mx-auto max-w-5xl relative z-10">
         <AnimateOnView className="mb-20 text-center">
-          <h2 className="text-3xl font-bold text-zinc-100 sm:text-4xl">
-            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent bg-[length:200%_100%] animate-text-shimmer">
-              How It Works
+          <div className="inline-flex items-center gap-2 rounded-full border border-purple-500/20 bg-purple-500/5 px-4 py-1.5 mb-6 backdrop-blur-sm">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping-slow absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
             </span>
+            <span className="text-xs font-semibold tracking-widest uppercase text-purple-300">Simple Workflow</span>
+          </div>
+          <h2 className="text-4xl font-black text-zinc-100 sm:text-5xl">
+            <GlitchText>How It Works</GlitchText>
           </h2>
-          <p className="mt-3 text-zinc-400 text-base">3 simple steps to create stunning AI art</p>
+          <p className="mt-4 text-zinc-400 text-base max-w-xl mx-auto">Three simple steps to unlock your AI creativity</p>
         </AnimateOnView>
 
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-3 relative">
+          {/* Connecting line */}
+          <div className="hidden sm:block absolute top-[88px] left-[calc(16.67%+40px)] right-[calc(16.67%+40px)] h-px">
+            <div className="h-full w-full bg-gradient-to-r from-purple-500/30 via-pink-500/30 to-cyan-500/30 relative overflow-hidden rounded-full">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-line-flow" />
+            </div>
+          </div>
+
           {steps.map((step, i) => (
             <AnimateOnView key={i} delay={i * 0.2}>
-              <TiltNeonCard className="relative rounded-3xl border-zinc-700/30 bg-zinc-900/50 p-10 text-center backdrop-blur-md">
-                <div className="step-badge absolute -top-5 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-1 text-xs font-black text-white shadow-lg shadow-purple-500/30">
-                  STEP {i + 1}
+              <TiltNeonCard className="group relative rounded-3xl border border-zinc-700/30 bg-zinc-900/60 p-8 text-center backdrop-blur-sm hover:border-purple-500/40 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/10">
+                {/* Step number - corner badge */}
+                <div className="absolute -top-3 -right-3 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 via-pink-600 to-purple-700 text-xs font-black text-white shadow-lg shadow-purple-500/40 animate-badge-pop" style={{ animationDelay: `${i * 0.15}s` }}>
+                  {i + 1}
                 </div>
-                <div className="mb-6 text-6xl transition-transform duration-500 hover:scale-125 hover:rotate-6 inline-block">
-                  {step.icon}
-                </div>
-                <h3 className="mb-3 text-xl font-bold text-zinc-100 group-hover:text-purple-300 transition-colors">
-                  <NeonText color="cyan" size="text-xl">{step.title}</NeonText>
+
+                {/* Top accent line */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-0.5 rounded-full bg-gradient-to-r from-transparent via-purple-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                <StepIcon type={step.type as any} />
+
+                <h3 className="mb-3 text-xl font-bold text-zinc-100 transition-colors duration-300 group-hover:text-purple-200">
+                  {step.title}
                 </h3>
                 <p className="text-sm text-zinc-400 leading-relaxed">{step.desc}</p>
 
-                {i < steps.length - 1 && (
-                  <div className="hidden absolute -right-6 top-1/2 h-0.5 w-12 bg-gradient-to-r from-purple-500/40 to-transparent sm:block" />
-                )}
+                {/* Bottom gradient accent on hover */}
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 rounded-b-3xl bg-gradient-to-r from-purple-500/0 via-purple-500/60 to-purple-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 scale-x-0 group-hover:scale-x-100 origin-center" />
               </TiltNeonCard>
             </AnimateOnView>
           ))}
