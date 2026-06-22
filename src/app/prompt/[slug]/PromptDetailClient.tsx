@@ -69,7 +69,7 @@ export default function PromptDetailClient({
 
   // Parse argument placeholders: {argument name="xxx" default="yyy"}
   const argRegex = /\{argument\s+name="([^"]+)"(?:\s+default="([^"]*)")?\s*\}/g
-  const args = []
+  const args: Array<{name: string, defaultValue: string}> = []
   let match
   const promptTextCopy = promptText
   while ((match = argRegex.exec(promptTextCopy)) !== null) {
