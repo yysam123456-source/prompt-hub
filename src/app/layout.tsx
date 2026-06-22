@@ -13,7 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="antialised bg-zinc-950 text-zinc-100">
+      <body className="antialised text-zinc-100" style={{ backgroundColor: '#090916' }}>
         {children}
       </body>
     </html>
