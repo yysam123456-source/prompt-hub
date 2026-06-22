@@ -1,0 +1,45 @@
+RoseKhlifa/Image-Prompts Full Dataset Fetcher
+Output: /Users/Lenovo/WorkBuddy/2026-06-17-14-51-24/prompt-hub/scripts/../public/data/rose-prompts-full.json
+
+============================================================
+STEP 1: Fetching item list from API
+============================================================
+  Page 14 failed, retrying...
+  Page 20 failed, retrying...
+  Page 41 failed, retrying...
+  Page 50: collected 3000/33919 items (continuing...)
+  Page 73 failed, retrying...
+  Page 73 failed again, stopping list fetch
+
+Step 1 complete: 4320 items collected
+
+============================================================
+STEP 2: Fetching prompt details
+============================================================
+  Already have 812 details in output file
+  Need to fetch details for 3508 items
+  Batch 1: +100 ok, 0 fail | Total: 912/4320 (2%)
+  Batch 2: +100 ok, 0 fail | Total: 1012/4320 (5%)
+  Batch 3: +99 ok, 1 fail | Total: 1112/4320 (8%)
+  Batch 4: +100 ok, 1 fail | Total: 1212/4320 (11%)
+  Batch 5: +100 ok, 1 fail | Total: 1312/4320 (14%)
+  Batch 6: +100 ok, 1 fail | Total: 1412/4320 (17%)
+  Batch 7: +100 ok, 1 fail | Total: 1512/4320 (19%)
+  Batch 8: +100 ok, 1 fail | Total: 1612/4320 (22%)
+  Batch 9: +88 ok, 13 fail | Total: 1712/4320 (25%)
+  Batch 10: +100 ok, 13 fail | Total: 1812/4320 (28%)
+  Batch 11: +56 ok, 57 fail | Total: 1912/4320 (31%)
+  Batch 12: +100 ok, 57 fail | Total: 2012/4320 (34%)
+  Batch 13: +97 ok, 60 fail | Total: 2112/4320 (37%)
+  Batch 14: +100 ok, 60 fail | Total: 2212/4320 (39%)
+  Batch 15: +100 ok, 60 fail | Total: 2312/4320 (42%)
+  Batch 16: +100 ok, 60 fail | Total: 2412/4320 (45%)
+  Batch 17: +100 ok, 60 fail | Total: 2512/4320 (48%)
+  Batch 18: +100 ok, 60 fail | Total: 2612/4320 (51%)
+  Batch 19: +99 ok, 61 fail | Total: 2712/4320 (54%)
+  Batch 20: +100 ok, 61 fail | Total: 2812/4320 (57%)
+  Batch 21: +100 ok, 61 fail | Total: 2912/4320 (59%)
+  Batch 22: +99 ok, 62 fail | Total: 3012/4320 (62%)
+  Batch 23: +100 ok, 62 fail | Total: 3112/4320 (65%)
+  Batch 24: +100 ok, 62 fail | Total: 3212/4320 (68%)
+  Batch 25: +70 ok, 92 fail | Total: 3312/4320 (71%)

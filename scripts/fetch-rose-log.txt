@@ -1,0 +1,34 @@
+=== Step 1: Fetching prompt list ===
+Total: 33919, pages: 566
+  Page 1: 60 items
+  List progress: 100/565 pages, 6000 items
+  List progress: 200/565 pages, 12000 items
+  List progress: 300/565 pages, 18000 items
+  List progress: 400/565 pages, 24000 items
+  [list page 462] Error: Remote end closed connection without response
+  [list page 463] Error: Remote end closed connection without response
+  [list page 464] Error: Remote end closed connection without response
+  List progress: 500/565 pages, 29820 items
+  [list page 331] Error: The read operation timed out
+  [list page 330] Error: The read operation timed out
+  [list page 332] Error: The read operation timed out
+  [list page 329] Error: The read operation timed out
+  [list page 328] Error: IncompleteRead(58271 bytes read, 5157 more expected)
+List fetch complete: 33439 items
+Saved list to /Users/Lenovo/WorkBuddy/2026-06-17-14-51-24/prompt-hub/scripts/../public/data/rose-prompts-list.json
+
+=== Step 2: Fetching prompt text (33439 items) ===
+Need to fetch: 33439 items
+  Progress: 20/33439 fetched, 0 failed
+  [detail 朋克粉色系动漫少女全身渲染图-1_0debce] Error: Remote end closed connection without response  [detail 充满情感的足球比赛照片-5_b646c3] Error: Remote end closed connection without response  [detail liblib-平面设计-e0312d79-e_2439ea] Error: Remote end closed connection without response  [detail 风暖花繁蝶飞舞-5_018f28] Error: Remote end closed connection without response  [detail pastel-pop-star-风格巴士车身广告-8_e8e] Error: Remote end closed connection without response
+  [detail liblib-风格插画-5def9f25-b_01c181] Error: Remote end closed connection without response
+
+
+
+
+  [detail 新年武侠小说封面-4_9cb0a2] Error: Remote end closed connection without response  [detail 带腰封的漫画书封面提示词-7_6de7be] Error: IncompleteRead(3098 bytes read, 4541 more expected)
+
+  Progress: 220/33439 fetched, 8 failed
+  Progress: 420/33439 fetched, 8 failed
+  Progress: 620/33439 fetched, 8 failed
+  Progress: 820/33439 fetched, 8 failed
