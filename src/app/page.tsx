@@ -16,18 +16,18 @@ import {
 } from '@/components/animata/effects/v2'
 import { SearchBox, AnimateOnView } from './HomePageClient'
 
-// ======== UNIFIED COLOR PALETTE ========
-// One single background color for the ENTIRE page — no more patches
-const BG = '#090916'        // deep space base
-const BG_CARD = '#111122'   // card surface
-const BG_ELEVATE = '#0d0d1f' // elevated sections
+// ======== SINGLE unified color ========
+const BG = '#090916'
 
-// ======== Hero Section ========
+// ======== Hero Section — ONLY section with animated background ========
 function HeroSection({ stats }: { stats: SiteStats }) {
   return (
     <section className="relative min-h-[75vh] flex items-center justify-center overflow-hidden">
-      {/* Full-visibility aurora flow */}
-      <FlowMesh variant="full" />
+      {/* Hero-only: full intensity FlowMesh (monochrome purple) */}
+      <FlowMesh intensity={1.3} />
+
+      {/* Subtle bottom fade to transition smoothly into next section */}
+      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#090916] to-transparent z-10 pointer-events-none" />
 
       {/* Center content */}
       <div className="relative z-20 flex flex-col items-center justify-center px-4 text-center">
@@ -83,7 +83,7 @@ function HeroSection({ stats }: { stats: SiteStats }) {
   )
 }
 
-// ======== Stats Section ========
+// ======== Stats Section — CLEAN, no background canvas ========
 function StatsSection({ stats }: { stats: SiteStats }) {
   const items = [
     { label: 'Total Prompts', value: stats.totalPrompts, suffix: '+' },
@@ -92,15 +92,12 @@ function StatsSection({ stats }: { stats: SiteStats }) {
   ]
 
   return (
-    <section className="relative px-4 py-20 overflow-hidden">
-      {/* Medium intensity flow mesh for visible depth */}
-      <FlowMesh variant="medium" />
-
+    <section className="relative px-4 py-20">
       <div className="mx-auto max-w-5xl relative z-10">
         <div className="grid grid-cols-1 gap-8 text-center sm:grid-cols-3">
           {items.map((item, i) => (
             <AnimateOnView key={item.label} delay={i * 0.15}>
-              <TiltNeonCard className="rounded-3xl border-zinc-700/30 bg-zinc-900/60 p-8 backdrop-blur-md">
+              <TiltNeonCard className="rounded-3xl border-zinc-800/40 bg-zinc-900/50 p-8 backdrop-blur-sm">
                 <div className="text-5xl font-black text-zinc-100 sm:text-6xl">
                   <CounterRoll end={item.value} suffix={item.suffix} duration={2500} />
                 </div>
@@ -131,7 +128,7 @@ function SectionHeader({ title, subtitle, action }: { title: string; subtitle?: 
   )
 }
 
-// ======== Prompt List Section ========
+// ======== Prompt List Section — CLEAN ========
 function PromptListSection({
   items,
   title,
@@ -143,9 +140,7 @@ function PromptListSection({
 }) {
   if (items.length === 0) return null
   return (
-    <section className="relative px-4 py-24 overflow-hidden">
-      <FlowMesh variant="subtle" />
-
+    <section className="relative px-4 py-24">
       <div className="mx-auto max-w-7xl relative z-10">
         <SectionHeader
           title={title}
@@ -170,12 +165,10 @@ function PromptListSection({
   )
 }
 
-// ======== Categories Section ========
+// ======== Categories Section — CLEAN ========
 function CategoriesSection({ categories, categoryImages }: { categories: Category[]; categoryImages?: Record<string, string> }) {
   return (
     <section className="relative px-4 py-24">
-      <FlowMesh variant="warm" />
-
       <div className="mx-auto max-w-7xl relative z-10">
         <AnimateOnView className="mb-16 text-center">
           <h2 className="text-3xl font-bold text-zinc-100 sm:text-4xl">
@@ -231,7 +224,7 @@ function StepIcon({ type }: { type: 'search' | 'copy' | 'create' }) {
   )
 }
 
-// ======== How To Use Section ========
+// ======== How To Use Section — CLEAN ========
 function HowToUseSection() {
   const steps = [
     { type: 'search', title: 'Search & Browse', desc: 'Enter keywords or browse categories to discover the perfect prompt for your creative vision' },
@@ -241,10 +234,8 @@ function HowToUseSection() {
 
   return (
     <section className="relative px-4 py-28 overflow-hidden">
-      <FlowMesh variant="medium" />
-
-      {/* Decorative grid lines */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none" />
+      {/* Decorative grid lines only — no canvas background */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(139,92,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(139,92,246,0.03)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none" />
 
       <div className="mx-auto max-w-5xl relative z-10">
         <AnimateOnView className="mb-20 text-center">
@@ -271,7 +262,7 @@ function HowToUseSection() {
 
           {steps.map((step, i) => (
             <AnimateOnView key={i} delay={i * 0.2}>
-              <TiltNeonCard className="group relative rounded-3xl border border-zinc-700/30 bg-zinc-900/60 p-8 text-center backdrop-blur-sm hover:border-purple-500/40 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/10">
+              <TiltNeonCard className="group relative rounded-3xl border border-zinc-800/40 bg-zinc-900/50 p-8 text-center backdrop-blur-sm hover:border-purple-500/40 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/10">
                 {/* Step number - corner badge */}
                 <div className="absolute -top-3 -right-3 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 via-pink-600 to-purple-700 text-xs font-black text-white shadow-lg shadow-purple-500/40 animate-badge-pop" style={{ animationDelay: `${i * 0.15}s` }}>
                   {i + 1}
@@ -298,11 +289,12 @@ function HowToUseSection() {
   )
 }
 
-// ======== CTA Section ========
+// ======== CTA Section — subtle FlowMesh only ========
 function CTASection() {
   return (
     <section className="relative overflow-hidden px-4 py-28">
-      <FlowMesh variant="full" />
+      {/* CTA gets a gentle flow mesh — much weaker than hero */}
+      <FlowMesh intensity={0.5} />
 
       <div className="relative z-20 mx-auto max-w-3xl text-center">
         <AnimateOnView>
@@ -414,7 +406,7 @@ export default async function HomePage() {
   ])
 
   return (
-    // ONE unified color — NO per-section backgrounds, NO patches
+    // ONE color for entire page — NO per-section backgrounds at all
     <main className="min-h-screen overflow-hidden" style={{ backgroundColor: BG }}>
       <NavBar />
       <HeroSection stats={statsData} />
