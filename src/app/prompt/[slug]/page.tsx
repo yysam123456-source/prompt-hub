@@ -1,31 +1,11 @@
 import type { Metadata, ResolvingMetadata } from 'next'
+import { notFound } from 'next/navigation'
 import PromptDetailClient from './PromptDetailClient'
-
-function loadPromptData() {
-  try {
-    const { readFileSync, existsSync } = require('fs')
-    const { join } = require('path')
-    const possiblePaths = [
-      join(process.cwd(), 'public', 'data', 'prompts.json'),
-      '/Users/Lenovo/WorkBuddy/2026-06-17-14-51-24/prompt-hub/public/data/prompts.json',
-    ]
-    for (const p of possiblePaths) {
-      if (existsSync(p)) {
-        const raw = readFileSync(p, 'utf-8')
-        const data = JSON.parse(raw)
-        return data.items || []
-      }
-    }
-    return []
-  } catch (e) {
-    console.error('Failed to load prompts:', e)
-    return []
-  }
-}
+import { loadPromptsData, loadPromptDetail, loadRelated } from '@/lib/staticData'
 
 export async function generateStaticParams() {
-  const items = loadPromptData()
-  return items.map((item: any) => ({
+  const data = await loadPromptsData()
+  return data.prompts.map((item) => ({
     slug: item.slug,
   }))
 }
@@ -35,13 +15,27 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const { slug } = await params
-  const items = loadPromptData()
-  const item = items.find((i: any) => i.slug === slug)
-  if (!item) return { title: 'Prompt Not Found - Prompt Hub' }
-  const title = item.title?.en || item.title || 'Untitled'
+  const detail = await loadPromptDetail(slug)
+  if (!detail) return { title: 'Prompt Not Found - Prompt Hub' }
+  
+  const baseUrl = 'https://prompt-hub.com' // 替换为实际域名
+  const imageUrl = detail.imageUrl || `${baseUrl}/og-image.png`
+  
   return {
-    title: `${title} - Prompt Hub`,
-    description: `AI prompt: ${title}`,
+    title: `${detail.title} - Prompt Hub`,
+    description: detail.promptZh || detail.prompt?.slice(0, 160) || `AI prompt: ${detail.title}`,
+    openGraph: {
+      title: detail.title,
+      description: detail.promptZh || detail.prompt?.slice(0, 160) || '',
+      images: [imageUrl],
+      type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: detail.title,
+      description: detail.promptZh || detail.prompt?.slice(0, 160) || '',
+      images: [imageUrl],
+    },
   }
 }
 
@@ -49,35 +43,30 @@ export default async function PromptDetailPage(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params
-  const items = loadPromptData()
-  const detail = items.find((i: any) => i.slug === slug)
+  const detail = await loadPromptDetail(slug)
+  const related = detail ? await loadRelated(slug, detail.category, 8) : []
 
   if (!detail) {
-    return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-2xl text-zinc-400 mb-4">Prompt not found</p>
-          <a href="/" className="text-purple-400 hover:text-purple-300 transition-colors">
-            ← Back to Home
-          </a>
-        </div>
-      </div>
-    )
+    notFound()
   }
-
-  const title = detail.title?.en || detail.title || 'Untitled'
-  const promptText = detail.prompt || ''
-  const category = detail.category || 'other'
-  const tags = detail.tags || []
-  const imageUrl = detail.primaryImage?.remoteUrl
 
   return (
     <PromptDetailClient
-      title={title}
-      promptText={promptText}
-      category={category}
-      tags={tags}
-      imageUrl={imageUrl}
+      title={detail.title}
+      promptText={detail.prompt || ''}
+      category={detail.category}
+      categoryZh={detail.categoryZh}
+      tags={detail.tags}
+      imageUrl={detail.imageUrl}
+      promptZh={detail.promptZh}
+      negativePrompt={detail.negativePrompt}
+      images={detail.images}
+      viewCount={detail.viewCount}
+      likeCount={detail.likeCount}
+      sourceSite={detail.sourceSite}
+      sourceUrl={detail.sourceUrl}
+      slug={detail.slug}
+      related={related}
     />
   )
 }

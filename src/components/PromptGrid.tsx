@@ -51,10 +51,10 @@ function PromptCard({ item, index }: { item: any; index: number }) {
   const [imgFailed, setImgFailed] = useState(false)
   const [imgLoaded, setImgLoaded] = useState(false)
 
-  const title = item.title?.en || item.title || 'Untitled'
+  const title = item.title || item.titleEn || 'Untitled'
   const category = item.category || 'other'
   const config = getConfig(category)
-  const imageUrl = item.primaryImage?.remoteUrl
+  const imageUrl = item.imageUrl || item.primaryImage?.remoteUrl || ''
 
   return (
     <motion.div

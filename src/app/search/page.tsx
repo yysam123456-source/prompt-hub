@@ -2,15 +2,19 @@
 
 import Link from 'next/link'
 import { useEffect, useState, Suspense } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { motion } from 'framer-motion'
 import PromptGrid from '@/components/PromptGrid'
 import { useSearchParams } from 'next/navigation'
 
 function SearchContent() {
   const searchParams = useSearchParams()
   const query = searchParams.get('q') || ''
+  const categorySlug = searchParams.get('cat') || 'all'
+  const sortBy = searchParams.get('sort') || 'latest'
+  
   const [allPrompts, setAllPrompts] = useState<any[]>([])
   const [results, setResults] = useState<any[]>([])
+  const [categories, setCategories] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState(query)
 
@@ -20,7 +24,22 @@ function SearchContent() {
       try {
         const res = await fetch('/data/prompts.json')
         const data = await res.json()
-        setAllPrompts(data.items || [])
+        // 兼容两种数据格式：数组 或 { meta, categories, prompts }
+        const items = Array.isArray(data) ? data : (data.prompts || [])
+        setAllPrompts(items)
+
+        // 提取分类
+        const catMap = new Map()
+        items.forEach((item: any) => {
+          const cat = item.category || 'other'
+          if (!catMap.has(cat)) {
+            catMap.set(cat, {
+              slug: cat,
+              label: item.categoryZh || cat.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()),
+            })
+          }
+        })
+        setCategories(Array.from(catMap.values()))
       } catch (e) {
         console.error('Failed to load prompts', e)
       } finally {
@@ -30,22 +49,51 @@ function SearchContent() {
     load()
   }, [])
 
-  // Filter when allPrompts or query changes
+  // Filter and sort
   useEffect(() => {
-    if (!query) {
+    if (!query && categorySlug === 'all') {
       setResults(allPrompts)
       return
     }
-    const q = query.toLowerCase()
-    const filtered = (allPrompts || []).filter((item: any) => {
-      const title = (item.title?.en || item.title || '').toLowerCase()
-      const prompt = (item.prompt || '').toLowerCase()
-      const category = (item.category || '').toLowerCase()
-      const tags = (item.tags || []).join(' ').toLowerCase()
-      return title.includes(q) || prompt.includes(q) || category.includes(q) || tags.includes(q)
-    })
+
+    let filtered = [...allPrompts]
+
+    // 关键词搜索
+    if (query) {
+      const q = query.toLowerCase()
+      filtered = filtered.filter((item: any) => {
+        const title = (item.title || '').toLowerCase()
+        const titleEn = (item.titleEn || '').toLowerCase()
+        const prompt = (item.prompt || '').toLowerCase()
+        const category = (item.category || '').toLowerCase()
+        const tags = (item.tags || []).join(' ').toLowerCase()
+        return title.includes(q) || titleEn.includes(q) || prompt.includes(q) || category.includes(q) || tags.includes(q)
+      })
+    }
+
+    // 分类筛选
+    if (categorySlug !== 'all') {
+      filtered = filtered.filter((item: any) =>
+        (item.category || '').toLowerCase() === categorySlug.toLowerCase()
+      )
+    }
+
+    // 排序
+    if (sortBy === 'trending') {
+      filtered.sort((a: any, b: any) => (b.viewCount || 0) - (a.viewCount || 0))
+    } else if (sortBy === 'most_liked') {
+      filtered.sort((a: any, b: any) => (b.likeCount || 0) - (a.likeCount || 0))
+    } else {
+      // latest
+      filtered.sort((a: any, b: any) => {
+        const aTime = a.approvedAt ? new Date(a.approvedAt).getTime() : 0
+        const bTime = b.approvedAt ? new Date(b.approvedAt).getTime() : 0
+        return bTime - aTime
+      })
+    }
+
     setResults(filtered)
-  }, [allPrompts, query])
+  }, [allPrompts, query, categorySlug, sortBy])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -53,20 +101,24 @@ function SearchContent() {
     const input = form.querySelector('input[name="q"]') as HTMLInputElement
     const newQ = input.value.trim()
     if (newQ) {
-      window.location.href = `/search?q=${encodeURIComponent(newQ)}`
+      const params = new URLSearchParams()
+      params.set('q', newQ)
+      if (categorySlug !== 'all') params.set('cat', categorySlug)
+      if (sortBy !== 'latest') params.set('sort', sortBy)
+      window.location.href = `/search?${params.toString()}`
     }
   }
 
   return (
     <main className="min-h-screen bg-zinc-950">
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-md">
+      <nav className="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/90 backdrop-blur-md">
         <div className="mx-auto max-w-7xl flex items-center gap-4 px-4 py-3">
-          <Link href="/" className="flex items-center gap-2 shrink-0">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-sm">
+          <Link href="/" className="flex items-center gap-2 shrink-0 group">
+            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-sm transition-transform group-hover:scale-105">
               P
             </div>
-            <span className="text-lg font-bold text-zinc-100">ImgPrompt</span>
+            <span className="text-lg font-bold text-zinc-100 hidden sm:block">Prompt Hub</span>
           </Link>
           <form onSubmit={handleSearch} className="flex gap-2 flex-1 max-w-2xl">
             <div className="relative flex-1">
@@ -103,12 +155,83 @@ function SearchContent() {
           </p>
         </motion.div>
 
+        {/* Filters */}
+        {!loading && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="mb-8 space-y-4"
+          >
+            {/* Category filter */}
+            <div className="flex flex-wrap gap-2">
+              <span className="text-sm text-zinc-500 mr-2 self-center">Category:</span>
+              <Link
+                href={`/search?q=${encodeURIComponent(query)}&sort=${sortBy}`}
+                className={`rounded-full border px-3 py-1 text-xs transition-colors ${
+                  categorySlug === 'all'
+                    ? 'border-purple-500 bg-purple-500/20 text-purple-300'
+                    : 'border-zinc-800 bg-zinc-900/60 text-zinc-400 hover:border-purple-500/50 hover:text-purple-300'
+                }`}
+              >
+                All
+              </Link>
+              {categories.slice(0, 10).map((cat: any) => (
+                <Link
+                  key={cat.slug}
+                  href={`/search?q=${encodeURIComponent(query)}&cat=${cat.slug}&sort=${sortBy}`}
+                  className={`rounded-full border px-3 py-1 text-xs transition-colors ${
+                    categorySlug === cat.slug
+                      ? 'border-purple-500 bg-purple-500/20 text-purple-300'
+                      : 'border-zinc-800 bg-zinc-900/60 text-zinc-400 hover:border-purple-500/50 hover:text-purple-300'
+                  }`}
+                >
+                  {cat.label || cat.slug}
+                </Link>
+              ))}
+            </div>
+
+            {/* Sort tabs */}
+            <div className="flex gap-2">
+              {[
+                { key: 'latest', label: 'Latest' },
+                { key: 'trending', label: 'Trending' },
+                { key: 'most_liked', label: 'Most Liked' },
+              ].map(tab => (
+                <Link
+                  key={tab.key}
+                  href={`/search?q=${encodeURIComponent(query)}&cat=${categorySlug}&sort=${tab.key}`}
+                  className={`rounded-lg border px-4 py-2 text-sm transition-colors ${
+                    sortBy === tab.key
+                      ? 'border-purple-500 bg-purple-500/20 text-purple-300'
+                      : 'border-zinc-800 bg-zinc-900/60 text-zinc-400 hover:border-purple-500/50 hover:text-purple-300'
+                  }`}
+                >
+                  {tab.label}
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
         {/* Results */}
         {loading ? (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
             {[...Array(20)].map((_, i) => (
               <div key={i} className="aspect-square rounded-2xl bg-zinc-900 animate-pulse" />
             ))}
+          </div>
+        ) : results.length === 0 ? (
+          <div className="py-20 text-center">
+            <div className="mb-4 text-6xl">🔍</div>
+            <h3 className="mb-2 text-xl font-semibold text-zinc-300">No prompts found</h3>
+            <p className="text-zinc-500 mb-6">Try different keywords or browse by category</p>
+            <Link
+              href="/category"
+              className="rounded-xl border border-purple-500 bg-purple-500/20 px-6 py-3 text-sm text-purple-300 transition-colors hover:bg-purple-500/30"
+            >
+              Browse Categories →
+            </Link>
           </div>
         ) : (
           <PromptGrid items={results} />
