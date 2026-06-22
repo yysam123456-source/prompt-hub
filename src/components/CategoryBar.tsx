@@ -107,8 +107,8 @@ export default function CategoryBar({ categories }: { categories?: any[] }) {
   if (!isClient) return null
 
   const cats: CategoryWithImage[] = (categories || []).map((cat: any) => ({
-    slug: cat.slug || cat,
-    name: cat.name || cat,
+    slug: typeof cat === 'string' ? cat : (cat.slug || ''),
+    name: cat.name || cat.label || cat.labelEn || (typeof cat === 'string' ? cat : cat.slug || ''),
     count: cat.count,
     imageUrl: cat.imageUrl,
   }))

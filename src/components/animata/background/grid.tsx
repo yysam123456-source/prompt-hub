@@ -54,7 +54,7 @@ export default function Grid({
       }}
       className={className}
     >
-      {children ?? <Placeholder size={size} />}
+      {children}
     </div>
   );
 }
