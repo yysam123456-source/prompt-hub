@@ -46,7 +46,23 @@ function getConfig(category: string) {
   return CATEGORY_CONFIG[category] || DEFAULT_CONFIG
 }
 
-export default function PromptGrid({ items }: { items: any[] }) {
+// Highlight matching text in a string
+function highlightText(text: string, query: string) {
+  if (!query || !text) return text
+  const lowerText = text.toLowerCase()
+  const lowerQuery = query.toLowerCase()
+  const idx = lowerText.indexOf(lowerQuery)
+  if (idx === -1) return text
+  return (
+    <>
+      {text.slice(0, idx)}
+      <mark className="bg-purple-500/30 text-purple-200 rounded px-0.5">{text.slice(idx, idx + query.length)}</mark>
+      {text.slice(idx + query.length)}
+    </>
+  )
+}
+
+export default function PromptGrid({ items, highlightQuery }: { items: any[]; highlightQuery?: string }) {
   if (!items || items.length === 0) {
     return (
       <div className="text-center py-20 text-zinc-500">
@@ -60,14 +76,14 @@ export default function PromptGrid({ items }: { items: any[] }) {
   return (
     <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
       {items.map((item: any, idx: number) => (
-        <PromptCard key={item.slug} item={item} index={idx} />
+        <PromptCard key={item.slug} item={item} index={idx} highlightQuery={highlightQuery} />
       ))}
     </div>
   )
 }
 
 
-export function PromptCard({ item, index }: { item: any; index: number }) {
+export function PromptCard({ item, index, highlightQuery }: { item: any; index: number; highlightQuery?: string }) {
   const [imgFailed, setImgFailed] = useState(false)
   const [imgLoaded, setImgLoaded] = useState(false)
 
@@ -141,7 +157,7 @@ export function PromptCard({ item, index }: { item: any; index: number }) {
         {/* Info area below image */}
         <div className="p-2.5 sm:p-3 transition-colors duration-200 group-hover:bg-purple-500/[0.03]">
           <h3 className="font-medium text-xs sm:text-sm text-zinc-200 line-clamp-2 group-hover:text-purple-400 transition-colors leading-snug min-h-[2.5rem]">
-            {title}
+            {highlightQuery ? highlightText(title, highlightQuery) : title}
           </h3>
         </div>
       </Link>
