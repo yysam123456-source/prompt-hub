@@ -67,7 +67,7 @@ export default function PromptGrid({ items }: { items: any[] }) {
 }
 
 
-function PromptCard({ item, index }: { item: any; index: number }) {
+export function PromptCard({ item, index }: { item: any; index: number }) {
   const [imgFailed, setImgFailed] = useState(false)
   const [imgLoaded, setImgLoaded] = useState(false)
 
