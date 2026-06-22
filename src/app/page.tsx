@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import CategoryBar from '@/components/CategoryBar'
 import PromptGrid from '@/components/PromptGrid'
-import { loadStats, loadCategories, loadTrending, loadLatest } from '@/lib/staticData.server'
+import { loadStats, loadCategories, loadTrending, loadLatest, loadCategoryImages } from '@/lib/staticData.server'
 import type { SiteStats, Category, PromptCard } from '@/lib/types'
 import AnimatedGradientText from '@/components/animata/text/animated-gradient-text'
 import Grid from '@/components/animata/background/grid'
@@ -133,7 +133,7 @@ function PromptListSection({
 }
 
 // ======== Categories Section ========
-function CategoriesSection({ categories }: { categories: Category[] }) {
+function CategoriesSection({ categories, categoryImages }: { categories: Category[]; categoryImages?: Record<string, string> }) {
   return (
     <section className="px-4 py-16">
       <div className="mx-auto max-w-7xl">
@@ -141,7 +141,7 @@ function CategoriesSection({ categories }: { categories: Category[] }) {
           <h2 className="text-3xl font-bold text-zinc-100">探索分类</h2>
           <p className="mt-2 text-zinc-400">按分类浏览，找到你需要的提示词</p>
         </div>
-        <CategoryBar categories={categories} />
+        <CategoryBar categories={categories} categoryImages={categoryImages} />
       </div>
     </section>
   )
@@ -263,11 +263,12 @@ function NavBar() {
 // ======== Main Page (Server Component) ========
 export default async function HomePage() {
   // 服务端加载数据
-  const [statsData, catData, trendingData, latestData] = await Promise.all([
+  const [statsData, catData, trendingData, latestData, catImages] = await Promise.all([
     loadStats(),
     loadCategories(),
     loadTrending(8),
     loadLatest(8),
+    loadCategoryImages(),
   ])
 
   return (
@@ -280,8 +281,8 @@ export default async function HomePage() {
       {/* 统计栏 — 服务端渲染 */}
       <StatsSection stats={statsData} />
 
-      {/* 分类入口 — 服务端渲染 */}
-      <CategoriesSection categories={catData} />
+      {/* 分类入口 — 服务端渲染，带封面图 */}
+      <CategoriesSection categories={catData} categoryImages={catImages} />
 
       <div className="border-t border-zinc-800/50" />
 

@@ -95,6 +95,18 @@ export async function loadLatest(limit = 8): Promise<PromptCard[]> {
   return items
 }
 
+/** 获取每个分类的封面图（取该分类下第一条有图片的数据） */
+export async function loadCategoryImages(): Promise<Record<string, string>> {
+  const data = getDataSync()
+  const map: Record<string, string> = {}
+  for (const item of data.prompts) {
+    if (item.category && item.imageUrl && !map[item.category]) {
+      map[item.category] = item.imageUrl
+    }
+  }
+  return map
+}
+
 export function parseArguments(prompt: string): PromptArgument[] {
   if (!prompt) return []
   const regex = /\{argument\s+name=["']([^"']+)["']\s+default=["']([^"']*)["']\}/g

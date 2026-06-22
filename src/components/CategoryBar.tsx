@@ -4,20 +4,24 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 
-// Category visual config - gradients as fallback when real image fails
-const CATEGORY_CONFIG: Record<string, { name: string; gradient: string; fallbackEmoji: string }> = {
-  'portrait':     { name: 'Portrait',     gradient: 'from-rose-600/90 to-pink-900/90',   fallbackEmoji: '👤' },
-  'landscape':    { name: 'Landscape',    gradient: 'from-emerald-600/90 to-teal-900/90',  fallbackEmoji: '🏔️' },
-  'fantasy':      { name: 'Fantasy',      gradient: 'from-violet-600/90 to-purple-900/90', fallbackEmoji: '🐉' },
-  'sci-fi':       { name: 'Sci-Fi',       gradient: 'from-blue-600/90 to-cyan-900/90',     fallbackEmoji: '🚀' },
-  'anime':        { name: 'Anime',        gradient: 'from-pink-600/90 to-rose-900/90',     fallbackEmoji: '🎌' },
-  'abstract':     { name: 'Abstract',     gradient: 'from-amber-600/90 to-orange-900/90',  fallbackEmoji: '🎨' },
-  'architecture': { name: 'Architecture', gradient: 'from-stone-600/90 to-zinc-900/90',    fallbackEmoji: '🏛️' },
-  'animal':       { name: 'Animal',       gradient: 'from-lime-600/90 to-green-900/90',    fallbackEmoji: '🦁' },
-  'food':         { name: 'Food',         gradient: 'from-red-600/90 to-amber-900/90',     fallbackEmoji: '🍜' },
-  'fashion':      { name: 'Fashion',      gradient: 'from-fuchsia-600/90 to-pink-900/90',  fallbackEmoji: '👗' },
-  'horror':       { name: 'Horror',       gradient: 'from-gray-800/95 to-black/95',        fallbackEmoji: '👻' },
-  'cyberpunk':    { name: 'Cyberpunk',    gradient: 'from-yellow-600/90 to-amber-900/90',   fallbackEmoji: '🌆' },
+// 匹配实际数据中的 category slug（来自 prompts.sorry.ink API）
+const CATEGORY_CONFIG: Record<string, { label: string; gradient: string; emoji: string }> = {
+  'other':              { label: '其他',       gradient: 'from-zinc-600/90 to-zinc-800/90',     emoji: '📦' },
+  'graphic_design':     { label: '平面设计',   gradient: 'from-blue-600/90 to-indigo-900/90',    emoji: '✏️' },
+  'anime_game':         { label: '动漫游戏',   gradient: 'from-pink-600/90 to-rose-900/90',      emoji: '🎮' },
+  'photography':        { label: '摄影写真',   gradient: 'from-amber-600/90 to-orange-900/90',   emoji: '📷' },
+  'branding_visual':    { label: '品牌视觉',   gradient: 'from-violet-600/90 to-purple-900/90',  emoji: '🎨' },
+  'character':          { label: '角色人物',   gradient: 'from-rose-600/90 to-red-900/90',      emoji: '👤' },
+  'illustration':       { label: '风格插画',   gradient: 'from-teal-600/90 to-cyan-900/90',     emoji: '🖌️' },
+  'ecommerce':          { label: '电商营销',   gradient: 'from-green-600/90 to-emerald-900/90',  emoji: '🛒' },
+  'tech_scifi':         { label: '科技科幻',   gradient: 'from-cyan-600/90 to-blue-900/90',     emoji: '🚀' },
+  'novel_story':        { label: '小说推文',   gradient: 'from-fuchsia-600/90 to-pink-900/90',   emoji: '📖' },
+  'architecture_interior': { label: '建筑室内', gradient: 'from-stone-600/90 to-warmGray-900/90', emoji: '🏛️' },
+  'landscape_scene':    { label: '风景场景',   gradient: 'from-emerald-600/90 to-green-900/90',  emoji: '🏔️' },
+  'food':               { label: '美食餐饮',   gradient: 'from-red-600/90 to-orange-900/90',     emoji: '🍜' },
+  'cultural_products':  { label: '文创周边',   gradient: 'from-yellow-600/90 to-amber-900/90',  emoji: '🎁' },
+  'creative_play':      { label: '创意玩法',   gradient: 'from-lime-600/90 to-yellow-900/90',   emoji: '💡' },
+  'product_design':     { label: '产品设计',   gradient: 'from-slate-600/90 to-gray-900/90',    emoji: '📱' },
 }
 
 export interface CategoryWithImage {
@@ -32,11 +36,11 @@ function CategoryCard({ cat, idx }: { cat: CategoryWithImage; idx: number }) {
   const [imgLoaded, setImgLoaded] = useState(false)
 
   const config = CATEGORY_CONFIG[cat.slug] || {
-    name: cat.slug,
+    label: cat.name || cat.slug,
     gradient: 'from-zinc-700/90 to-zinc-900/90',
-    fallbackEmoji: '💡',
+    emoji: '💡',
   }
-  const href = `/category?slug=${cat.slug}`
+  const href = `/category?slug=${encodeURIComponent(cat.slug)}`
   const hasRealImage = !!cat.imageUrl && !imgFailed
 
   return (
@@ -52,16 +56,16 @@ function CategoryCard({ cat, idx }: { cat: CategoryWithImage; idx: number }) {
         style={{ aspectRatio: '1 / 1' }}
       >
         <div className={`relative w-full h-full bg-zinc-900`}>
-          {/* Shimmer loading - only shows while image is loading */}
+          {/* Shimmer loading */}
           {cat.imageUrl && !imgFailed && !imgLoaded && (
             <div className="absolute inset-0 image-loading-shimmer z-10" />
           )}
 
-          {/* Real image with error handling */}
+          {/* Real image */}
           {cat.imageUrl && !imgFailed && (
             <img
               src={cat.imageUrl}
-              alt={`${config.name} category`}
+              alt={`${config.label} category`}
               loading="lazy"
               className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
               onLoad={() => setImgLoaded(true)}
@@ -72,17 +76,17 @@ function CategoryCard({ cat, idx }: { cat: CategoryWithImage; idx: number }) {
           {/* Dark overlay for text readability */}
           <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors" />
 
-          {/* Fallback when no image or image failed - show gradient bg */}
+          {/* Fallback - gradient bg with emoji when no image or failed */}
           {(!cat.imageUrl || imgFailed) && (
             <div className={`absolute inset-0 bg-gradient-to-br ${config.gradient} flex items-center justify-center`}>
-              <span className="text-5xl opacity-50 drop-shadow-lg">{config.fallbackEmoji}</span>
+              <span className="text-5xl opacity-60 drop-shadow-lg">{config.emoji}</span>
             </div>
           )}
 
           {/* Content overlay */}
           <div className="relative z-10 flex flex-col justify-end h-full p-4">
             <h3 className="font-semibold text-white text-sm drop-shadow-lg">
-              {cat.name || config.name}
+              {config.label || cat.name}
             </h3>
 
             {'count' in cat && cat.count !== undefined && (
@@ -97,7 +101,10 @@ function CategoryCard({ cat, idx }: { cat: CategoryWithImage; idx: number }) {
   )
 }
 
-export default function CategoryBar({ categories }: { categories?: any[] }) {
+export default function CategoryBar({ categories, categoryImages }: {
+  categories?: any[]
+  categoryImages?: Record<string, string>
+}) {
   const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
@@ -106,12 +113,16 @@ export default function CategoryBar({ categories }: { categories?: any[] }) {
 
   if (!isClient) return null
 
-  const cats: CategoryWithImage[] = (categories || []).map((cat: any) => ({
-    slug: typeof cat === 'string' ? cat : (cat.slug || ''),
-    name: cat.name || cat.label || cat.labelEn || (typeof cat === 'string' ? cat : cat.slug || ''),
-    count: cat.count,
-    imageUrl: cat.imageUrl,
-  }))
+  const cats: CategoryWithImage[] = (categories || []).map((cat: any) => {
+    const slug = typeof cat === 'string' ? cat : (cat.slug || '')
+    return {
+      slug,
+      name: cat.name || cat.label || (typeof cat === 'string' ? cat : cat.slug || ''),
+      count: cat.count,
+      // 优先使用传入的封面图映射
+      imageUrl: categoryImages?.[slug] || cat.imageUrl,
+    }
+  })
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">

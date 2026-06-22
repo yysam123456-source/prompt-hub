@@ -67,7 +67,27 @@ export default function PromptDetailClient({
 
   const displayPrompt = showZh && promptZh ? promptZh : promptText
 
-  // Parse argument placeholders: {argument name="xxx" default="yyy"}
+  // Detect if prompt is structured JSON format
+  const isJsonPrompt = (() => {
+    const trimmed = (promptText || '').trim()
+    return (trimmed.startsWith('{') || trimmed.startsWith('[')) && !trimmed.includes('{argument')
+  })()
+
+  // Pretty-print JSON prompts for readability
+  const formattedDisplay = isJsonPrompt
+    ? tryPrettyPrint(displayPrompt)
+    : displayPrompt
+
+  function tryPrettyPrint(text: string): string {
+    try {
+      const parsed = JSON.parse(text)
+      return JSON.stringify(parsed, null, 2)
+    } catch {
+      return text
+    }
+  }
+
+  // Parse argument placeholders: {argument name="xxx" default="yyy"} (only for non-JSON prompts)
   const argRegex = /\{argument\s+name="([^"]+)"(?:\s+default="([^"]*)")?\s*\}/g
   const args: Array<{name: string, defaultValue: string}> = []
   let match
@@ -91,7 +111,7 @@ export default function PromptDetailClient({
   }, [hasArguments])
 
   function getFinalPrompt() {
-    let final = displayPrompt
+    let final = formattedDisplay
     if (hasArguments) {
       args.forEach(arg => {
         const placeholder = `{argument name="${arg.name}"${arg.defaultValue ? ` default="${arg.defaultValue}"` : ''}}`
@@ -224,6 +244,11 @@ export default function PromptDetailClient({
             <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
               <h2 className="text-xl font-semibold text-zinc-100 flex items-center gap-2">
                 <span className="text-purple-400">✦</span> Prompt Text
+                {isJsonPrompt && (
+                  <span className="text-xs rounded-full bg-amber-500/20 text-amber-400 px-2 py-0.5 border border-amber-500/30">
+                    Structured JSON
+                  </span>
+                )}
               </h2>
               <div className="flex gap-2">
                 {promptZh && (
@@ -267,8 +292,8 @@ export default function PromptDetailClient({
             )}
 
             <div className="relative rounded-2xl border border-zinc-800 bg-zinc-900/80 p-5 sm:p-6">
-              <pre className="whitespace-pre-wrap text-sm sm:text-base leading-relaxed text-zinc-300 font-mono overflow-x-auto">
-                {displayPrompt}
+              <pre className={`whitespace-pre-wrap text-sm sm:text-base leading-relaxed text-zinc-300 overflow-x-auto ${isJsonPrompt ? 'text-xs' : 'font-mono'}`}>
+                {formattedDisplay}
               </pre>
             </div>
 
