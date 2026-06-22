@@ -5,22 +5,23 @@ import { loadStats, loadCategories, loadTrending, loadLatest, loadCategoryImages
 import type { SiteStats, Category, PromptCard } from '@/lib/types'
 import AnimatedGradientText from '@/components/animata/text/animated-gradient-text'
 import Grid from '@/components/animata/background/grid'
-import HomePageClient, { SearchBox, AnimateOnView, AnimateCard } from './HomePageClient'
+import { SearchBox, AnimateOnView, AnimateCard } from './HomePageClient'
 
-// ======== Hero Section (Server Component — 静态渲染) ========
+// ======== Hero Section (Server Component — static render) ========
 function HeroSection({ stats }: { stats: SiteStats }) {
   return (
     <section className="relative overflow-hidden">
+      {/* Animated background layers */}
       <div className="absolute inset-0 -z-10 opacity-20">
-        <Grid color="#3b82f6" size={40} style={{ backgroundColor: 'transparent' }} />
+        <Grid color="#a855f7" size={40} style={{ backgroundColor: 'transparent' }} />
       </div>
       <div className="absolute inset-0 -z-20 bg-gradient-to-br from-purple-500/5 via-transparent to-pink-500/5" />
-      <div className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-purple-500/10 blur-3xl -z-10" />
-      <div className="absolute right-1/4 bottom-1/4 h-96 w-96 rounded-full bg-pink-500/10 blur-3xl -z-10" />
+      <div className="animate-float absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-purple-500/10 blur-3xl -z-10" />
+      <div className="animate-float-delay absolute right-1/4 bottom-1/4 h-96 w-96 rounded-full bg-pink-500/10 blur-3xl -z-10" />
 
       <div className="relative z-10 flex min-h-[60vh] flex-col items-center justify-center px-4 py-20 text-center sm:py-28">
-        {/* Badge */}
-        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-500/10 px-4 py-1.5 text-sm text-purple-300">
+        {/* Badge — animated glow */}
+        <div className="animate-scale-in mb-6 inline-flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-500/10 px-4 py-1.5 text-sm text-purple-300 backdrop-blur-sm">
           <span className="relative flex h-2 w-2">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-purple-400 opacity-75" />
             <span className="relative inline-flex h-full w-2 rounded-full bg-purple-400" />
@@ -28,31 +29,31 @@ function HeroSection({ stats }: { stats: SiteStats }) {
           {stats.totalPrompts}+ curated GPT Image 2 prompts
         </div>
 
-        {/* 主标题 */}
-        <h1 className="mb-4 text-4xl font-bold tracking-tight text-zinc-100 sm:text-5xl lg:text-6xl">
-          探索{' '}
-          <AnimatedGradientText className="text-4xl sm:text-5xl lg:text-6xl font-bold">
-            AI 提示词
+        {/* Main heading with gradient animation */}
+        <h1 className="animate-fade-in-up mb-4 text-4xl font-bold tracking-tight text-zinc-100 sm:text-5xl lg:text-6xl">
+          Explore{' '}
+          <AnimatedGradientText className="animate-text-shimmer text-4xl font-bold sm:text-5xl lg:text-6xl">
+            AI Prompts
           </AnimatedGradientText>
           <br />
-          激发创作灵感
+          <span className="animate-fade-in-delay-2">Ignite Your Creativity</span>
         </h1>
 
-        {/* 副标题 */}
-        <p className="mb-8 max-w-xl text-base text-zinc-400 sm:text-lg">
-          免费使用高质量 GPT Image 2 提示词，复制即可生成惊艳 AI 图像
+        {/* Subtitle */}
+        <p className="animate-fade-in-delay-3 mb-8 max-w-xl text-base text-zinc-400 sm:text-lg">
+          Free high-quality GPT Image 2 prompts. Copy and generate stunning AI images instantly.
         </p>
 
-        {/* 搜索框 — Client Component */}
+        {/* Search box — Client Component */}
         <SearchBox />
 
-        {/* 快捷标签 */}
+        {/* Quick tags */}
         <div className="mt-6 flex flex-wrap justify-center gap-2">
-          {['海报设计', '赛博朋克', '头像', '科幻', '水彩'].map(tag => (
+          {['Poster Design', 'Cyberpunk', 'Portrait', 'Sci-Fi', 'Watercolor'].map(tag => (
             <Link
               key={tag}
               href={`/search?q=${encodeURIComponent(tag)}`}
-              className="rounded-full border border-zinc-800 bg-zinc-900/60 px-3 py-1 text-xs text-zinc-400 backdrop-blur-sm transition-colors hover:border-purple-500/50 hover:text-purple-300"
+              className="rounded-full border border-zinc-800 bg-zinc-900/60 px-3 py-1 text-xs text-zinc-400 backdrop-blur-sm transition-all duration-200 hover:border-purple-500/50 hover:text-purple-300 hover:shadow-lg hover:shadow-purple-500/10"
             >
               {tag}
             </Link>
@@ -66,9 +67,9 @@ function HeroSection({ stats }: { stats: SiteStats }) {
 // ======== Stats Section ========
 function StatsSection({ stats }: { stats: SiteStats }) {
   const items = [
-    { label: '提示词总数', value: stats.totalPrompts, suffix: '+' },
-    { label: '分类数量', value: stats.totalCategories, suffix: '' },
-    { label: '贡献者', value: stats.totalContributors, suffix: '+' },
+    { label: 'Total Prompts', value: stats.totalPrompts, suffix: '+' },
+    { label: 'Categories', value: stats.totalCategories, suffix: '' },
+    { label: 'Contributors', value: stats.totalContributors, suffix: '+' },
   ]
 
   return (
@@ -76,12 +77,14 @@ function StatsSection({ stats }: { stats: SiteStats }) {
       <div className="mx-auto max-w-4xl">
         <div className="grid grid-cols-3 gap-4 text-center">
           {items.map((item) => (
-            <div key={item.label}>
-              <div className="text-2xl font-bold text-purple-400 sm:text-3xl">
-                {item.value}{item.suffix}
+            <AnimateCard key={item.label}>
+              <div>
+                <div className="text-2xl font-bold text-purple-400 sm:text-3xl">
+                  {item.value}{item.suffix}
+                </div>
+                <div className="mt-1 text-xs text-zinc-500 sm:text-sm">{item.label}</div>
               </div>
-              <div className="mt-1 text-xs text-zinc-500 sm:text-sm">{item.label}</div>
-            </div>
+            </AnimateCard>
           ))}
         </div>
       </div>
@@ -122,7 +125,7 @@ function PromptListSection({
           subtitle={subtitle}
           action={
             <Link href="/category" className="text-sm text-purple-400 transition-colors hover:text-purple-300">
-              查看全部 →
+              View All &rarr;
             </Link>
           }
         />
@@ -137,39 +140,39 @@ function CategoriesSection({ categories, categoryImages }: { categories: Categor
   return (
     <section className="px-4 py-16">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-8 text-center">
-          <h2 className="text-3xl font-bold text-zinc-100">探索分类</h2>
-          <p className="mt-2 text-zinc-400">按分类浏览，找到你需要的提示词</p>
-        </div>
+        <AnimateOnView className="mb-8 text-center">
+          <h2 className="text-3xl font-bold text-zinc-100">Explore Categories</h2>
+          <p className="mt-2 text-zinc-400">Browse by category to find the perfect prompt</p>
+        </AnimateOnView>
         <CategoryBar categories={categories} categoryImages={categoryImages} />
       </div>
     </section>
   )
 }
 
-// ======== How To Use Section (with animation via client wrapper) ========
+// ======== How To Use Section ========
 function HowToUseSection() {
   const steps = [
-    { icon: '🔍', title: '搜索提示词', desc: '在搜索框输入关键词，或点击分类浏览，找到你想要的提示词' },
-    { icon: '📋', title: '复制提示词', desc: '点击提示词卡片进入详情页，复制完整提示词文本（支持参数替换）' },
-    { icon: '🎨', title: '生成图像', desc: '将复制的提示词粘贴到 GPT Image 2 或其他 AI 图像生成平台，开始创作' },
+    { icon: '🔍', title: 'Search', desc: 'Enter keywords in the search box or browse categories to find your ideal prompt' },
+    { icon: '📋', title: 'Copy', desc: 'Click a prompt card to view details and copy the full prompt text (with parameter replacement)' },
+    { icon: '🎨', title: 'Create', desc: 'Paste the copied prompt into GPT Image 2 or any AI image generator and start creating' },
   ]
 
   return (
     <section className="border-t border-zinc-800/50 px-4 py-20">
       <div className="mx-auto max-w-4xl">
         <AnimateOnView className="mb-12 text-center">
-          <h2 className="text-3xl font-bold text-zinc-100">如何使用</h2>
-          <p className="mt-2 text-zinc-400">3 步快速上手，复制即使用</p>
+          <h2 className="text-3xl font-bold text-zinc-100">How It Works</h2>
+          <p className="mt-2 text-zinc-400">3 simple steps to create stunning AI art</p>
         </AnimateOnView>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
           {steps.map((step, i) => (
             <AnimateCard key={i} delay={i * 0.15}>
-              <div className="group relative rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 text-center transition-colors hover:border-purple-500/30">
+              <div className="group relative rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 text-center transition-all duration-300 hover:border-purple-500/30 hover:shadow-lg hover:shadow-purple-500/5">
                 <div className="mb-4 text-4xl">{step.icon}</div>
                 <div className="mb-2 text-lg font-semibold text-zinc-100">
-                  {i + 1}. {step.title}
+                  Step {i + 1}: {step.title}
                 </div>
                 <p className="text-sm text-zinc-400">{step.desc}</p>
                 {i < steps.length - 1 && (
@@ -192,20 +195,20 @@ function CTASection() {
       <div className="relative z-10 mx-auto max-w-2xl text-center">
         <AnimateOnView>
           <h2 className="mb-4 text-3xl font-bold text-zinc-100 sm:text-4xl">
-            开始你的 <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">AI 创作之旅</span>
+            Start Your <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">AI Creative Journey</span>
           </h2>
         </AnimateOnView>
         <AnimateOnView delay={0.15}>
           <p className="mb-8 text-zinc-400">
-            免费使用，无需注册。立即探索 {new Date().getFullYear()} 最热门的 GPT Image 2 提示词
+            Free to use, no registration required. Explore the hottest GPT Image 2 prompts of {new Date().getFullYear()}
           </p>
         </AnimateOnView>
         <AnimateOnView delay={0.3}>
           <Link
             href="/category"
-            className="inline-block rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-3.5 text-base font-medium text-white transition-opacity hover:opacity-90"
+            className="inline-block rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-3.5 text-base font-medium text-white transition-all duration-200 hover:opacity-90 hover:shadow-lg hover:shadow-purple-500/25"
           >
-            开始探索
+            Start Exploring
           </Link>
         </AnimateOnView>
       </div>
@@ -219,18 +222,18 @@ function Footer() {
     <footer className="border-t border-zinc-800 px-4 py-10">
       <div className="mx-auto max-w-7xl flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 text-sm font-bold text-white">P</div>
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 text-sm font-bold text-white transition-transform group-hover:scale-105">P</div>
           <span className="text-lg font-bold text-zinc-100">Prompt Hub</span>
         </div>
         <p className="text-xs text-zinc-500">
-          © {new Date().getFullYear()} Prompt Hub · 数据来源：
+          &copy; {new Date().getFullYear()} Prompt Hub &middot; Data source:
           <a href="https://youmind.com/gpt-image-2-prompts" target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:text-purple-300 ml-1">YouMind</a>
           {' / '}
           <a href="https://prompts.sorry.ink" target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:text-purple-300">Image-Prompts</a>
         </p>
         <div className="flex gap-4">
           <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-sm text-zinc-500 transition-colors hover:text-purple-400">GitHub</a>
-          <Link href="/about" className="text-sm text-zinc-500 transition-colors hover:text-purple-400">关于</Link>
+          <Link href="/about" className="text-sm text-zinc-500 transition-colors hover:text-purple-400">About</Link>
         </div>
       </div>
     </footer>
@@ -249,11 +252,11 @@ function NavBar() {
         <form action="/search" method="GET" className="flex gap-2 flex-1 max-w-lg ml-auto">
           <div className="relative flex-1">
             <svg className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 11-14 0 7 7 0 0114 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-            <input name="q" type="text" placeholder="搜索提示词..." className="w-full rounded-xl border border-zinc-800 bg-zinc-900/80 py-2 pl-10 pr-4 text-sm text-zinc-100 placeholder-zinc-500 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500/20" />
+            <input name="q" type="text" placeholder="Search prompts..." className="w-full rounded-xl border border-zinc-800 bg-zinc-900/80 py-2 pl-10 pr-4 text-sm text-zinc-100 placeholder-zinc-500 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500/20" />
           </div>
-          <button type="submit" className="rounded-xl bg-purple-600 px-4 py-2 text-sm text-white transition-colors hover:bg-purple-700">搜索</button>
+          <button type="submit" className="rounded-xl bg-purple-600 px-4 py-2 text-sm text-white transition-colors hover:bg-purple-700">Search</button>
         </form>
       </div>
     </nav>
@@ -262,7 +265,7 @@ function NavBar() {
 
 // ======== Main Page (Server Component) ========
 export default async function HomePage() {
-  // 服务端加载数据
+  // Server-side data loading
   const [statsData, catData, trendingData, latestData, catImages] = await Promise.all([
     loadStats(),
     loadCategories(),
@@ -275,41 +278,41 @@ export default async function HomePage() {
     <main className="min-h-screen bg-zinc-950">
       <NavBar />
 
-      {/* Hero — 服务端渲染，数据直接可用 */}
+      {/* Hero — server rendered, data available immediately */}
       <HeroSection stats={statsData} />
 
-      {/* 统计栏 — 服务端渲染 */}
+      {/* Stats bar — server rendered */}
       <StatsSection stats={statsData} />
 
-      {/* 分类入口 — 服务端渲染，带封面图 */}
+      {/* Category entry — server rendered with cover images */}
       <CategoriesSection categories={catData} categoryImages={catImages} />
 
       <div className="border-t border-zinc-800/50" />
 
-      {/* 热门提示词 — 服务端渲染 */}
-      <PromptListSection items={trendingData} title="🔥 热门提示词" subtitle="浏览量最高的提示词" />
+      {/* Trending prompts — server rendered */}
+      <PromptListSection items={trendingData} title="🔥 Trending Prompts" subtitle="Most viewed prompts" />
 
       <div className="border-t border-zinc-800/50" />
 
-      {/* 最新提示词 — 服务端渲染 */}
-      <PromptListSection items={latestData} title="🆕 最新提示词" subtitle="最新收录的优质提示词" />
+      {/* Latest prompts — server rendered */}
+      <PromptListSection items={latestData} title="✨ Latest Prompts" subtitle="Newly added quality prompts" />
 
       <div className="border-t border-zinc-800/50" />
 
-      {/* 精选 — 复用热门数据前4条 */}
+      {/* Editor's Picks — reuse top 4 from trending */}
       {trendingData.length > 0 && (
         <>
-          <PromptListSection items={trendingData.slice(0, 4)} title="✨ 编辑精选" subtitle="优质提示词精选推荐" />
+          <PromptListSection items={trendingData.slice(0, 4)} title="💎 Editor's Picks" subtitle="Curated quality prompts" />
           <div className="border-t border-zinc-800/50" />
         </>
       )}
 
-      {/* 如何使用 — 带动画的客户端组件 */}
+      {/* How to use — with animations (client wrapper) */}
       <HowToUseSection />
 
       <div className="border-t border-zinc-800/50" />
 
-      {/* CTA — 带动画 */}
+      {/* CTA — with animations */}
       <CTASection />
 
       {/* Footer */}

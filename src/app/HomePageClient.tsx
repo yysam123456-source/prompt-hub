@@ -35,12 +35,12 @@ export function SearchBox() {
             value={query}
             onChange={e => setQuery(e.target.value)}
             type="text"
-            placeholder="搜索提示词... 如：海报、赛博朋克、头像"
+            placeholder="Search prompts... e.g. poster, cyberpunk, portrait"
             className="w-full rounded-2xl border border-zinc-800 bg-zinc-900/80 py-3.5 pl-12 pr-4 text-sm text-zinc-100 placeholder-zinc-500 backdrop-blur-sm transition-colors focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20"
           />
         </div>
         <button type="submit" className="shrink-0 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3.5 text-sm font-medium text-white transition-opacity hover:opacity-90">
-          搜索
+          Search
         </button>
       </div>
     </motion.form>

@@ -258,7 +258,7 @@ export default function PromptDetailClient({
                     onClick={() => setShowZh(!showZh)}
                     className="text-xs border-zinc-700 text-zinc-400 hover:text-purple-300"
                   >
-                    {showZh ? '🇺🇸 English' : '🇨🇳 中文'}
+                    {showZh ? 'English' : '中文'}
                   </Button>
                 )}
                 <Button
@@ -383,11 +383,11 @@ export default function PromptDetailClient({
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
               {related.map((item: any) => (
-                <Link
-                  key={item.slug}
-                  href={`/prompt/${item.slug}`}
-                  className="group rounded-2xl border border-zinc-800 bg-zinc-900/50 overflow-hidden hover:border-purple-500/30 transition-colors"
-                >
+                  <Link
+                    key={item.slug}
+                    href={`/prompt?slug=${item.slug}`}
+                    className="group rounded-2xl border border-zinc-800 bg-zinc-900/50 overflow-hidden hover:border-purple-500/30 transition-colors"
+                  >
                   <div className="aspect-square overflow-hidden">
                     <img src={item.imageUrl || item.images?.[0]} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                   </div>

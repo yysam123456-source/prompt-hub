@@ -4,24 +4,24 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 
-// 匹配实际数据中的 category slug（来自 prompts.sorry.ink API）
+// Match actual category slugs from prompts.sorry.ink API
 const CATEGORY_CONFIG: Record<string, { label: string; gradient: string; emoji: string }> = {
-  'other':              { label: '其他',       gradient: 'from-zinc-600/90 to-zinc-800/90',     emoji: '📦' },
-  'graphic_design':     { label: '平面设计',   gradient: 'from-blue-600/90 to-indigo-900/90',    emoji: '✏️' },
-  'anime_game':         { label: '动漫游戏',   gradient: 'from-pink-600/90 to-rose-900/90',      emoji: '🎮' },
-  'photography':        { label: '摄影写真',   gradient: 'from-amber-600/90 to-orange-900/90',   emoji: '📷' },
-  'branding_visual':    { label: '品牌视觉',   gradient: 'from-violet-600/90 to-purple-900/90',  emoji: '🎨' },
-  'character':          { label: '角色人物',   gradient: 'from-rose-600/90 to-red-900/90',      emoji: '👤' },
-  'illustration':       { label: '风格插画',   gradient: 'from-teal-600/90 to-cyan-900/90',     emoji: '🖌️' },
-  'ecommerce':          { label: '电商营销',   gradient: 'from-green-600/90 to-emerald-900/90',  emoji: '🛒' },
-  'tech_scifi':         { label: '科技科幻',   gradient: 'from-cyan-600/90 to-blue-900/90',     emoji: '🚀' },
-  'novel_story':        { label: '小说推文',   gradient: 'from-fuchsia-600/90 to-pink-900/90',   emoji: '📖' },
-  'architecture_interior': { label: '建筑室内', gradient: 'from-stone-600/90 to-warmGray-900/90', emoji: '🏛️' },
-  'landscape_scene':    { label: '风景场景',   gradient: 'from-emerald-600/90 to-green-900/90',  emoji: '🏔️' },
-  'food':               { label: '美食餐饮',   gradient: 'from-red-600/90 to-orange-900/90',     emoji: '🍜' },
-  'cultural_products':  { label: '文创周边',   gradient: 'from-yellow-600/90 to-amber-900/90',  emoji: '🎁' },
-  'creative_play':      { label: '创意玩法',   gradient: 'from-lime-600/90 to-yellow-900/90',   emoji: '💡' },
-  'product_design':     { label: '产品设计',   gradient: 'from-slate-600/90 to-gray-900/90',    emoji: '📱' },
+  'other':              { label: 'Other',           gradient: 'from-zinc-600/90 to-zinc-800/90',     emoji: '📦' },
+  'graphic_design':     { label: 'Graphic Design',   gradient: 'from-blue-600/90 to-indigo-900/90',    emoji: '✏️' },
+  'anime_game':         { label: 'Anime & Game',    gradient: 'from-pink-600/90 to-rose-900/90',      emoji: '🎮' },
+  'photography':        { label: 'Photography',     gradient: 'from-amber-600/90 to-orange-900/90',   emoji: '📷' },
+  'branding_visual':    { label: 'Branding',        gradient: 'from-violet-600/90 to-purple-900/90',  emoji: '🎨' },
+  'character':          { label: 'Character',        gradient: 'from-rose-600/90 to-red-900/90',      emoji: '👤' },
+  'illustration':       { label: 'Illustration',    gradient: 'from-teal-600/90 to-cyan-900/90',     emoji: '🖌️' },
+  'ecommerce':          { label: 'E-commerce',      gradient: 'from-green-600/90 to-emerald-900/90',  emoji: '🛒' },
+  'tech_scifi':         { label: 'Sci-Fi & Tech',    gradient: 'from-cyan-600/90 to-blue-900/90',     emoji: '🚀' },
+  'novel_story':        { label: 'Novel & Story',    gradient: 'from-fuchsia-600/90 to-pink-900/90',   emoji: '📖' },
+  'architecture_interior': { label: 'Architecture',    gradient: 'from-stone-600/90 to-warmGray-900/90', emoji: '🏛️' },
+  'landscape_scene':    { label: 'Landscape',       gradient: 'from-emerald-600/90 to-green-900/90',  emoji: '🏔️' },
+  'food':               { label: 'Food & Drink',    gradient: 'from-red-600/90 to-orange-900/90',     emoji: '🍜' },
+  'cultural_products':  { label: 'Cultural',        gradient: 'from-yellow-600/90 to-amber-900/90',  emoji: '🎁' },
+  'creative_play':      { label: 'Creative Play',    gradient: 'from-lime-600/90 to-yellow-900/90',   emoji: '💡' },
+  'product_design':     { label: 'Product Design',   gradient: 'from-slate-600/90 to-gray-900/90',    emoji: '📱' },
 }
 
 export interface CategoryWithImage {
