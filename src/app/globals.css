@@ -3,11 +3,11 @@
 @import "shadcn/tailwind.css";
 
 @theme {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --border: oklch(0.922 0 0);
+  --background: oklch(0.09 0.01 270);
+  --foreground: oklch(0.95 0 0);
+  --card: oklch(0.13 0.01 270);
+  --card-foreground: oklch(0.95 0 0);
+  --border: oklch(0.22 0.01 270);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(0.205 0 0);
@@ -703,16 +703,22 @@
   }
 }
 
-/* Aurora layer animation */
-.aurora-layer {
-  animation: aurora-layer-drift 10s ease-in-out infinite alternate;
+/* Mesh gradient smooth drift — replaces ugly aurora blobs */
+@keyframes mesh-drift-1 {
+  0%   { transform: translate(-5%, -5%) rotate(0deg); }
+  33%  { transform: translate(3%, 2%) rotate(2deg); }
+  66%  { transform: translate(-2%, 4%) rotate(-1deg); }
+  100% { transform: translate(4%, -3%) rotate(1deg); }
 }
-@keyframes aurora-layer-drift {
-  0%   { transform: translate(0, 0) scale(1); opacity: 0.5; }
-  25%  { transform: translate(5%, -5%) scale(1.05); opacity: 0.6; }
-  50%  { transform: translate(-3%, 3%) scale(0.95); opacity: 0.55; }
-  75%  { transform: translate(4%, 2%) scale(1.03); opacity: 0.65; }
-  100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+@keyframes mesh-drift-2 {
+  0%   { transform: translate(5%, 5%) rotate(0deg); }
+  33%  { transform: translate(-3%, -2%) rotate(-2deg); }
+  66%  { transform: translate(2%, -4%) rotate(1deg); }
+  100% { transform: translate(-4%, 3%) rotate(-1deg); }
+}
+@keyframes mesh-pulse {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.05); }
 }
 
 /* Tilt neon card - 3D perspective + neon glow on hover */

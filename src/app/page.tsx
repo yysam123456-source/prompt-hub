@@ -8,7 +8,8 @@ import {
   GlitchText,
   TypewriterLoop,
   ParticleCanvas,
-  AuroraBackground,
+  MeshGradient,
+  Starfield,
   TiltNeonCard,
   MagneticBtn,
   CounterRoll,
@@ -21,10 +22,14 @@ import { SearchBox, AnimateOnView } from './HomePageClient'
 function HeroSection({ stats }: { stats: SiteStats }) {
   return (
     <section className="relative min-h-[75vh] flex items-center justify-center overflow-hidden">
-      {/* Background layers */}
-      <AuroraBackground>
-        <ParticleCanvas particleCount={50} className="opacity-40" />
-      </AuroraBackground>
+      {/* Unified smooth background — no patchy aurora blobs */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a1a] via-[#0c0c22] to-[#0e0e28]" />
+
+      {/* Smooth mesh gradient overlay */}
+      <MeshGradient intensity="medium" className="opacity-60" />
+
+      {/* Visible starfield animation */}
+      <Starfield density={150} className="opacity-70" />
 
       {/* Center content */}
       <div className="relative z-20 flex flex-col items-center justify-center px-4 text-center">
@@ -37,7 +42,7 @@ function HeroSection({ stats }: { stats: SiteStats }) {
           <span className="font-medium">{stats.totalPrompts}+ curated GPT Image 2 prompts</span>
         </div>
 
-        {/* Main heading — full neon + glitch effect */}
+        {/* Main heading — neon + glitch */}
         <h1 className="hero-heading mb-6 text-5xl font-black tracking-tight text-zinc-100 sm:text-6xl lg:text-8xl">
           <NeonText color="purple" size="text-5xl sm:text-6xl lg:text-8xl">
             Explore{' '}
@@ -69,13 +74,16 @@ function HeroSection({ stats }: { stats: SiteStats }) {
             <Link
               key={tag}
               href={`/search?q=${encodeURIComponent(tag)}`}
-              className="quick-tag rounded-full border border-zinc-700/60 bg-zinc-900/70 px-4 py-1.5 text-xs text-zinc-400 backdrop-blur-sm hover:border-purple-500/50 hover:text-purple-300 transition-all duration-300"
+              className="quick-tag rounded-full border border-zinc-700/40 bg-zinc-900/50 px-4 py-1.5 text-xs text-zinc-400 backdrop-blur-sm hover:border-purple-500/50 hover:text-purple-300 transition-all duration-300"
             >
               #{tag}
             </Link>
           ))}
         </div>
       </div>
+
+      {/* Bottom fade into next section */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0c0c24] to-transparent pointer-events-none" />
     </section>
   )
 }
@@ -89,21 +97,21 @@ function StatsSection({ stats }: { stats: SiteStats }) {
   ]
 
   return (
-    <section className="relative border-y border-zinc-800/40 bg-zinc-900/20 px-4 py-20 overflow-hidden">
-      <ParticleCanvas particleCount={20} className="opacity-20" />
+    <section className="relative px-4 py-20 overflow-hidden bg-[#0b0b20]">
+      {/* Subtle mesh gradient for depth */}
+      <MeshGradient intensity="subtle" className="opacity-30" />
+
       <div className="mx-auto max-w-5xl relative z-10">
         <div className="grid grid-cols-1 gap-8 text-center sm:grid-cols-3">
           {items.map((item, i) => (
             <AnimateOnView key={item.label} delay={i * 0.15}>
-              <TiltNeonCard className="rounded-3xl border-zinc-700/40 bg-zinc-900/50 p-8 backdrop-blur-md">
+              <TiltNeonCard className="rounded-3xl border-zinc-700/30 bg-zinc-900/50 p-8 backdrop-blur-md">
                 <div className="text-5xl font-black text-zinc-100 sm:text-6xl">
                   <CounterRoll end={item.value} suffix={item.suffix} duration={2500} />
                 </div>
                 <div className="mt-3 text-xs uppercase tracking-[0.2em] text-zinc-500 sm:text-sm">
                   {item.label}
                 </div>
-                {/* Decorative orb */}
-                <div className="absolute -right-4 -top-4 h-20 w-20 rounded-full bg-purple-600/10 blur-2xl" />
               </TiltNeonCard>
             </AnimateOnView>
           ))}
@@ -140,8 +148,10 @@ function PromptListSection({
 }) {
   if (items.length === 0) return null
   return (
-    <section className="relative px-4 py-24 overflow-hidden">
-      <ParticleCanvas particleCount={15} className="opacity-15" />
+    <section className="relative px-4 py-24 bg-[#0a0a1e]">
+      {/* Very subtle mesh for texture */}
+      <MeshGradient intensity="subtle" className="opacity-15" />
+
       <div className="mx-auto max-w-7xl relative z-10">
         <SectionHeader
           title={title}
@@ -169,10 +179,13 @@ function PromptListSection({
 // ======== Categories Section ========
 function CategoriesSection({ categories, categoryImages }: { categories: Category[]; categoryImages?: Record<string, string> }) {
   return (
-    <section className="relative px-4 py-24 overflow-hidden">
-      <AuroraBackground>
-        <div className="absolute inset-0 opacity-10" style={{ background: 'radial-gradient(circle at 50% 50%, rgba(168,85,247,0.15) 0%, transparent 60%)' }} />
-      </AuroraBackground>
+    <section className="relative px-4 py-24 bg-[#0b0b21]">
+      {/* Subtle center glow for category section */}
+      <div className="absolute inset-0"
+        style={{
+          background: 'radial-gradient(ellipse 60% 50% at 50% 50%, rgba(139,92,246,0.06), transparent 70%)',
+        }}
+      />
 
       <div className="mx-auto max-w-7xl relative z-10">
         <AnimateOnView className="mb-16 text-center">
@@ -196,8 +209,9 @@ function HowToUseSection() {
   ]
 
   return (
-    <section className="relative border-t border-zinc-800/40 px-4 py-28 overflow-hidden">
-      <ParticleCanvas particleCount={30} className="opacity-25" />
+    <section className="relative px-4 py-28 bg-[#0a0a1e]">
+      <MeshGradient intensity="subtle" className="opacity-25" />
+
       <div className="mx-auto max-w-5xl relative z-10">
         <AnimateOnView className="mb-20 text-center">
           <h2 className="text-3xl font-bold text-zinc-100 sm:text-4xl">
@@ -211,8 +225,7 @@ function HowToUseSection() {
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-3">
           {steps.map((step, i) => (
             <AnimateOnView key={i} delay={i * 0.2}>
-              <TiltNeonCard className="relative rounded-3xl border-zinc-700/40 bg-zinc-900/50 p-10 text-center backdrop-blur-md">
-                {/* Step number badge */}
+              <TiltNeonCard className="relative rounded-3xl border-zinc-700/30 bg-zinc-900/50 p-10 text-center backdrop-blur-md">
                 <div className="step-badge absolute -top-5 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-1 text-xs font-black text-white shadow-lg shadow-purple-500/30">
                   STEP {i + 1}
                 </div>
@@ -224,9 +237,8 @@ function HowToUseSection() {
                 </h3>
                 <p className="text-sm text-zinc-400 leading-relaxed">{step.desc}</p>
 
-                {/* Connecting line */}
                 {i < steps.length - 1 && (
-                  <div className="hidden absolute -right-6 top-1/2 h-0.5 w-12 bg-gradient-to-r from-purple-500/50 to-transparent sm:block" />
+                  <div className="hidden absolute -right-6 top-1/2 h-0.5 w-12 bg-gradient-to-r from-purple-500/40 to-transparent sm:block" />
                 )}
               </TiltNeonCard>
             </AnimateOnView>
@@ -240,10 +252,9 @@ function HowToUseSection() {
 // ======== CTA Section ========
 function CTASection() {
   return (
-    <section className="relative overflow-hidden border-t border-zinc-800/40 px-4 py-28">
-      <AuroraBackground>
-        <ParticleCanvas particleCount={40} className="opacity-30" />
-      </AuroraBackground>
+    <section className="relative overflow-hidden px-4 py-28 bg-[#0c0c26]">
+      <MeshGradient intensity="medium" className="opacity-50" />
+      <Starfield density={80} className="opacity-40" />
 
       <div className="relative z-20 mx-auto max-w-3xl text-center">
         <AnimateOnView>
@@ -274,7 +285,7 @@ function CTASection() {
 // ======== Footer ========
 function Footer() {
   return (
-    <footer className="border-t border-zinc-800/60 px-4 py-16">
+    <footer className="border-t border-zinc-800/50 px-4 py-16 bg-[#08081a]">
       <div className="mx-auto max-w-7xl flex flex-col items-center gap-6 sm:flex-row sm:justify-between">
         <div className="flex items-center gap-2.5">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 text-sm font-black text-white transition-all duration-500 hover:scale-110 hover:rotate-6 hover:shadow-lg hover:shadow-purple-500/40">
@@ -310,7 +321,7 @@ function Footer() {
 // ======== NavBar ========
 function NavBar() {
   return (
-    <nav className="sticky top-0 z-50 border-b border-zinc-800/70 bg-zinc-950/85 backdrop-blur-xl">
+    <nav className="sticky top-0 z-50 border-b border-zinc-800/50 bg-[#09091a]/95 backdrop-blur-xl">
       <div className="mx-auto max-w-7xl flex items-center gap-4 px-4 py-3.5">
         <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 text-sm font-black text-white transition-all duration-500 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-purple-500/40">
@@ -329,7 +340,7 @@ function NavBar() {
               name="q"
               type="text"
               placeholder="Search prompts..."
-              className="w-full rounded-xl border border-zinc-700/60 bg-zinc-900/80 py-2.5 pl-11 pr-5 text-sm text-zinc-100 placeholder-zinc-500 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/25 focus:bg-zinc-900 transition-all duration-300"
+              className="w-full rounded-xl border border-zinc-700/40 bg-zinc-900/60 py-2.5 pl-11 pr-5 text-sm text-zinc-100 placeholder-zinc-500 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/25 focus:bg-zinc-900 transition-all duration-300"
             />
           </div>
           <button
@@ -355,24 +366,18 @@ export default async function HomePage() {
   ])
 
   return (
-    <main className="min-h-screen bg-zinc-950 overflow-hidden">
+    // Unified dark base — ONE color for entire page
+    <main className="min-h-screen bg-gradient-to-b from-[#0a0a1a] via-[#0b0b20] to-[#0d0d28] overflow-hidden">
       <NavBar />
       <HeroSection stats={statsData} />
       <StatsSection stats={statsData} />
       <CategoriesSection categories={catData} categoryImages={catImages} />
-      <div className="border-t border-zinc-800/30" />
       <PromptListSection items={trendingData} title="🔥 Trending Prompts" subtitle="Most viewed prompts this week" />
-      <div className="border-t border-zinc-800/30" />
       <PromptListSection items={latestData} title="✨ Latest Prompts" subtitle="Newly added quality prompts" />
-      <div className="border-t border-zinc-800/30" />
       {trendingData.length > 0 && (
-        <>
-          <PromptListSection items={trendingData.slice(0, 4)} title="💎 Editor's Picks" subtitle="Curated quality prompts" />
-          <div className="border-t border-zinc-800/30" />
-        </>
+        <PromptListSection items={trendingData.slice(0, 4)} title="💎 Editor's Picks" subtitle="Curated quality prompts" />
       )}
       <HowToUseSection />
-      <div className="border-t border-zinc-800/30" />
       <CTASection />
       <Footer />
     </main>

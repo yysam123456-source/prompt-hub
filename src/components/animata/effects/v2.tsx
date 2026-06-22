@@ -235,41 +235,157 @@ export function ParticleCanvas({
   )
 }
 
-// ===== Aurora Gradient Background =====
-export function AuroraBackground({
-  children,
+// ===== Smooth Mesh Gradient Background =====
+// Replaces ugly aurora blobs with a seamless flowing gradient
+export function MeshGradient({
   className = '',
+  intensity = 'medium',
 }: {
-  children?: React.ReactNode
   className?: string
+  intensity?: 'subtle' | 'medium' | 'strong'
 }) {
+  const opacityMap = { subtle: 0.3, medium: 0.5, strong: 0.7 }
+  const op = opacityMap[intensity]
+
   return (
     <div className={`absolute inset-0 overflow-hidden ${className}`}>
-      <div className="aurora-layer absolute -inset-[10%] opacity-70"
+      {/* Layer 1: Large soft purple-cyan gradient — moves slowly */}
+      <div
+        className="absolute inset-[-30%]"
         style={{
           background: `
-            radial-gradient(ellipse at 20% 50%, rgba(168,85,247,0.35) 0%, transparent 50%),
-            radial-gradient(ellipse at 80% 20%, rgba(6,182,212,0.3) 0%, transparent 50%),
-            radial-gradient(ellipse at 50% 80%, rgba(236,72,153,0.25) 0%, transparent 50%),
-            radial-gradient(ellipse at 10% 90%, rgba(99,102,241,0.2) 0%, transparent 40%)
+            linear-gradient(
+              135deg,
+              rgba(99, 102, 241, ${op * 0.4}) 0%,
+              transparent 40%,
+              rgba(168, 85, 247, ${op * 0.25}) 60%,
+              transparent 100%
+            )
           `,
-          backgroundSize: '200% 200%',
-          animation: 'aurora-drift 8s ease-in-out infinite',
+          filter: 'blur(60px)',
+          transform: 'translate(-5%, -5%)',
+          animation: 'mesh-drift-1 20s ease-in-out infinite alternate',
         }}
       />
-      <div className="aurora-layer absolute -inset-[10%] opacity-50"
+      {/* Layer 2: Cyan accent — opposite direction */}
+      <div
+        className="absolute inset-[-30%]"
         style={{
           background: `
-            radial-gradient(ellipse at 80% 80%, rgba(168,85,247,0.25) 0%, transparent 50%),
-            radial-gradient(ellipse at 20% 20%, rgba(236,72,153,0.2) 0%, transparent 50%),
-            radial-gradient(ellipse at 60% 50%, rgba(6,182,212,0.2) 0%, transparent 40%)
+            linear-gradient(
+              225deg,
+              rgba(6, 182, 212, ${op * 0.2}) 0%,
+              transparent 35%,
+              rgba(236, 72, 153, ${op * 0.15}) 65%,
+              transparent 100%
+            )
           `,
-          backgroundSize: '180% 180%',
-          animation: 'aurora-drift 12s ease-in-out infinite reverse',
+          filter: 'blur(70px)',
+          transform: 'translate(5%, 5%)',
+          animation: 'mesh-drift-2 25s ease-in-out infinite alternate-reverse',
         }}
       />
-      {children}
+      {/* Layer 3: Center glow */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `
+            radial-gradient(
+              ellipse 80% 50% at 50% 50%,
+              rgba(139, 92, 246, ${op * 0.12}) 0%,
+              transparent 70%
+            )
+          `,
+          filter: 'blur(40px)',
+          animation: 'mesh-pulse 15s ease-in-out infinite',
+        }}
+      />
     </div>
+  )
+}
+
+// ===== Starfield / Noise Texture Background =====
+export function Starfield({
+  density = 120,
+  className = '',
+}: {
+  density?: number
+  className?: string
+}) {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    let animId: number
+    const stars: { x: number; y: number; r: number; speed: number; twinkleSpeed: number }[] = []
+
+    function resize() {
+      canvas!.width = canvas!.offsetWidth
+      canvas!.height = canvas!.offsetHeight
+      initStars()
+    }
+
+    function initStars() {
+      stars.length = 0
+      for (let i = 0; i < density; i++) {
+        stars.push({
+          x: Math.random() * canvas!.width,
+          y: Math.random() * canvas!.height,
+          r: Math.random() * 1.5 + 0.3,
+          speed: Math.random() * 0.15 + 0.02,
+          twinkleSpeed: Math.random() * 0.02 + 0.005,
+        })
+      }
+    }
+
+    let phase = 0
+    function animate() {
+      ctx!.clearRect(0, 0, canvas!.width, canvas!.height)
+      phase += 0.008
+      for (const s of stars) {
+        // Twinkle using sine wave
+        const alpha = 0.3 + 0.7 * Math.abs(Math.sin(phase * s.twinkleSpeed * 100 + s.x))
+        ctx!.beginPath()
+        ctx!.arc(s.x, s.y, s.r, 0, Math.PI * 2)
+        ctx!.fillStyle = `rgba(200, 200, 255, ${alpha * 0.7})`
+        ctx!.fill()
+        // Subtle glow on brighter stars
+        if (s.r > 1 && alpha > 0.8) {
+          ctx!.beginPath()
+          ctx!.arc(s.x, s.y, s.r * 3, 0, Math.PI * 2)
+          ctx!.fillStyle = `rgba(168, 85, 247, ${alpha * 0.15})`
+          ctx!.fill()
+        }
+        // Slow drift
+        s.y += s.speed
+        if (s.y > canvas!.height + 5) {
+          s.y = -5
+          s.x = Math.random() * canvas!.width
+        }
+      }
+      animId = requestAnimationFrame(animate)
+    }
+
+    resize()
+    window.addEventListener('resize', resize)
+    animate()
+
+    return () => {
+      cancelAnimationFrame(animId)
+      window.removeEventListener('resize', resize)
+    }
+  }, [density])
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className={`absolute inset-0 h-full w-full ${className}`}
+      style={{ pointerEvents: 'none' }}
+    />
   )
 }
 
