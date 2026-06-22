@@ -5,6 +5,42 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
 
+// JSON syntax highlighting — returns array of {text, className} segments
+function highlightJson(jsonStr: string): { text: string; cls: string }[] {
+  const segments: { text: string; cls: string }[] = []
+  const regex = /("(?:\\.|[^"\\])*")\s*(:)|("(?:\\.|[^"\\])*")|(\b-?\d+\.?\d*\b)|(true|false|null)|([{}\[\],])/g
+  let lastIndex = 0
+  let match
+
+  while ((match = regex.exec(jsonStr)) !== null) {
+    if (match.index > lastIndex) {
+      segments.push({ text: jsonStr.slice(lastIndex, match.index), cls: '' })
+    }
+    if (match[1]) {
+      // Key (before colon)
+      segments.push({ text: match[1], cls: 'json-key' })
+      segments.push({ text: match[2], cls: 'json-punct' })
+    } else if (match[3]) {
+      // String value
+      segments.push({ text: match[3], cls: 'json-string' })
+    } else if (match[4]) {
+      // Number
+      segments.push({ text: match[4], cls: 'json-number' })
+    } else if (match[5]) {
+      // Literal
+      segments.push({ text: match[5], cls: 'json-literal' })
+    } else if (match[6]) {
+      // Punctuation
+      segments.push({ text: match[6], cls: 'json-punct' })
+    }
+    lastIndex = regex.lastIndex
+  }
+  if (lastIndex < jsonStr.length) {
+    segments.push({ text: jsonStr.slice(lastIndex), cls: '' })
+  }
+  return segments
+}
+
 export default function PromptDetailClient({
   title,
   promptText,
@@ -268,16 +304,16 @@ export default function PromptDetailClient({
                 )}
               </h2>
               <div className="flex gap-2">
-                {promptZh && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setShowZh(!showZh)}
-                    className="text-xs border-zinc-700 text-zinc-400 hover:text-purple-300 gap-1"
-                  >
-                    {showZh ? '🇺🇸 EN' : '🇨🇳 中文'}
-                  </Button>
-                )}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowZh(!showZh)}
+                  className={`text-xs gap-1 ${!promptZh ? 'opacity-40 cursor-not-allowed' : 'border-zinc-700 text-zinc-400 hover:text-purple-300'}`}
+                  disabled={!promptZh}
+                  title={promptZh ? 'Toggle between English and Chinese' : 'Chinese translation not available for this prompt'}
+                >
+                  {showZh ? '🇺🇸 EN' : '🇨🇳 中文'}
+                </Button>
                 <Button
                   variant={copied ? "default" : "outline"}
                   size="sm"
@@ -308,10 +344,25 @@ export default function PromptDetailClient({
               </div>
             )}
 
-            <div className="relative rounded-2xl border border-zinc-800 bg-zinc-900/80 p-5 sm:p-6">
-              <pre className={`whitespace-pre-wrap text-sm sm:text-base leading-relaxed text-zinc-300 overflow-x-auto ${isJsonPrompt ? 'text-xs' : 'font-mono'}`}>
-                {formattedDisplay}
-              </pre>
+            <div className="relative rounded-2xl border border-zinc-800 bg-zinc-900/80 overflow-hidden">
+              {isJsonPrompt && (
+                <div className="flex items-center justify-between px-4 py-2 border-b border-zinc-800/60 bg-zinc-900/90">
+                  <span className="text-xs text-amber-400 font-medium flex items-center gap-1.5">
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" /></svg>
+                    Structured JSON Prompt
+                  </span>
+                  <span className="text-[10px] text-zinc-500 font-mono">syntax highlighted</span>
+                </div>
+              )}
+              {isJsonPrompt ? (
+                <pre className={`text-sm leading-relaxed overflow-x-auto p-5 json-bg`}><code>{highlightJson(formattedDisplay).map((seg, i) => (
+                  <span key={i} className={seg.cls}>{seg.text}</span>
+                ))}</code></pre>
+              ) : (
+                <pre className={`whitespace-pre-wrap text-sm sm:text-base leading-relaxed text-zinc-300 overflow-x-auto p-5`}>
+                  {formattedDisplay}
+                </pre>
+              )}
             </div>
 
             <p className="mt-3 text-xs text-zinc-600 text-center">

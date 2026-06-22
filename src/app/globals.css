@@ -346,6 +346,33 @@
   transform: translateY(-2px);
 }
 
+/* ======== JSON Syntax Highlighting ======== */
+.json-bg {
+  background: linear-gradient(180deg, rgba(39,39,42,0.5) 0%, rgba(24,24,27,0.8) 100%);
+}
+.json-bg code {
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+  font-size: 0.8rem;
+  line-height: 1.7;
+}
+.json-key {
+  color: #7dd3fc; /* sky-300 */
+  font-weight: 500;
+}
+.json-string {
+  color: #86efac; /* green-300 */
+}
+.json-number {
+  color: #fdba74; /* orange-300 */
+}
+.json-literal {
+  color: #c4b5fd; /* violet-300 */
+  font-style: italic;
+}
+.json-punct {
+  color: #71717a; /* zinc-500 */
+}
+
 /* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;
