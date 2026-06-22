@@ -37,120 +37,247 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
-/* ======== Gradient text background position animation (for AnimatedGradientText) ======== */
+/* ============================================================
+   ANIMATION SYSTEM — Pure CSS Keyframes & Utilities
+   ============================================================ */
+
+/* ======== Core Keyframes ======== */
+
+/* Gradient background position flow */
 @keyframes bg-position {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
+/* Fade up — element slides in from below */
+@keyframes fade-up {
+  0% { opacity: 0; transform: translateY(24px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Fade scale — pop-in effect */
+@keyframes fade-scale {
+  0% { opacity: 0; transform: scale(0.92); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Shimmer sweep for skeletons & loading */
+@keyframes shimmer-sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Shimmer skeleton — background position shift */
+@keyframes shimmer-skeleton {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Gradient shift — flowing gradient backgrounds */
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Float subtle — gentle vertical bobbing */
+@keyframes float-subtle {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+/* Pulse glow — glowing border/shadow pulse */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 15px rgba(168, 85, 247, 0.15), 0 0 30px rgba(168, 85, 247, 0.05); }
+  50% { box-shadow: 0 0 25px rgba(168, 85, 247, 0.35), 0 0 50px rgba(168, 85, 247, 0.1); }
+}
+
+/* Border flow — gradient border rotation */
+@keyframes border-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Meteor beam */
+@keyframes meteor {
+  0% { transform: rotate(215deg) translateX(0); opacity: 1; }
+  70% { opacity: 0.6; }
+  100% { transform: rotate(215deg) translateX(-500px); opacity: 0; }
+}
+
+/* Fade in simple */
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Float (hero orbs) */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Glow pulse (badge) */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 5px rgba(168, 85, 247, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.6); }
+}
+
+/* Text shimmer sweep */
+@keyframes text-shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Scale in */
+@keyframes scale-in {
+  0% { opacity: 0; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Rotate slow — for spinning decorations */
+@keyframes rotate-slow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Pulse ring — expanding ring effect */
+@keyframes pulse-ring {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+/* ======== Animation Utility Classes ======== */
+
 .animate-bg-position {
   animation: bg-position 3s ease infinite;
+  background-size: 200% auto;
+}
+
+.animate-fade-up {
+  animation: fade-up 0.6s ease-out forwards;
+}
+
+.animate-fade-scale {
+  animation: fade-scale 0.5s ease-out forwards;
+}
+
+.animate-float-subtle {
+  animation: float-subtle 5s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-gradient-shift {
+  animation: gradient-shift 4s ease infinite;
+  background-size: 200% 200%;
 }
 
 .bg-size {
   background-size: 200% auto;
 }
 
-/* Meteor beam animation */
-@keyframes meteor {
-  0% {
-    transform: rotate(215deg) translateX(0);
-    opacity: 1;
-  }
-  70% {
-    opacity: 0.6;
-  }
-  100% {
-    transform: rotate(215deg) translateX(-500px);
-    opacity: 0;
-  }
-}
-
-/* Shimmer effect for shiny button */
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-/* Fade in up animation */
-@keyframes fade-in-up {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in-up {
-  animation: fade-in-up 0.6s ease-out forwards;
-}
-
-/* Gradient text */
 .gradient-text {
   @apply bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 bg-clip-text text-transparent;
 }
 
-/* Glass effect */
 .glass {
   @apply bg-zinc-900/60 backdrop-blur-md border border-zinc-800/60;
 }
 
-/* Fade in animation for prompt detail page */
-@keyframes fade-in {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
-}
-
-/* Image loading shimmer skeleton */
+/* Shimmer loading overlay */
 .image-loading-shimmer {
   background: linear-gradient(110deg, #1a1a2e 25%, #2a2a3e 37%, #1a1a2e 63%);
   background-size: 200% 100%;
   animation: shimmer-skeleton 1.5s ease-in-out infinite;
 }
 
-@keyframes shimmer-skeleton {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+/* ======== Hover Effect Classes ======== */
+
+/* Card lift on hover */
+.hover-lift {
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
+.hover-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(168, 85, 247, 0.08);
+}
+
+/* Glow effect on hover */
+.hover-glow {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.hover-glow:hover {
+  border-color: rgba(168, 85, 247, 0.5);
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.15), 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Image zoom on card hover */
+.img-zoom img,
+.img-zoom {
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.img-zoom:hover img,
+.img-zoom:hover {
+  transform: scale(1.06);
+}
+
+/* Animated gradient border on hover */
+.animated-border {
+  position: relative;
+}
+.animated-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, #a855f7, #ec4899, #6366f1, #a855f7);
+  background-size: 300% 300%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+}
+.animated-border:hover::before {
+  opacity: 1;
+  animation: border-flow 3s linear infinite;
+}
+
+/* Stagger children — apply to parent container */
+.stagger-children > * {
+  animation: fade-up 0.5s ease-out both;
+}
+.stagger-children > *:nth-child(1)  { animation-delay: 0.05s; }
+.stagger-children > *:nth-child(2)  { animation-delay: 0.10s; }
+.stagger-children > *:nth-child(3)  { animation-delay: 0.15s; }
+.stagger-children > *:nth-child(4)  { animation-delay: 0.20s; }
+.stagger-children > *:nth-child(5)  { animation-delay: 0.25s; }
+.stagger-children > *:nth-child(6)  { animation-delay: 0.30s; }
+.stagger-children > *:nth-child(7)  { animation-delay: 0.35s; }
+.stagger-children > *:nth-child(8)  { animation-delay: 0.40s; }
+.stagger-children > *:nth-child(9)  { animation-delay: 0.45s; }
+.stagger-children > *:nth-child(10) { animation-delay: 0.50s; }
+
+/* ======== Delay Variants ======== */
 
 .animate-fade-in {
   animation: fade-in 0.5s ease-out forwards;
 }
 
-.animate-fade-in-delay-1 {
-  animation: fade-in 0.5s ease-out 0.1s forwards;
-  opacity: 0;
-}
+.animate-fade-in-delay-1 { animation: fade-in 0.5s ease-out 0.10s forwards; opacity: 0; }
+.animate-fade-in-delay-2 { animation: fade-in 0.5s ease-out 0.20s forwards; opacity: 0; }
+.animate-fade-in-delay-3 { animation: fade-in 0.5s ease-out 0.30s forwards; opacity: 0; }
+.animate-fade-in-delay-4 { animation: fade-in 0.5s ease-out 0.40s forwards; opacity: 0; }
 
-.animate-fade-in-delay-2 {
-  animation: fade-in 0.5s ease-out 0.2s forwards;
-  opacity: 0;
-}
-
-.animate-fade-in-delay-3 {
-  animation: fade-in 0.5s ease-out 0.3s forwards;
-  opacity: 0;
-}
-
-.animate-fade-in-delay-4 {
-  animation: fade-in 0.5s ease-out 0.4s forwards;
-  opacity: 0;
-}
-
-/* ======== Hero Animations ======== */
-
-/* Floating animation for hero elements */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+.animate-fade-in-up {
+  animation: fade-up 0.6s ease-out forwards;
 }
 
 .animate-float {
@@ -161,20 +288,8 @@
   animation: float 3s ease-in-out 1.5s infinite;
 }
 
-/* Glow pulse for badge */
-@keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 5px rgba(168, 85, 247, 0.3); }
-  50% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.6); }
-}
-
 .animate-glow-pulse {
   animation: glow-pulse 2s ease-in-out infinite;
-}
-
-/* Text shimmer sweep */
-@keyframes text-shimmer {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
 }
 
 .animate-text-shimmer {
@@ -182,29 +297,65 @@
   animation: text-shimmer 4s linear infinite;
 }
 
-/* Scale in animation */
-@keyframes scale-in {
-  0% { opacity: 0; transform: scale(0.95); }
-  100% { opacity: 1; transform: scale(1); }
-}
-
 .animate-scale-in {
   animation: scale-in 0.6s ease-out forwards;
 }
 
-/* Scrollbar */
+/* Hero section specific */
+.hero-orb {
+  animation: float 6s ease-in-out infinite;
+}
+.hero-orb-delay {
+  animation: float 6s ease-in-out 2s infinite;
+}
+
+/* Stat number highlight */
+.stat-number {
+  @apply bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 bg-clip-text text-transparent;
+  background-size: 200% auto;
+  animation: bg-position 3s ease infinite;
+}
+
+/* CTA button glow */
+.cta-button-glow {
+  position: relative;
+  overflow: hidden;
+}
+.cta-button-glow::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, #a855f7, #ec4899, #6366f1);
+  z-index: -1;
+  opacity: 0;
+  filter: blur(12px);
+  transition: opacity 0.3s ease;
+}
+.cta-button-glow:hover::after {
+  opacity: 0.5;
+}
+
+/* Category tag hover sparkle */
+.tag-hover {
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.tag-hover:hover {
+  border-color: rgba(168, 85, 247, 0.5);
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;
 }
-
 ::-webkit-scrollbar-track {
   @apply bg-zinc-950;
 }
-
 ::-webkit-scrollbar-thumb {
   @apply bg-zinc-700 rounded-full;
 }
-
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-zinc-600;
 }

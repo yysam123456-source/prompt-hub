@@ -16,12 +16,14 @@ function HeroSection({ stats }: { stats: SiteStats }) {
         <Grid color="#a855f7" size={40} style={{ backgroundColor: 'transparent' }} />
       </div>
       <div className="absolute inset-0 -z-20 bg-gradient-to-br from-purple-500/5 via-transparent to-pink-500/5" />
-      <div className="animate-float absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-purple-500/10 blur-3xl -z-10" />
-      <div className="animate-float-delay absolute right-1/4 bottom-1/4 h-96 w-96 rounded-full bg-pink-500/10 blur-3xl -z-10" />
+      {/* Enhanced floating orbs */}
+      <div className="hero-orb absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-purple-500/10 blur-3xl -z-10" />
+      <div className="hero-orb-delay absolute right-1/4 bottom-1/4 h-80 w-80 rounded-full bg-pink-500/10 blur-3xl -z-10" />
+      <div className="animate-float-subtle absolute left-1/2 top-1/3 h-48 w-48 rounded-full bg-indigo-500/8 blur-3xl -z-10" />
 
       <div className="relative z-10 flex min-h-[60vh] flex-col items-center justify-center px-4 py-20 text-center sm:py-28">
         {/* Badge — animated glow */}
-        <div className="animate-scale-in mb-6 inline-flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-500/10 px-4 py-1.5 text-sm text-purple-300 backdrop-blur-sm">
+        <div className="animate-scale-in mb-6 inline-flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-500/10 px-4 py-1.5 text-sm text-purple-300 backdrop-blur-sm animate-glow-pulse">
           <span className="relative flex h-2 w-2">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-purple-400 opacity-75" />
             <span className="relative inline-flex h-full w-2 rounded-full bg-purple-400" />
@@ -53,7 +55,7 @@ function HeroSection({ stats }: { stats: SiteStats }) {
             <Link
               key={tag}
               href={`/search?q=${encodeURIComponent(tag)}`}
-              className="rounded-full border border-zinc-800 bg-zinc-900/60 px-3 py-1 text-xs text-zinc-400 backdrop-blur-sm transition-all duration-200 hover:border-purple-500/50 hover:text-purple-300 hover:shadow-lg hover:shadow-purple-500/10"
+              className="tag-hover rounded-full border border-zinc-800 bg-zinc-900/60 px-3 py-1 text-xs text-zinc-400 backdrop-blur-sm"
             >
               {tag}
             </Link>
@@ -78,8 +80,8 @@ function StatsSection({ stats }: { stats: SiteStats }) {
         <div className="grid grid-cols-3 gap-4 text-center">
           {items.map((item) => (
             <AnimateCard key={item.label}>
-              <div>
-                <div className="text-2xl font-bold text-purple-400 sm:text-3xl">
+              <div className="group">
+                <div className="stat-number text-2xl font-bold sm:text-3xl transition-all duration-300 group-hover:scale-110 inline-block">
                   {item.value}{item.suffix}
                 </div>
                 <div className="mt-1 text-xs text-zinc-500 sm:text-sm">{item.label}</div>
@@ -169,14 +171,18 @@ function HowToUseSection() {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
           {steps.map((step, i) => (
             <AnimateCard key={i} delay={i * 0.15}>
-              <div className="group relative rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 text-center transition-all duration-300 hover:border-purple-500/30 hover:shadow-lg hover:shadow-purple-500/5">
-                <div className="mb-4 text-4xl">{step.icon}</div>
-                <div className="mb-2 text-lg font-semibold text-zinc-100">
-                  Step {i + 1}: {step.title}
+              <div className="group relative rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 text-center transition-all duration-300 hover:border-purple-500/30 hover:shadow-lg hover:shadow-purple-500/5 hover:-translate-y-1 animated-border">
+                {/* Step number badge */}
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-3 py-0.5 text-[11px] font-bold text-white shadow-lg shadow-purple-500/20">
+                  Step {i + 1}
                 </div>
-                <p className="text-sm text-zinc-400">{step.desc}</p>
+                <div className="mt-2 mb-4 text-4xl transition-transform duration-300 group-hover:scale-125">{step.icon}</div>
+                <div className="mb-2 text-lg font-semibold text-zinc-100 group-hover:text-purple-300 transition-colors">
+                  {step.title}
+                </div>
+                <p className="text-sm text-zinc-400 leading-relaxed">{step.desc}</p>
                 {i < steps.length - 1 && (
-                  <div className="absolute -right-3 top-1/2 hidden h-0.5 w-6 bg-zinc-700 sm:block" />
+                  <div className="hidden absolute -right-3 top-1/2 h-0.5 w-6 bg-gradient-to-r from-purple-500/40 to-transparent sm:block" />
                 )}
               </div>
             </AnimateCard>
@@ -192,10 +198,13 @@ function CTASection() {
   return (
     <section className="relative overflow-hidden border-t border-zinc-800/50 px-4 py-20">
       <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 via-pink-500/5 to-indigo-500/5" />
+      {/* Decorative orbs */}
+      <div className="hero-orb absolute left-1/4 top-1/3 h-64 w-64 rounded-full bg-purple-500/10 blur-3xl -z-10" />
+      <div className="hero-orb-delay absolute right-1/4 bottom-1/3 h-64 w-64 rounded-full bg-pink-500/10 blur-3xl -z-10" />
       <div className="relative z-10 mx-auto max-w-2xl text-center">
         <AnimateOnView>
           <h2 className="mb-4 text-3xl font-bold text-zinc-100 sm:text-4xl">
-            Start Your <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">AI Creative Journey</span>
+            Start Your <span className="gradient-text">AI Creative Journey</span>
           </h2>
         </AnimateOnView>
         <AnimateOnView delay={0.15}>
@@ -206,9 +215,9 @@ function CTASection() {
         <AnimateOnView delay={0.3}>
           <Link
             href="/category"
-            className="inline-block rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-3.5 text-base font-medium text-white transition-all duration-200 hover:opacity-90 hover:shadow-lg hover:shadow-purple-500/25"
+            className="cta-button-glow inline-block rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-3.5 text-base font-medium text-white transition-all duration-200 hover:opacity-90 hover:shadow-xl hover:shadow-purple-500/25 hover:-translate-y-0.5"
           >
-            Start Exploring
+            Start Exploring →
           </Link>
         </AnimateOnView>
       </div>
@@ -246,17 +255,17 @@ function NavBar() {
     <nav className="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-md">
       <div className="mx-auto max-w-7xl flex items-center gap-4 px-4 py-3">
         <Link href="/" className="flex items-center gap-2 shrink-0 group">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 text-white font-bold text-sm transition-transform group-hover:scale-105">P</div>
-          <span className="text-lg font-bold text-zinc-100">Prompt Hub</span>
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 text-white font-bold text-sm transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-purple-500/30">P</div>
+          <span className="text-lg font-bold text-zinc-100 group-hover:text-purple-300 transition-colors">Prompt Hub</span>
         </Link>
         <form action="/search" method="GET" className="flex gap-2 flex-1 max-w-lg ml-auto">
-          <div className="relative flex-1">
-            <svg className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="relative flex-1 group">
+            <svg className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500 transition-colors group-focus-within:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
-            <input name="q" type="text" placeholder="Search prompts..." className="w-full rounded-xl border border-zinc-800 bg-zinc-900/80 py-2 pl-10 pr-4 text-sm text-zinc-100 placeholder-zinc-500 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500/20" />
+            <input name="q" type="text" placeholder="Search prompts..." className="w-full rounded-xl border border-zinc-800 bg-zinc-900/80 py-2 pl-10 pr-4 text-sm text-zinc-100 placeholder-zinc-500 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500/20 focus:bg-zinc-900 transition-all duration-200" />
           </div>
-          <button type="submit" className="rounded-xl bg-purple-600 px-4 py-2 text-sm text-white transition-colors hover:bg-purple-700">Search</button>
+          <button type="submit" className="rounded-xl bg-purple-600 px-4 py-2 text-sm text-white font-medium transition-all duration-200 hover:bg-purple-700 hover:shadow-lg hover:shadow-purple-500/25 hover:-translate-y-0.5 active:translate-y-0">Search</button>
         </form>
       </div>
     </nav>

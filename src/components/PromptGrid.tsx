@@ -58,14 +58,15 @@ function PromptCard({ item, index }: { item: any; index: number }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.4, delay: (index % 12) * 0.05 }}
+      initial={{ opacity: 0, y: 24, scale: 0.96 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: (index % 12) * 0.05 }}
+      whileHover={{ y: -8, scale: 1.02 }}
     >
         <Link
           href={`/prompt?slug=${item.slug}`}
-        className="group block overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/80 transition-all duration-300 hover:border-purple-500/50 hover:shadow-xl hover:shadow-purple-500/10 hover:-translate-y-1"
+        className="group relative block overflow-hidden rounded-2xl border border-zinc-800/80 bg-zinc-900/80 transition-all duration-300 hover:border-purple-500/50 hover:shadow-2xl hover:shadow-purple-500/15 animated-border"
       >
         {/* Image area */}
         <div className={`relative aspect-square overflow-hidden bg-zinc-900`}>
@@ -80,7 +81,7 @@ function PromptCard({ item, index }: { item: any; index: number }) {
               src={imageUrl}
               alt={item.primaryImage?.altText || title}
               loading="lazy"
-              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
+              className={`absolute inset-0 h-full w-full object-cover transition-all duration-700 ease-out ${imgLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}
               onLoad={() => setImgLoaded(true)}
               onError={() => setImgFailed(true)}
             />
@@ -98,7 +99,7 @@ function PromptCard({ item, index }: { item: any; index: number }) {
           <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/70 to-transparent" />
 
           {/* View count badge */}
-          <div className="absolute top-2 right-2 rounded-full bg-black/60 backdrop-blur-sm px-2 py-0.5 text-[10px] text-zinc-300 font-medium flex items-center gap-1">
+          <div className="absolute top-2 right-2 rounded-full bg-black/60 backdrop-blur-sm px-2 py-0.5 text-[10px] text-zinc-300 font-medium flex items-center gap-1 transition-opacity group-hover:opacity-90">
             <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/><path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd"/></svg>
             {formatCount(item.viewCount ?? item.view_count ?? 0)}
           </div>
@@ -109,13 +110,16 @@ function PromptCard({ item, index }: { item: any; index: number }) {
           </div>
 
           {/* Category label */}
-          <div className="absolute bottom-2 left-2 rounded-md bg-black/50 backdrop-blur-sm px-2 py-0.5 text-[10px] text-zinc-300 capitalize">
+          <div className="absolute bottom-2 left-2 rounded-md bg-black/50 backdrop-blur-sm px-2 py-0.5 text-[10px] text-zinc-300 capitalize transition-colors group-hover:bg-purple-600/30 group-hover:text-purple-200">
             {category.replace('-', ' ')}
           </div>
+
+          {/* Hover overlay glow */}
+          <div className="absolute inset-0 bg-gradient-to-t from-purple-500/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none" />
         </div>
 
         {/* Info area below image */}
-        <div className="p-2.5 sm:p-3">
+        <div className="p-2.5 sm:p-3 transition-colors duration-200 group-hover:bg-purple-500/[0.03]">
           <h3 className="font-medium text-xs sm:text-sm text-zinc-200 line-clamp-2 group-hover:text-purple-400 transition-colors leading-snug min-h-[2.5rem]">
             {title}
           </h3>
