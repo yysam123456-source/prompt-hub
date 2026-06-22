@@ -3,75 +3,73 @@ import CategoryBar from '@/components/CategoryBar'
 import PromptGrid, { PromptCard } from '@/components/PromptGrid'
 import { loadStats, loadCategories, loadTrending, loadLatest, loadCategoryImages } from '@/lib/staticData.server'
 import type { SiteStats, Category } from '@/lib/types'
-import AnimatedGradientText from '@/components/animata/text/animated-gradient-text'
-import { SearchBox, AnimateOnView, AnimateCard } from './HomePageClient'
 import {
+  NeonText,
+  GlitchText,
+  TypewriterLoop,
+  ParticleCanvas,
   AuroraBackground,
-  ParticleField,
-  MorphingBlob,
-  TiltCard,
-  AnimatedCounter,
-  MagneticButton,
-  TypewriterText,
-} from '@/components/animata/effects'
+  TiltNeonCard,
+  MagneticBtn,
+  CounterRoll,
+  GlowCard,
+  ShimmerText,
+} from '@/components/animata/effects/v2'
+import { SearchBox, AnimateOnView } from './HomePageClient'
 
 // ======== Hero Section ========
 function HeroSection({ stats }: { stats: SiteStats }) {
   return (
-    <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
-      {/* Aurora + Particles */}
+    <section className="relative min-h-[75vh] flex items-center justify-center overflow-hidden">
+      {/* Background layers */}
       <AuroraBackground>
-        <ParticleField />
+        <ParticleCanvas particleCount={50} className="opacity-40" />
       </AuroraBackground>
-
-      {/* Morphing blobs */}
-      <div className="absolute left-[-10%] top-[-10%] w-[500px] h-[500px] -z-10 pointer-events-none">
-        <MorphingBlob color1="#a855f7" color2="#06b6d4" />
-      </div>
-      <div className="absolute right-[-5%] bottom-[-15%] w-[400px] h-[400px] -z-10 pointer-events-none">
-        <MorphingBlob color1="#ec4899" color2="#6366f1" />
-      </div>
 
       {/* Center content */}
       <div className="relative z-20 flex flex-col items-center justify-center px-4 text-center">
         {/* Live badge */}
-        <div className="animate-scale-in mb-6 inline-flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-500/10 px-4 py-1.5 text-sm text-purple-300 backdrop-blur-sm">
-          <span className="relative flex h-2 w-2">
+        <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-500/10 px-5 py-2 text-sm text-purple-300 backdrop-blur-md badge-glow">
+          <span className="relative flex h-2.5 w-2.5">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-purple-400 opacity-75" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-purple-400" />
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-purple-400" />
           </span>
-          {stats.totalPrompts}+ curated GPT Image 2 prompts
+          <span className="font-medium">{stats.totalPrompts}+ curated GPT Image 2 prompts</span>
         </div>
 
-        {/* Main heading */}
-        <h1 className="animate-fade-in-up mb-4 text-4xl font-bold tracking-tight text-zinc-100 sm:text-5xl lg:text-7xl">
-          Explore{' '}
-          <AnimatedGradientText className="text-4xl font-bold sm:text-5xl lg:text-7xl">
-            AI Prompts
-          </AnimatedGradientText>
+        {/* Main heading — full neon + glitch effect */}
+        <h1 className="hero-heading mb-6 text-5xl font-black tracking-tight text-zinc-100 sm:text-6xl lg:text-8xl">
+          <NeonText color="purple" size="text-5xl sm:text-6xl lg:text-8xl">
+            Explore{' '}
+          </NeonText>
           <br />
-          <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-            <TypewriterText texts={['Ignite Creativity', 'Create Art', 'Build Worlds', 'Dream in Prompt']} />
+          <span className="neon-accent">
+            <GlitchText className="text-4xl sm:text-5xl lg:text-7xl">
+              AI Prompts
+            </GlitchText>
           </span>
         </h1>
 
-        {/* Subtitle */}
-        <p className="animate-fade-in-delay-2 mb-8 max-w-xl text-base text-zinc-400 sm:text-lg">
-          Free high-quality GPT Image 2 prompts. Copy and generate stunning AI images instantly.
-        </p>
+        {/* Typewriter subtitle */}
+        <div className="mb-10 h-8 text-lg text-zinc-400 sm:text-xl">
+          <TypewriterLoop
+            texts={['Ignite Creativity', 'Create Stunning Art', 'Build Imaginary Worlds', 'Dream in Prompt']}
+            className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent bg-[length:200%_100%] animate-text-shimmer"
+          />
+        </div>
 
         {/* Search */}
-        <div className="animate-fade-in-delay-3 w-full max-w-lg">
+        <div className="w-full max-w-xl mb-8">
           <SearchBox />
         </div>
 
         {/* Quick tags */}
-        <div className="animate-fade-in-delay-4 mt-6 flex flex-wrap justify-center gap-2">
-          {['Poster Design', 'Cyberpunk', 'Portrait', 'Sci-Fi', 'Watercolor'].map((tag) => (
+        <div className="flex flex-wrap justify-center gap-2.5">
+          {['Poster Design', 'Cyberpunk', 'Portrait', 'Sci-Fi', 'Watercolor', 'Anime', 'Fantasy'].map((tag) => (
             <Link
               key={tag}
               href={`/search?q=${encodeURIComponent(tag)}`}
-              className="tag-hover rounded-full border border-zinc-800 bg-zinc-900/60 px-3 py-1 text-xs text-zinc-400 backdrop-blur-sm hover:border-purple-500/50 hover:text-purple-300"
+              className="quick-tag rounded-full border border-zinc-700/60 bg-zinc-900/70 px-4 py-1.5 text-xs text-zinc-400 backdrop-blur-sm hover:border-purple-500/50 hover:text-purple-300 transition-all duration-300"
             >
               #{tag}
             </Link>
@@ -91,22 +89,23 @@ function StatsSection({ stats }: { stats: SiteStats }) {
   ]
 
   return (
-    <section className="border-y border-zinc-800/50 bg-zinc-900/30 px-4 py-14">
-      <div className="mx-auto max-w-4xl">
-        <div className="grid grid-cols-3 gap-8 text-center">
-          {items.map((item) => (
-            <AnimateCard key={item.label}>
-              <TiltCard className="rounded-2xl border border-zinc-800/60 bg-zinc-900/40 p-6 backdrop-blur-sm">
-                <div className="stat-number-glow inline-block">
-                  <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 bg-clip-text text-4xl font-bold text-transparent sm:text-5xl">
-                    <AnimatedCounter end={item.value} suffix={item.suffix} />
-                  </span>
+    <section className="relative border-y border-zinc-800/40 bg-zinc-900/20 px-4 py-20 overflow-hidden">
+      <ParticleCanvas particleCount={20} className="opacity-20" />
+      <div className="mx-auto max-w-5xl relative z-10">
+        <div className="grid grid-cols-1 gap-8 text-center sm:grid-cols-3">
+          {items.map((item, i) => (
+            <AnimateOnView key={item.label} delay={i * 0.15}>
+              <TiltNeonCard className="rounded-3xl border-zinc-700/40 bg-zinc-900/50 p-8 backdrop-blur-md">
+                <div className="text-5xl font-black text-zinc-100 sm:text-6xl">
+                  <CounterRoll end={item.value} suffix={item.suffix} duration={2500} />
                 </div>
-                <div className="mt-2 text-xs text-zinc-500 uppercase tracking-wider sm:text-sm">
+                <div className="mt-3 text-xs uppercase tracking-[0.2em] text-zinc-500 sm:text-sm">
                   {item.label}
                 </div>
-              </TiltCard>
-            </AnimateCard>
+                {/* Decorative orb */}
+                <div className="absolute -right-4 -top-4 h-20 w-20 rounded-full bg-purple-600/10 blur-2xl" />
+              </TiltNeonCard>
+            </AnimateOnView>
           ))}
         </div>
       </div>
@@ -117,10 +116,12 @@ function StatsSection({ stats }: { stats: SiteStats }) {
 // ======== Section Header ========
 function SectionHeader({ title, subtitle, action }: { title: string; subtitle?: string; action?: React.ReactNode }) {
   return (
-    <div className="mb-8 flex items-end justify-between">
+    <div className="mb-10 flex items-end justify-between">
       <div>
-        <h2 className="text-2xl font-bold text-zinc-100 sm:text-3xl">{title}</h2>
-        {subtitle && <p className="mt-1 text-sm text-zinc-400">{subtitle}</p>}
+        <h2 className="text-3xl font-bold text-zinc-100 sm:text-4xl">
+          <ShimmerText className="text-3xl font-bold sm:text-4xl">{title}</ShimmerText>
+        </h2>
+        {subtitle && <p className="mt-1.5 text-sm text-zinc-400">{subtitle}</p>}
       </div>
       {action}
     </div>
@@ -139,26 +140,25 @@ function PromptListSection({
 }) {
   if (items.length === 0) return null
   return (
-    <section className="px-4 py-20">
-      <div className="mx-auto max-w-7xl">
+    <section className="relative px-4 py-24 overflow-hidden">
+      <ParticleCanvas particleCount={15} className="opacity-15" />
+      <div className="mx-auto max-w-7xl relative z-10">
         <SectionHeader
           title={title}
           subtitle={subtitle}
           action={
-            <Link href="/category" className="group text-sm text-purple-400 transition-colors hover:text-purple-300">
+            <Link href="/category" className="group text-sm text-purple-400 transition-all duration-300 hover:text-purple-300 hover:translate-x-1 inline-block">
               View All →
             </Link>
           }
         />
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {items.map((item, i) => (
-            <AnimateCard key={item.slug} delay={i * 0.08}>
-              <TiltCard className="h-full">
-                <div className="prompt-card-v2 h-full">
-                  <PromptCard item={item} index={i} />
-                </div>
-              </TiltCard>
-            </AnimateCard>
+            <AnimateOnView key={item.slug} delay={i * 0.08}>
+              <GlowCard className="h-full rounded-2xl">
+                <PromptCard item={item} index={i} />
+              </GlowCard>
+            </AnimateOnView>
           ))}
         </div>
       </div>
@@ -169,21 +169,17 @@ function PromptListSection({
 // ======== Categories Section ========
 function CategoriesSection({ categories, categoryImages }: { categories: Category[]; categoryImages?: Record<string, string> }) {
   return (
-    <section className="relative px-4 py-20 overflow-hidden">
-      {/* Morphing blob decoration */}
-      <div className="absolute right-[-8%] top-[20%] w-[350px] h-[350px] -z-10 pointer-events-none opacity-40">
-        <MorphingBlob color1="#6366f1" color2="#a855f7" />
-      </div>
+    <section className="relative px-4 py-24 overflow-hidden">
+      <AuroraBackground>
+        <div className="absolute inset-0 opacity-10" style={{ background: 'radial-gradient(circle at 50% 50%, rgba(168,85,247,0.15) 0%, transparent 60%)' }} />
+      </AuroraBackground>
 
       <div className="mx-auto max-w-7xl relative z-10">
-        <AnimateOnView className="mb-12 text-center">
-          <h2 className="text-3xl font-bold text-zinc-100">
-            <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-              Explore
-            </span>{' '}
-            Categories
+        <AnimateOnView className="mb-16 text-center">
+          <h2 className="text-3xl font-bold text-zinc-100 sm:text-4xl">
+            <ShimmerText className="text-3xl font-bold sm:text-4xl">Explore Categories</ShimmerText>
           </h2>
-          <p className="mt-2 text-zinc-400">Browse by category to find the perfect prompt</p>
+          <p className="mt-3 text-zinc-400 text-base">Browse by category to find the perfect prompt style</p>
         </AnimateOnView>
         <CategoryBar categories={categories} categoryImages={categoryImages} />
       </div>
@@ -194,43 +190,46 @@ function CategoriesSection({ categories, categoryImages }: { categories: Categor
 // ======== How To Use Section ========
 function HowToUseSection() {
   const steps = [
-    { icon: '🔍', title: 'Search', desc: 'Enter keywords or browse categories' },
-    { icon: '📋', title: 'Copy', desc: 'Click card to view & copy full prompt' },
-    { icon: '🎨', title: 'Create', desc: 'Paste into GPT Image 2 & create' },
+    { icon: '🔍', title: 'Search & Browse', desc: 'Enter keywords or browse categories to discover prompts' },
+    { icon: '📋', title: 'Copy Prompt', desc: 'Click any card to view & copy the full prompt instantly' },
+    { icon: '🎨', title: 'Create Art', desc: 'Paste into GPT Image 2 and watch the magic happen' },
   ]
 
   return (
-    <section className="relative border-t border-zinc-800/50 px-4 py-24 overflow-hidden">
-      <ParticleField className="opacity-30" />
-
-      <div className="mx-auto max-w-4xl relative z-10">
-        <AnimateOnView className="mb-16 text-center">
-          <h2 className="text-3xl font-bold text-zinc-100">How It Works</h2>
-          <p className="mt-2 text-zinc-400">3 simple steps to create stunning AI art</p>
+    <section className="relative border-t border-zinc-800/40 px-4 py-28 overflow-hidden">
+      <ParticleCanvas particleCount={30} className="opacity-25" />
+      <div className="mx-auto max-w-5xl relative z-10">
+        <AnimateOnView className="mb-20 text-center">
+          <h2 className="text-3xl font-bold text-zinc-100 sm:text-4xl">
+            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent bg-[length:200%_100%] animate-text-shimmer">
+              How It Works
+            </span>
+          </h2>
+          <p className="mt-3 text-zinc-400 text-base">3 simple steps to create stunning AI art</p>
         </AnimateOnView>
 
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-3">
           {steps.map((step, i) => (
-            <AnimateCard key={i} delay={i * 0.15}>
-              <TiltCard className="relative rounded-2xl border border-zinc-800 bg-zinc-900/50 p-8 text-center backdrop-blur-sm">
-                {/* Step number */}
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-3 py-0.5 text-[11px] font-bold text-white shadow-lg shadow-purple-500/20">
-                  Step {i + 1}
+            <AnimateOnView key={i} delay={i * 0.2}>
+              <TiltNeonCard className="relative rounded-3xl border-zinc-700/40 bg-zinc-900/50 p-10 text-center backdrop-blur-md">
+                {/* Step number badge */}
+                <div className="step-badge absolute -top-5 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-1 text-xs font-black text-white shadow-lg shadow-purple-500/30">
+                  STEP {i + 1}
                 </div>
-                <div className="mb-4 text-5xl transition-transform duration-300 hover:scale-125">
+                <div className="mb-6 text-6xl transition-transform duration-500 hover:scale-125 hover:rotate-6 inline-block">
                   {step.icon}
                 </div>
-                <h3 className="mb-2 text-lg font-semibold text-zinc-100 group-hover:text-purple-300 transition-colors">
-                  {step.title}
+                <h3 className="mb-3 text-xl font-bold text-zinc-100 group-hover:text-purple-300 transition-colors">
+                  <NeonText color="cyan" size="text-xl">{step.title}</NeonText>
                 </h3>
                 <p className="text-sm text-zinc-400 leading-relaxed">{step.desc}</p>
 
                 {/* Connecting line */}
                 {i < steps.length - 1 && (
-                  <div className="hidden absolute -right-4 top-1/2 h-0.5 w-8 bg-gradient-to-r from-purple-500/40 to-transparent sm:block" />
+                  <div className="hidden absolute -right-6 top-1/2 h-0.5 w-12 bg-gradient-to-r from-purple-500/50 to-transparent sm:block" />
                 )}
-              </TiltCard>
-            </AnimateCard>
+              </TiltNeonCard>
+            </AnimateOnView>
           ))}
         </div>
       </div>
@@ -241,30 +240,30 @@ function HowToUseSection() {
 // ======== CTA Section ========
 function CTASection() {
   return (
-    <section className="relative overflow-hidden border-t border-zinc-800/50 px-4 py-24">
+    <section className="relative overflow-hidden border-t border-zinc-800/40 px-4 py-28">
       <AuroraBackground>
-        <ParticleField className="opacity-20" />
+        <ParticleCanvas particleCount={40} className="opacity-30" />
       </AuroraBackground>
 
-      <div className="relative z-20 mx-auto max-w-2xl text-center">
+      <div className="relative z-20 mx-auto max-w-3xl text-center">
         <AnimateOnView>
-          <h2 className="mb-4 text-3xl font-bold text-zinc-100 sm:text-4xl">
+          <h2 className="mb-6 text-4xl font-black text-zinc-100 sm:text-5xl cta-glow-text">
             Start Your{' '}
-            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 bg-clip-text text-transparent bg-[length:200%_100%] animate-text-shimmer">
               AI Creative Journey
             </span>
           </h2>
         </AnimateOnView>
-        <AnimateOnView delay={0.15}>
-          <p className="mb-10 text-zinc-400">
+        <AnimateOnView delay={0.2}>
+          <p className="mb-12 text-zinc-400 text-lg">
             Free to use, no registration required. Explore the hottest GPT Image 2 prompts of {new Date().getFullYear()}
           </p>
         </AnimateOnView>
-        <AnimateOnView delay={0.3}>
+        <AnimateOnView delay={0.4}>
           <Link href="/category">
-            <MagneticButton className="inline-block rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 px-10 py-4 text-base font-medium text-white transition-all duration-200 hover:opacity-90 hover:shadow-xl hover:shadow-purple-500/25">
-              Start Exploring →
-            </MagneticButton>
+            <MagneticBtn className="inline-block rounded-2xl px-12 py-4 text-lg font-bold">
+              🚀 Start Exploring
+            </MagneticBtn>
           </Link>
         </AnimateOnView>
       </div>
@@ -275,29 +274,31 @@ function CTASection() {
 // ======== Footer ========
 function Footer() {
   return (
-    <footer className="border-t border-zinc-800 px-4 py-12">
-      <div className="mx-auto max-w-7xl flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 text-sm font-bold text-white transition-transform hover:scale-105">
+    <footer className="border-t border-zinc-800/60 px-4 py-16">
+      <div className="mx-auto max-w-7xl flex flex-col items-center gap-6 sm:flex-row sm:justify-between">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 text-sm font-black text-white transition-all duration-500 hover:scale-110 hover:rotate-6 hover:shadow-lg hover:shadow-purple-500/40">
             P
           </div>
-          <span className="text-lg font-bold text-zinc-100">Prompt Hub</span>
+          <span className="text-xl font-bold text-zinc-100 hover:text-purple-300 transition-colors cursor-pointer">
+            Prompt Hub
+          </span>
         </div>
-        <p className="text-xs text-zinc-500">
+        <p className="text-xs text-zinc-500 text-center">
           &copy; {new Date().getFullYear()} Prompt Hub &middot; Data source:{' '}
-          <a href="https://youmind.com/gpt-image-2-prompts" target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:text-purple-300 ml-1">
+          <a href="https://youmind.com/gpt-image-2-prompts" target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:text-purple-300 transition-colors">
             YouMind
           </a>
           {' / '}
-          <a href="https://prompts.sorry.ink" target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:text-purple-300">
+          <a href="https://prompts.sorry.ink" target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:text-purple-300 transition-colors">
             Image-Prompts
           </a>
         </p>
-        <div className="flex gap-4">
-          <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-sm text-zinc-500 transition-colors hover:text-purple-400">
+        <div className="flex gap-6">
+          <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-sm text-zinc-500 transition-all duration-300 hover:text-purple-400 hover:translate-y-[-2px] inline-block">
             GitHub
           </a>
-          <Link href="/about" className="text-sm text-zinc-500 transition-colors hover:text-purple-400">
+          <Link href="/about" className="text-sm text-zinc-500 transition-all duration-300 hover:text-purple-400 hover:translate-y-[-2px] inline-block">
             About
           </Link>
         </div>
@@ -309,31 +310,31 @@ function Footer() {
 // ======== NavBar ========
 function NavBar() {
   return (
-    <nav className="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-md">
-      <div className="mx-auto max-w-7xl flex items-center gap-4 px-4 py-3">
-        <Link href="/" className="flex items-center gap-2 shrink-0 group">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 text-white font-bold text-sm transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-purple-500/30">
+    <nav className="sticky top-0 z-50 border-b border-zinc-800/70 bg-zinc-950/85 backdrop-blur-xl">
+      <div className="mx-auto max-w-7xl flex items-center gap-4 px-4 py-3.5">
+        <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 text-sm font-black text-white transition-all duration-500 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-purple-500/40">
             P
           </div>
-          <span className="text-lg font-bold text-zinc-100 group-hover:text-purple-300 transition-colors">
+          <span className="text-xl font-bold text-zinc-100 group-hover:text-purple-300 transition-colors">
             Prompt Hub
           </span>
         </Link>
-        <form action="/search" method="GET" className="flex gap-2 flex-1 max-w-lg ml-auto">
+        <form action="/search" method="GET" className="flex gap-2.5 flex-1 max-w-xl ml-auto">
           <div className="relative flex-1 group">
-            <svg className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500 transition-colors group-focus-within:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500 transition-colors group-focus-within:text-purple-400 z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <input
               name="q"
               type="text"
               placeholder="Search prompts..."
-              className="w-full rounded-xl border border-zinc-800 bg-zinc-900/80 py-2 pl-10 pr-4 text-sm text-zinc-100 placeholder-zinc-500 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500/20 focus:bg-zinc-900 transition-all duration-200"
+              className="w-full rounded-xl border border-zinc-700/60 bg-zinc-900/80 py-2.5 pl-11 pr-5 text-sm text-zinc-100 placeholder-zinc-500 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/25 focus:bg-zinc-900 transition-all duration-300"
             />
           </div>
           <button
             type="submit"
-            className="rounded-xl bg-purple-600 px-5 py-2 text-sm text-white font-medium transition-all duration-200 hover:bg-purple-700 hover:shadow-lg hover:shadow-purple-500/25 hover:-translate-y-0.5 active:translate-y-0"
+            className="rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-2.5 text-sm text-white font-semibold transition-all duration-300 hover:opacity-90 hover:shadow-lg hover:shadow-purple-500/30 hover:-translate-y-0.5 active:translate-y-0"
           >
             Search
           </button>
@@ -354,24 +355,24 @@ export default async function HomePage() {
   ])
 
   return (
-    <main className="min-h-screen bg-zinc-950">
+    <main className="min-h-screen bg-zinc-950 overflow-hidden">
       <NavBar />
       <HeroSection stats={statsData} />
       <StatsSection stats={statsData} />
       <CategoriesSection categories={catData} categoryImages={catImages} />
-      <div className="border-t border-zinc-800/50" />
-      <PromptListSection items={trendingData} title="🔥 Trending Prompts" subtitle="Most viewed prompts" />
-      <div className="border-t border-zinc-800/50" />
+      <div className="border-t border-zinc-800/30" />
+      <PromptListSection items={trendingData} title="🔥 Trending Prompts" subtitle="Most viewed prompts this week" />
+      <div className="border-t border-zinc-800/30" />
       <PromptListSection items={latestData} title="✨ Latest Prompts" subtitle="Newly added quality prompts" />
-      <div className="border-t border-zinc-800/50" />
+      <div className="border-t border-zinc-800/30" />
       {trendingData.length > 0 && (
         <>
           <PromptListSection items={trendingData.slice(0, 4)} title="💎 Editor's Picks" subtitle="Curated quality prompts" />
-          <div className="border-t border-zinc-800/50" />
+          <div className="border-t border-zinc-800/30" />
         </>
       )}
       <HowToUseSection />
-      <div className="border-t border-zinc-800/50" />
+      <div className="border-t border-zinc-800/30" />
       <CTASection />
       <Footer />
     </main>
