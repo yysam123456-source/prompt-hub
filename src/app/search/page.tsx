@@ -29,13 +29,15 @@ function SearchContent() {
         setAllPrompts(items)
 
         // 提取分类
-        const catMap = new Map()
+          const catMap = new Map()
         items.forEach((item: any) => {
           const cat = item.category || 'other'
           if (!catMap.has(cat)) {
+            // Format slug to readable English label
+            const label = (cat.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()))
             catMap.set(cat, {
               slug: cat,
-              label: item.categoryZh || cat.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()),
+              label: label,
             })
           }
         })

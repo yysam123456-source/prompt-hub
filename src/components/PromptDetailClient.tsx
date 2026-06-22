@@ -67,17 +67,14 @@ export default function PromptDetailClient({
 
   const displayPrompt = showZh && promptZh ? promptZh : promptText
 
-  // Detect if prompt is structured JSON format
+  // Detect if prompt is structured JSON format (check original promptText)
   const isJsonPrompt = (() => {
     const trimmed = (promptText || '').trim()
-    return (trimmed.startsWith('{') || trimmed.startsWith('[')) && !trimmed.includes('{argument')
+    if (!trimmed) return false
+    return (trimmed.startsWith('{') || trimmed.startsWith('['))
   })()
 
-  // Pretty-print JSON prompts for readability
-  const formattedDisplay = isJsonPrompt
-    ? tryPrettyPrint(displayPrompt)
-    : displayPrompt
-
+  // Pretty-print JSON prompts for display only (not for copy)
   function tryPrettyPrint(text: string): string {
     try {
       const parsed = JSON.parse(text)
@@ -87,7 +84,11 @@ export default function PromptDetailClient({
     }
   }
 
-  // Parse argument placeholders: {argument name="xxx" default="yyy"} (only for non-JSON prompts)
+  const formattedDisplay = isJsonPrompt
+    ? tryPrettyPrint(displayPrompt)
+    : displayPrompt
+
+  // Parse argument placeholders from the ORIGINAL English prompt (for copy)
   const argRegex = /\{argument\s+name="([^"]+)"(?:\s+default="([^"]*)")?\s*\}/g
   const args: Array<{name: string, defaultValue: string}> = []
   let match
@@ -110,8 +111,9 @@ export default function PromptDetailClient({
     }
   }, [hasArguments])
 
-  function getFinalPrompt() {
-    let final = formattedDisplay
+  // getFinalPrompt: always returns English prompt with arguments filled in (for copy)
+  function getFinalPrompt(): string {
+    let final = promptText
     if (hasArguments) {
       args.forEach(arg => {
         const placeholder = `{argument name="${arg.name}"${arg.defaultValue ? ` default="${arg.defaultValue}"` : ''}}`
@@ -121,6 +123,7 @@ export default function PromptDetailClient({
     return final
   }
 
+  // Category config — all categories with English labels
   const categoryConfig: Record<string, { name: string; emoji: string }> = {
     'article-covers': { name: 'Article Covers', emoji: '📖' },
     'profile-avatar': { name: 'Profile Avatar', emoji: '👤' },
@@ -130,8 +133,22 @@ export default function PromptDetailClient({
     'comic': { name: 'Comic', emoji: '📚' },
     'poster': { name: 'Poster', emoji: '🎨' },
     'app-web-design': { name: 'App Web Design', emoji: '💻' },
+    'anime_game': { name: 'Anime & Game', emoji: '🎮' },
+    'character': { name: 'Character', emoji: '👤' },
+    'product-photography': { name: 'Product Photography', emoji: '📷' },
+    'fashion': { name: 'Fashion', emoji: '👗' },
+    'architecture': { name: 'Architecture', emoji: '🏛️' },
+    'food-drink': { name: 'Food & Drink', emoji: '🍜' },
+    'nature-landscape': { name: 'Nature & Landscape', emoji: '🌿' },
+    'abstract-geometric': { name: 'Abstract & Geometric', emoji: '🔷' },
+    'vintage-retro': { name: 'Vintage & Retro', emoji: '📻' },
+    'other': { name: 'Other', emoji: '💡' },
   }
-  const config = categoryConfig[category] || { name: categoryZh || category, emoji: '💡' }
+  // Fallback: format slug to readable English (no Chinese)
+  const config = categoryConfig[category] || {
+    name: category.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()),
+    emoji: '💡',
+  }
 
   return (
     <div className="min-h-screen bg-zinc-950">
@@ -256,9 +273,9 @@ export default function PromptDetailClient({
                     variant="outline"
                     size="sm"
                     onClick={() => setShowZh(!showZh)}
-                    className="text-xs border-zinc-700 text-zinc-400 hover:text-purple-300"
+                    className="text-xs border-zinc-700 text-zinc-400 hover:text-purple-300 gap-1"
                   >
-                    {showZh ? 'English' : '中文'}
+                    {showZh ? '🇺🇸 EN' : '🇨🇳 中文'}
                   </Button>
                 )}
                 <Button
