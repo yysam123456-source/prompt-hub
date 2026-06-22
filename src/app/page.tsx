@@ -7,14 +7,12 @@ import {
   NeonText,
   GlitchText,
   TypewriterLoop,
-  ParticleCanvas,
-  MeshGradient,
-  Starfield,
   TiltNeonCard,
   MagneticBtn,
   CounterRoll,
   GlowCard,
   ShimmerText,
+  FlowMesh,
 } from '@/components/animata/effects/v2'
 import { SearchBox, AnimateOnView } from './HomePageClient'
 
@@ -25,11 +23,9 @@ function HeroSection({ stats }: { stats: SiteStats }) {
       {/* Unified smooth background — no patchy aurora blobs */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a1a] via-[#0c0c22] to-[#0e0e28]" />
 
-      {/* Smooth mesh gradient overlay */}
-      <MeshGradient intensity="medium" className="opacity-60" />
-
-      {/* Visible starfield animation */}
-      <Starfield density={150} className="opacity-70" />
+      {/* Flowing gradient mesh — silky smooth, no patchy blobs */}
+      <FlowMesh className="opacity-60" />
+      <div className="absolute inset-0 bg-[#0a0a1a]/40 pointer-events-none" />
 
       {/* Center content */}
       <div className="relative z-20 flex flex-col items-center justify-center px-4 text-center">
@@ -98,8 +94,8 @@ function StatsSection({ stats }: { stats: SiteStats }) {
 
   return (
     <section className="relative px-4 py-20 overflow-hidden bg-[#0b0b20]">
-      {/* Subtle mesh gradient for depth */}
-      <MeshGradient intensity="subtle" className="opacity-30" />
+      {/* Flowing mesh for depth — no more patchy blobs */}
+      <FlowMesh className="opacity-25" />
 
       <div className="mx-auto max-w-5xl relative z-10">
         <div className="grid grid-cols-1 gap-8 text-center sm:grid-cols-3">
@@ -148,9 +144,9 @@ function PromptListSection({
 }) {
   if (items.length === 0) return null
   return (
-    <section className="relative px-4 py-24 bg-[#0a0a1e]">
-      {/* Very subtle mesh for texture */}
-      <MeshGradient intensity="subtle" className="opacity-15" />
+    <section className="relative px-4 py-24 bg-[#0a0a1e] overflow-hidden">
+      {/* Flowing mesh for texture — smooth, no patches */}
+      <FlowMesh className="opacity-20" />
 
       <div className="mx-auto max-w-7xl relative z-10">
         <SectionHeader
@@ -252,7 +248,8 @@ function HowToUseSection() {
 
   return (
     <section className="relative px-4 py-28 bg-[#0a0a1e] overflow-hidden">
-      <MeshGradient intensity="subtle" className="opacity-30" />
+      {/* Flowing mesh — silky smooth, no patchy blobs */}
+      <FlowMesh className="opacity-25" />
 
       {/* Decorative grid lines */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none" />
@@ -313,8 +310,9 @@ function HowToUseSection() {
 function CTASection() {
   return (
     <section className="relative overflow-hidden px-4 py-28 bg-[#0c0c26]">
-      <MeshGradient intensity="medium" className="opacity-50" />
-      <Starfield density={80} className="opacity-40" />
+      {/* Flowing gradient mesh — smooth, no patches */}
+      <FlowMesh className="opacity-50" />
+      <div className="absolute inset-0 bg-[#0c0c26]/30 pointer-events-none" />
 
       <div className="relative z-20 mx-auto max-w-3xl text-center">
         <AnimateOnView>

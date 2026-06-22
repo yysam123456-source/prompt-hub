@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+export { FlowMesh } from './flow-mesh'
 
 // ===== Neon Glow Text =====
 // 多层 text-shadow 霓虹灯效果 + 闪烁动画
