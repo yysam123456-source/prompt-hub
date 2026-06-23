@@ -40,7 +40,7 @@ function CategoryCard({ cat, idx }: { cat: CategoryWithImage; idx: number }) {
     gradient: 'from-zinc-700/90 to-zinc-900/90',
     emoji: '💡',
   }
-  const href = `/category?slug=${encodeURIComponent(cat.slug)}`
+  const href = `/category?cat=${encodeURIComponent(cat.slug)}`
   const hasRealImage = !!cat.imageUrl && !imgFailed
 
   return (
