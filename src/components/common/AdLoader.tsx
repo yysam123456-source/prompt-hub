@@ -1,6 +1,5 @@
 'use client';
 
-import Script from 'next/script';
 import { useEffect, useState } from 'react';
 import { isAdsEnabled, isAdsEnabledSync } from '@/lib/config/ads';
 
@@ -9,10 +8,12 @@ import { isAdsEnabled, isAdsEnabledSync } from '@/lib/config/ads';
  *
  * Uses runtime config (remote or hardcoded) to decide whether to load ads.
  * This runs on the client after hydration, so remote config fetch works.
+ *
+ * Monetag vignette banner is loaded inline (no separate .js file)
+ * to avoid Cloudflare 403 issues on static .js files.
  */
 export function AdLoader() {
   const [adsEnabled, setAdsEnabled] = useState(isAdsEnabledSync());
-  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -28,17 +29,24 @@ export function AdLoader() {
     return () => { cancelled = true; };
   }, []);
 
+  useEffect(() => {
+    if (!adsEnabled) return;
+
+    // Load Monetag vignette banner (inline, no separate .js file)
+    const s = document.createElement('script');
+    s.dataset.zone = '11117037';
+    s.src = 'https://n6wxm.com/vignette.min.js';
+    s.async = true;
+    document.body.appendChild(s);
+
+    return () => {
+      // Cleanup: remove script when component unmounts
+      const existing = document.querySelector('script[data-zone="11117037"]');
+      if (existing) existing.remove();
+    };
+  }, [adsEnabled]);
+
   if (!adsEnabled) return null;
 
-  return (
-    <>
-      {/* Monetag Vignette Banner */}
-      <Script
-        id="monetag-vignette"
-        src="/monetag-vignette.js"
-        strategy="afterInteractive"
-        onLoad={() => setLoaded(true)}
-      />
-    </>
-  );
+  return null;
 }
