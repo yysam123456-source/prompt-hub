@@ -1,9 +1,12 @@
 /**
- * Ad configuration module
+ * Ad configuration module for prompt-hub
  *
+ * Uses Monetag vignette banner.
  * Centralized control via craftisle-configs repo.
- * All Craftisle projects read from the same URL.
  */
+
+// ========== Ad platform for this project ==========
+export const AD_PLATFORM = 'monetag' as const;
 
 // Hardcoded fallback (used when remote config is unavailable)
 export const ADS_ENABLED = true;
@@ -21,6 +24,8 @@ let remoteCache: { value: boolean; fetchedAt: number } | null = null;
 
 export interface AdsRemoteConfig {
   enabled: boolean;
+  monetag?: boolean;
+  adsense?: boolean;
   updatedAt: string;
   note?: string;
 }
@@ -46,8 +51,15 @@ export async function isAdsEnabled(): Promise<boolean> {
       });
       if (res.ok) {
         const config: AdsRemoteConfig = await res.json();
-        remoteCache = { value: config.enabled, fetchedAt: now };
-        return config.enabled;
+        // Check platform-specific field
+        let enabled: boolean;
+        if (AD_PLATFORM === 'monetag') {
+          enabled = config.enabled && config.monetag !== false;
+        } else {
+          enabled = config.enabled && config.adsense !== false;
+        }
+        remoteCache = { value: enabled, fetchedAt: now };
+        return enabled;
       }
     } catch {
       // fetch failed - fall through to hardcoded fallback
