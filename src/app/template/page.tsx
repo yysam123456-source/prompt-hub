@@ -8,6 +8,7 @@ import { getCategoryConfig } from '@/lib/categories'
 
 interface Template {
   id: string
+  templateId: string
   anchor: string
   title: string
   description: string
@@ -24,7 +25,7 @@ interface Template {
 
 function TemplateContent() {
   const searchParams = useSearchParams()
-  const anchor = searchParams.get('anchor') || ''
+  const templateId = searchParams.get('id') || ''
   const [template, setTemplate] = useState<Template | null>(null)
   const [allTemplates, setAllTemplates] = useState<Template[]>([])
   const [loading, setLoading] = useState(true)
@@ -36,13 +37,13 @@ function TemplateContent() {
         const res = await fetch('/data/templates.json')
         const data: Template[] = await res.json()
         setAllTemplates(data)
-        const found = data.find(t => t.anchor === anchor) || data[0]
+        const found = data.find((t: Template) => t.templateId === templateId) || data[0]
         setTemplate(found)
       } catch { /* ignore */ }
       setLoading(false)
     }
     load()
-  }, [anchor])
+  }, [templateId])
 
   if (loading) {
     return (
@@ -156,12 +157,12 @@ function TemplateContent() {
           <section className="mt-16 pt-8 border-t border-zinc-800">
             <h3 className="text-lg font-semibold text-white mb-4">More Templates</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {allTemplates.filter(t => t.anchor !== template.anchor).slice(0, 8).map(t => {
+              {allTemplates.filter(t => t.templateId !== template.templateId).slice(0, 8).map(t => {
                 const cfg = getCategoryConfig(t.category)
                 return (
                   <Link
                     key={t.id}
-                    href={`/template?anchor=${encodeURIComponent(t.anchor)}`}
+                    href={`/template?id=${encodeURIComponent(t.templateId)}`}
                     className="block p-4 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-purple-500/50 transition-all group"
                   >
                     <span className="text-xs text-zinc-500 block mb-1">{cfg.emoji} {cfg.label}</span>

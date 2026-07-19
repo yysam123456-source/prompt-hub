@@ -36,6 +36,14 @@ function toEN(obj) {
   return ''
 }
 
+// guidance/pitfalls in style-library are {en: [...], zh: [...]} objects, not arrays
+function extractList(val) {
+  if (!val) return []
+  if (Array.isArray(val)) return val.map(toEN).filter(Boolean)
+  if (typeof val === 'object' && Array.isArray(val.en)) return val.en.filter(Boolean)
+  return []
+}
+
 function mapImage(url) {
   if (!url) return ''
   if (url.startsWith('/images/')) return GITHUB_RAW_IMAGES + url
@@ -45,7 +53,8 @@ function mapImage(url) {
 
 const templates = raw.templates.map((t, i) => ({
   id: crypto.randomUUID(),
-  anchor: t.anchor || '',
+  templateId: t.id || '',       // original id from style-library (unique, e.g. "infographic-engine")
+  anchor: t.anchor || '',       // category-level grouping key (e.g. "tpl-infographic")
   title: toEN(t.title) || 'Untitled Template',
   description: toEN(t.description) || '',
   category: CATEGORY_MAP[t.category] || 'other',
@@ -54,12 +63,8 @@ const templates = raw.templates.map((t, i) => ({
   scenes: (t.scenes || []).filter(Boolean),
   tags: (t.tags || []).filter(Boolean),
   useWhen: toEN(t.useWhen),
-  guidance: Array.isArray(t.guidance)
-    ? t.guidance.map(toEN).filter(Boolean)
-    : [],
-  pitfalls: Array.isArray(t.pitfalls)
-    ? t.pitfalls.map(toEN).filter(Boolean)
-    : [],
+  guidance: extractList(t.guidance),
+  pitfalls: extractList(t.pitfalls),
   exampleCases: (t.exampleCases || []),
 }))
 

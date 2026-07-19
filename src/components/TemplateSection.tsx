@@ -7,6 +7,7 @@ import { getCategoryConfig } from '@/lib/categories'
 
 interface Template {
   id: string
+  templateId: string
   anchor: string
   title: string
   description: string
@@ -54,7 +55,7 @@ export default function TemplateSection() {
               transition={{ duration: 0.4, delay: idx * 0.06 }}
             >
               <Link
-                href={`/template?anchor=${encodeURIComponent(t.anchor)}`}
+                href={`/template?id=${encodeURIComponent(t.templateId)}`}
                 className="block group p-5 rounded-xl bg-zinc-900/80 border border-zinc-800/80 hover:border-purple-500/40 transition-all duration-300 hover:bg-zinc-900"
               >
                 <div className="flex items-center gap-2 mb-3">
@@ -84,7 +85,7 @@ export default function TemplateSection() {
 
       <div className="text-center mt-8">
         <Link
-          href="/template?anchor=tpl-ui"
+          href="/template?id=ui-screenshot-system"
           className="inline-flex items-center gap-2 text-sm text-purple-400 hover:text-purple-300 transition-colors"
         >
           View all templates <span className="text-lg leading-none">→</span>
