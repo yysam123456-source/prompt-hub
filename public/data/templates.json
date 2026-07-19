@@ -1,0 +1,602 @@
+[
+ {
+  "id": "f2fa4cca-5ab2-481f-9873-03eb58097129",
+  "anchor": "tpl-ui",
+  "title": "UI Screenshot System",
+  "description": "High-fidelity app, web, dashboard, and social interface prompts.",
+  "category": "tech_scifi",
+  "cover": "https://raw.githubusercontent.com/freestylefly/awesome-gpt-image-2/main/images/case17.jpg",
+  "styles": [
+   "UI"
+  ],
+  "scenes": [
+   "Tech",
+   "Social"
+  ],
+  "tags": [
+   "UI",
+   "Dashboard",
+   "Screenshot"
+  ],
+  "useWhen": "Use for app screens, dashboards, social screenshots, and live interface mockups.",
+  "guidance": [],
+  "pitfalls": [],
+  "exampleCases": [
+   17,
+   2,
+   4
+  ]
+ },
+ {
+  "id": "725a0c84-83cf-4f6f-a1e4-6a551ad46845",
+  "anchor": "tpl-infographic",
+  "title": "Infographic Engine",
+  "description": "Structured diagrams, timelines, knowledge maps, and explainers.",
+  "category": "graphic_design",
+  "cover": "https://raw.githubusercontent.com/freestylefly/awesome-gpt-image-2/main/images/case334.png",
+  "styles": [
+   "Infographic",
+   "Charts"
+  ],
+  "scenes": [
+   "Education",
+   "Tech"
+  ],
+  "tags": [
+   "Infographic",
+   "Chart",
+   "Education"
+  ],
+  "useWhen": "Use for explainer graphics, technical diagrams, timelines, and knowledge cards.",
+  "guidance": [],
+  "pitfalls": [],
+  "exampleCases": [
+   334,
+   1,
+   8
+  ]
+ },
+ {
+  "id": "b5d01a17-6264-43f2-9bc5-8dcd23e32121",
+  "anchor": "tpl-infographic",
+  "title": "Scientific Scale Diagram",
+  "description": "Multi-scale science visuals with readable labels and hierarchy.",
+  "category": "graphic_design",
+  "cover": "https://raw.githubusercontent.com/freestylefly/awesome-gpt-image-2/main/images/case341.jpg",
+  "styles": [
+   "Infographic",
+   "Charts",
+   "Realistic"
+  ],
+  "scenes": [
+   "Education",
+   "Tech"
+  ],
+  "tags": [
+   "Infographic",
+   "Chart",
+   "Education"
+  ],
+  "useWhen": "Use when the topic needs micro-to-macro scale comparison and labeled detail windows.",
+  "guidance": [],
+  "pitfalls": [],
+  "exampleCases": [
+   341
+  ]
+ },
+ {
+  "id": "29f1dd6a-c84a-4ed1-aa10-899cc5eda1e4",
+  "anchor": "tpl-poster",
+  "title": "Poster Layout System",
+  "description": "Event, product, movie, and social poster compositions.",
+  "category": "graphic_design",
+  "cover": "https://raw.githubusercontent.com/freestylefly/awesome-gpt-image-2/main/images/case345.jpg",
+  "styles": [
+   "Poster"
+  ],
+  "scenes": [
+   "Commerce",
+   "Social"
+  ],
+  "tags": [
+   "Poster",
+   "Typography",
+   "Campaign"
+  ],
+  "useWhen": "Use for event posters, movie posters, covers, and social campaign visuals.",
+  "guidance": [],
+  "pitfalls": [],
+  "exampleCases": [
+   345,
+   5,
+   10
+  ]
+ },
+ {
+  "id": "b1b9eeba-0c38-4929-9599-f3fb8d31a4bb",
+  "anchor": "tpl-poster",
+  "title": "Sports Campaign Poster",
+  "description": "Commercial sports visuals with athletes, props, and brand color.",
+  "category": "graphic_design",
+  "cover": "https://raw.githubusercontent.com/freestylefly/awesome-gpt-image-2/main/images/case350.jpg",
+  "styles": [
+   "Poster",
+   "Realistic"
+  ],
+  "scenes": [
+   "Commerce",
+   "Fashion"
+  ],
+  "tags": [
+   "Poster",
+   "Campaign",
+   "Typography"
+  ],
+  "useWhen": "Use for sports brand campaigns, athlete posters, and product-led sport visuals.",
+  "guidance": [],
+  "pitfalls": [],
+  "exampleCases": [
+   350,
+   3
+  ]
+ },
+ {
+  "id": "34384a2e-8bfe-4117-985f-8b998dde19ba",
+  "anchor": "tpl-poster",
+  "title": "Conceptual Typography Poster",
+  "description": "Premium title-led posters with strong typographic systems.",
+  "category": "graphic_design",
+  "cover": "https://raw.githubusercontent.com/freestylefly/awesome-gpt-image-2/main/images/case355.jpg",
+  "styles": [
+   "Poster"
+  ],
+  "scenes": [
+   "Creative",
+   "Social"
+  ],
+  "tags": [
+   "Typography",
+   "Poster",
+   "Style"
+  ],
+  "useWhen": "Use when the exact title must become the main visual structure.",
+  "guidance": [],
+  "pitfalls": [],
+  "exampleCases": [
+   355
+  ]
+ },
+ {
+  "id": "b122d4a6-6416-4cd3-9a3b-5a6be4cf6255",
+  "anchor": "tpl-poster",
+  "title": "Ink Double Exposure Poster",
+  "description": "Chinese ink, portrait, and layered atmosphere composition.",
+  "category": "graphic_design",
+  "cover": "https://raw.githubusercontent.com/freestylefly/awesome-gpt-image-2/main/images/case359.jpg",
+  "styles": [
+   "Poster",
+   "Illustration",
+   "Classical"
+  ],
+  "scenes": [
+   "Story",
+   "History"
+  ],
+  "tags": [
+   "Poster",
+   "Classical",
+   "Style"
+  ],
+  "useWhen": "Use for poetic portrait posters, ink atmospheres, and layered cultural visuals.",
+  "guidance": [],
+  "pitfalls": [],
+  "exampleCases": [
+   359
+  ]
+ },
+ {
+  "id": "29ed8397-5be6-4787-a20f-df2531559655",
+  "anchor": "tpl-poster",
+  "title": "Nature Science Poster",
+  "description": "Minimal product-style science posters for natural subjects.",
+  "category": "graphic_design",
+  "cover": "https://raw.githubusercontent.com/freestylefly/awesome-gpt-image-2/main/images/case339.jpg",
+  "styles": [
+   "Poster",
+   "Infographic"
+  ],
+  "scenes": [
+   "Education"
+  ],
+  "tags": [
+   "Poster",
+   "Education",
+   "Style"
+  ],
+  "useWhen": "Use for natural subjects that need a premium, clean science poster feel.",
+  "guidance": [],
+  "pitfalls": [],
+  "exampleCases": [
+   339
+  ]
+ },
+ {
+  "id": "41e867f3-6cc1-47be-ac42-0fbf0a1b1794",
+  "anchor": "tpl-product",
+  "title": "Product Commerce Visual",
+  "description": "Product shots, packaging, detail pages, and selling-point layouts.",
+  "category": "ecommerce",
+  "cover": "https://raw.githubusercontent.com/freestylefly/awesome-gpt-image-2/main/images/case373.jpg",
+  "styles": [
+   "Product",
+   "Realistic"
+  ],
+  "scenes": [
+   "Commerce",
+   "Food"
+  ],
+  "tags": [
+   "Product",
+   "Commerce",
+   "Packaging"
+  ],
+  "useWhen": "Use for product hero shots, packaging visuals, detail pages, and sales layouts.",
+  "guidance": [],
+  "pitfalls": [],
+  "exampleCases": [
+   373,
+   358
+  ]
+ },
+ {
+  "id": "3dcb0f00-9499-4ffb-897b-86f62a67f49b",
+  "anchor": "tpl-product",
+  "title": "Personalized Beauty Report",
+  "description": "Recommendation-report layouts for beauty and lifestyle products.",
+  "category": "ecommerce",
+  "cover": "https://raw.githubusercontent.com/freestylefly/awesome-gpt-image-2/main/images/case353.jpg",
+  "styles": [
+   "Product",
+   "UI"
+  ],
+  "scenes": [
+   "Commerce",
+   "Fashion"
+  ],
+  "tags": [
+   "Product",
+   "Layout",
+   "Style"
+  ],
+  "useWhen": "Use for beauty recommendations, skin reports, shopping assistants, and lifestyle product cards.",
+  "guidance": [],
+  "pitfalls": [],
+  "exampleCases": [
+   353
+  ]
+ },
+ {
+  "id": "6d94cb38-a32e-4580-bc4b-696c84ab3afb",
+  "anchor": "tpl-brand",
+  "title": "Brand Identity Package",
+  "description": "Logo, palette, typography, applications, and brand touchpoints.",
+  "category": "branding_visual",
+  "cover": "https://raw.githubusercontent.com/freestylefly/awesome-gpt-image-2/main/images/case354.jpg",
+  "styles": [
+   "Brand"
+  ],
+  "scenes": [
+   "Commerce"
+  ],
+  "tags": [
+   "Brand",
+   "Logo",
+   "Identity"
+  ],
+  "useWhen": "Use for logo systems, brand boards, visual identity kits, and application mockups.",
+  "guidance": [],
+  "pitfalls": [],
+  "exampleCases": [
+   354
+  ]
+ },
+ {
+  "id": "e5c574b1-b8d1-4a6a-95f2-d9ed0b8189a2",
+  "anchor": "tpl-brand",
+  "title": "Brand Touchpoint Board",
+  "description": "Campaign boards across packaging, social, web, and display contexts.",
+  "category": "branding_visual",
+  "cover": "https://raw.githubusercontent.com/freestylefly/awesome-gpt-image-2/main/images/case362.jpg",
+  "styles": [
+   "Brand",
+   "Product"
+  ],
+  "scenes": [
+   "Commerce",
+   "Social"
+  ],
+  "tags": [
+   "Brand",
+   "Identity",
+   "Campaign"
+  ],
+  "useWhen": "Use for multi-touchpoint campaign boards and brand rollout previews.",
+  "guidance": [],
+  "pitfalls": [],
+  "exampleCases": [
+   362
+  ]
+ },
+ {
+  "id": "a0ee6e29-54cd-4f37-8e75-269211f69d5e",
+  "anchor": "tpl-architecture",
+  "title": "Architecture & Space",
+  "description": "Interior, exterior, city, map, and spatial concept visuals.",
+  "category": "architecture_interior",
+  "cover": "https://raw.githubusercontent.com/freestylefly/awesome-gpt-image-2/main/images/case331.png",
+  "styles": [
+   "Architecture"
+  ],
+  "scenes": [
+   "Travel",
+   "Commerce"
+  ],
+  "tags": [
+   "Architecture",
+   "Interior",
+   "Map"
+  ],
+  "useWhen": "Use for interiors, architecture renders, city maps, spatial plans, and environment concepts.",
+  "guidance": [],
+  "pitfalls": [],
+  "exampleCases": [
+   331,
+   11
+  ]
+ },
+ {
+  "id": "54d476d2-fb31-469a-8e39-793fe3e69ca2",
+  "anchor": "tpl-photo",
+  "title": "Realistic Photography",
+  "description": "Lens, lighting, film texture, and documentary-style photo prompts.",
+  "category": "photography",
+  "cover": "https://raw.githubusercontent.com/freestylefly/awesome-gpt-image-2/main/images/case377.jpg",
+  "styles": [
+   "Photography",
+   "Realistic"
+  ],
+  "scenes": [
+   "Fashion",
+   "Commerce"
+  ],
+  "tags": [
+   "Photography",
+   "Realistic",
+   "Lens"
+  ],
+  "useWhen": "Use for portraits, street photos, product photography, and cinematic realism.",
+  "guidance": [],
+  "pitfalls": [],
+  "exampleCases": [
+   377
+  ]
+ },
+ {
+  "id": "55612628-8917-4ddf-8125-14447219549b",
+  "anchor": "tpl-photo",
+  "title": "Street Accident Moment",
+  "description": "Realistic phone-photo scenes with negative constraints.",
+  "category": "photography",
+  "cover": "https://raw.githubusercontent.com/freestylefly/awesome-gpt-image-2/main/images/case376.jpg",
+  "styles": [
+   "Photography",
+   "Realistic"
+  ],
+  "scenes": [
+   "Travel",
+   "Social"
+  ],
+  "tags": [
+   "Photography",
+   "Realistic",
+   "Scene"
+  ],
+  "useWhen": "Use for candid street moments, accidental spills, documentary phone shots, and fast action.",
+  "guidance": [],
+  "pitfalls": [],
+  "exampleCases": [
+   376
+  ]
+ },
+ {
+  "id": "ff8371ab-e882-424d-b6ce-eec79432d90d",
+  "anchor": "tpl-illustration",
+  "title": "Illustration & Art Style",
+  "description": "Anime, watercolor, ink, material experiments, and art direction.",
+  "category": "illustration",
+  "cover": "https://raw.githubusercontent.com/freestylefly/awesome-gpt-image-2/main/images/case346.jpg",
+  "styles": [
+   "Illustration"
+  ],
+  "scenes": [
+   "Story",
+   "Creative"
+  ],
+  "tags": [
+   "Illustration",
+   "Art",
+   "Style"
+  ],
+  "useWhen": "Use for anime, watercolor, ink, decorative art, and style experiments.",
+  "guidance": [],
+  "pitfalls": [],
+  "exampleCases": [
+   346,
+   6
+  ]
+ },
+ {
+  "id": "203c2168-e20c-425a-9075-91fd708183fb",
+  "anchor": "tpl-character",
+  "title": "Character Design Sheet",
+  "description": "Characters, pose sheets, action grids, and identity consistency.",
+  "category": "character",
+  "cover": "https://raw.githubusercontent.com/freestylefly/awesome-gpt-image-2/main/images/case347.jpg",
+  "styles": [
+   "Character",
+   "Illustration"
+  ],
+  "scenes": [
+   "Story"
+  ],
+  "tags": [
+   "Character",
+   "Pose",
+   "Style"
+  ],
+  "useWhen": "Use for character sheets, pose grids, action breakdowns, and identity references.",
+  "guidance": [],
+  "pitfalls": [],
+  "exampleCases": [
+   347
+  ]
+ },
+ {
+  "id": "7fa0b219-90a7-4b92-b4fe-3a90de5de6ba",
+  "anchor": "tpl-character",
+  "title": "3D Collectible Toy",
+  "description": "Reference photo to premium 3D collectible figure prompts.",
+  "category": "character",
+  "cover": "https://raw.githubusercontent.com/freestylefly/awesome-gpt-image-2/main/images/case378.jpg",
+  "styles": [
+   "3D",
+   "Character"
+  ],
+  "scenes": [
+   "Commerce",
+   "Creative"
+  ],
+  "tags": [
+   "Character",
+   "3D",
+   "Style"
+  ],
+  "useWhen": "Use for premium collectible figures, avatar toys, blind-box characters, and 3D display renders.",
+  "guidance": [],
+  "pitfalls": [],
+  "exampleCases": [
+   378
+  ]
+ },
+ {
+  "id": "f77a0340-50ed-407f-911e-e486a99a2d2c",
+  "anchor": "tpl-scene",
+  "title": "Scene Storytelling",
+  "description": "Storyboards, worldbuilding, narrative scenes, and emotional pacing.",
+  "category": "novel_story",
+  "cover": "https://raw.githubusercontent.com/freestylefly/awesome-gpt-image-2/main/images/case330.png",
+  "styles": [
+   "Scenes",
+   "Illustration"
+  ],
+  "scenes": [
+   "Story",
+   "Social"
+  ],
+  "tags": [
+   "Scene",
+   "Story",
+   "Storyboard"
+  ],
+  "useWhen": "Use for storyboards, worldbuilding, live scenes, and emotional narrative frames.",
+  "guidance": [],
+  "pitfalls": [],
+  "exampleCases": [
+   330
+  ]
+ },
+ {
+  "id": "e42e6290-0067-4708-a9c8-c330bb531a95",
+  "anchor": "tpl-history",
+  "title": "History & Classical Themes",
+  "description": "Dynasty clothing, scroll narrative, poetry, and traditional motifs.",
+  "category": "cultural_products",
+  "cover": "https://raw.githubusercontent.com/freestylefly/awesome-gpt-image-2/main/images/case375.jpg",
+  "styles": [
+   "History",
+   "Classical",
+   "Illustration"
+  ],
+  "scenes": [
+   "History",
+   "Story"
+  ],
+  "tags": [
+   "History",
+   "Classical",
+   "Scroll"
+  ],
+  "useWhen": "Use for ancient Chinese themes, scrolls, dynasty clothing, poetry visuals, and historical scenes.",
+  "guidance": [],
+  "pitfalls": [],
+  "exampleCases": [
+   375,
+   338
+  ]
+ },
+ {
+  "id": "6d61d515-f3c6-4fef-94e4-5825dd2abe39",
+  "anchor": "tpl-document",
+  "title": "Document & Publishing",
+  "description": "White papers, manuals, encyclopedic plates, and page systems.",
+  "category": "graphic_design",
+  "cover": "https://raw.githubusercontent.com/freestylefly/awesome-gpt-image-2/main/images/case360.jpg",
+  "styles": [
+   "Documents",
+   "Infographic"
+  ],
+  "scenes": [
+   "Education",
+   "Tech"
+  ],
+  "tags": [
+   "Document",
+   "Publishing",
+   "Layout"
+  ],
+  "useWhen": "Use for white papers, manuals, encyclopedic plates, report pages, and publication systems.",
+  "guidance": [],
+  "pitfalls": [],
+  "exampleCases": [
+   360
+  ]
+ },
+ {
+  "id": "4ba73372-d293-4151-bb94-8cb52ed0773b",
+  "anchor": "tpl-other",
+  "title": "Concept Product Breakdown",
+  "description": "R&D boards, exploded views, mixed tasks, and special outputs.",
+  "category": "other",
+  "cover": "https://raw.githubusercontent.com/freestylefly/awesome-gpt-image-2/main/images/case370.jpg",
+  "styles": [
+   "Other Use Cases",
+   "Product"
+  ],
+  "scenes": [
+   "Creative",
+   "Tech"
+  ],
+  "tags": [
+   "Creative",
+   "R&D",
+   "Special"
+  ],
+  "useWhen": "Use for experimental prompt tasks, R&D boards, exploded diagrams, and unusual visual systems.",
+  "guidance": [],
+  "pitfalls": [],
+  "exampleCases": [
+   370,
+   361
+  ]
+ }
+]

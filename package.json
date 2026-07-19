@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000",
-    "prebuild": "node scripts/generate-light.js && node scripts/generate-search-index.js",
+    "prebuild": "node scripts/generate-light.js && node scripts/generate-search-index.js && node scripts/generate-templates.js && node scripts/generate-facets.js",
     "build": "next build",
     "start": "npx serve@latest out"
   },

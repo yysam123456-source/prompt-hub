@@ -15,6 +15,7 @@ import {
   FlowMesh,
 } from '@/components/animata/effects/v2'
 import { SearchBox, AnimateOnView } from './HomePageClient'
+import TemplateSection from '@/components/TemplateSection'
 
 // ======== SINGLE unified color ========
 const BG = '#090916'
@@ -417,6 +418,7 @@ export default async function HomePage() {
       {trendingData.length > 0 && (
         <PromptListSection items={trendingData.slice(0, 4)} title="💎 Editor's Picks" subtitle="Curated quality prompts" />
       )}
+      <TemplateSection />
       <HowToUseSection />
       <CTASection />
       <Footer />

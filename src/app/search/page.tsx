@@ -50,7 +50,18 @@ function SearchContent() {
   const [categorySlug, setCategorySlug] = useState(initialCat)
   const [sortBy, setSortBy] = useState(initialSort)
 
-  // Autocomplete state
+  // Style/scene facet state
+  const [facets, setFacets] = useState<{ styles: { name: string; count: number }[]; scenes: { name: string; count: number }[]; styleIndex: Record<string, string[]>; sceneIndex: Record<string, string[]> } | null>(null)
+  const [selectedStyles, setSelectedStyles] = useState<Set<string>>(new Set())
+  const [selectedScenes, setSelectedScenes] = useState<Set<string>>(new Set())
+
+  // Load facets
+  useEffect(() => {
+    fetch('/data/style-scene-index.json')
+      .then(res => res.json())
+      .then(data => setFacets(data))
+      .catch(() => {})
+  }, [])
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [suggestions, setSuggestions] = useState<{ text: string; type: 'title' | 'tag' | 'category' }[]>([])
   const [showHistory, setShowHistory] = useState(false)
@@ -100,6 +111,33 @@ function SearchContent() {
     // Apply category filter first
     if (categorySlug !== 'all') {
       filtered = filtered.filter(item => (item.category || '').toLowerCase() === categorySlug.toLowerCase())
+    }
+
+    // Apply style/scene facet filter
+    if (facets && (selectedStyles.size > 0 || selectedScenes.size > 0)) {
+      const allowedSlugs = new Set<string>()
+      if (selectedStyles.size > 0) {
+        for (const style of selectedStyles) {
+          const slugs = facets.styleIndex[style] || []
+          slugs.forEach(s => allowedSlugs.add(s))
+        }
+      }
+      if (selectedScenes.size > 0) {
+        const sceneSlugs = new Set<string>()
+        for (const scene of selectedScenes) {
+          const slugs = facets.sceneIndex[scene] || []
+          slugs.forEach(s => sceneSlugs.add(s))
+        }
+        if (selectedStyles.size > 0) {
+          // Intersection: must match BOTH a selected style AND a selected scene
+          for (const s of allowedSlugs) {
+            if (!sceneSlugs.has(s)) allowedSlugs.delete(s)
+          }
+        } else {
+          sceneSlugs.forEach(s => allowedSlugs.add(s))
+        }
+      }
+      filtered = filtered.filter(item => allowedSlugs.has((item as any).slug || ''))
     }
 
     // Apply search
@@ -396,6 +434,59 @@ function SearchContent() {
                 </button>
               ))}
             </div>
+
+            {/* Style/Scene facets */}
+            {facets && (
+              <div className="space-y-3">
+                {/* Styles */}
+                {facets.styles.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 items-center">
+                    <span className="text-xs text-zinc-500 mr-2 shrink-0">Style:</span>
+                    {facets.styles.sort((a, b) => b.count - a.count).slice(0, 12).map(s => (
+                      <button
+                        key={s.name}
+                        onClick={() => {
+                          const next = new Set(selectedStyles)
+                          next.has(s.name) ? next.delete(s.name) : next.add(s.name)
+                          setSelectedStyles(next)
+                        }}
+                        className={'rounded-full border px-2.5 py-0.5 text-xs transition-colors ' + (
+                          selectedStyles.has(s.name)
+                            ? 'border-purple-500 bg-purple-500/20 text-purple-300'
+                            : 'border-zinc-800 bg-zinc-900/60 text-zinc-500 hover:border-purple-500/40 hover:text-purple-300'
+                        )}
+                      >
+                        {s.name} <span className="opacity-50 ml-0.5">{s.count}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* Scenes */}
+                {facets.scenes.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 items-center">
+                    <span className="text-xs text-zinc-500 mr-2 shrink-0">Scene:</span>
+                    {facets.scenes.sort((a, b) => b.count - a.count).map(s => (
+                      <button
+                        key={s.name}
+                        onClick={() => {
+                          const next = new Set(selectedScenes)
+                          next.has(s.name) ? next.delete(s.name) : next.add(s.name)
+                          setSelectedScenes(next)
+                        }}
+                        className={'rounded-full border px-2.5 py-0.5 text-xs transition-colors ' + (
+                          selectedScenes.has(s.name)
+                            ? 'border-cyan-500 bg-cyan-500/20 text-cyan-300'
+                            : 'border-zinc-800 bg-zinc-900/60 text-zinc-500 hover:border-cyan-500/40 hover:text-cyan-300'
+                        )}
+                      >
+                        {s.name} <span className="opacity-50 ml-0.5">{s.count}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Sort tabs */}
             <div className="flex gap-2">
