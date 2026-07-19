@@ -20,7 +20,7 @@ function CategoryContent() {
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch('/data/prompts.json')
+        const res = await fetch('/data/prompts-light.json')
         const data = await res.json()
         // 兼容两种数据格式：数组 或 { meta, categories, prompts }
         const items = Array.isArray(data) ? data : (data.prompts || [])

@@ -67,7 +67,7 @@ function SearchContent() {
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch('/data/prompts.json')
+        const res = await fetch('/data/search-index.json')
         const data = await res.json()
         const items: PromptItem[] = Array.isArray(data) ? data : (data.prompts || [])
         setAllPrompts(items)

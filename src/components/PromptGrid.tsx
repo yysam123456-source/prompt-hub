@@ -3,47 +3,12 @@
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
+import { getCategoryConfig } from '@/lib/categories'
 
-// Category visual config with English display names
-const CATEGORY_CONFIG: Record<string, { gradient: string; emoji: string; label: string }> = {
-  'article-covers':  { gradient: 'from-blue-500/80 to-indigo-600/80', emoji: '📖', label: 'Article Covers' },
-  'profile-avatar':  { gradient: 'from-rose-500/80 to-pink-600/80', emoji: '👤', label: 'Avatar' },
-  'social-media-post': { gradient: 'from-cyan-500/80 to-blue-600/80', emoji: '📱', label: 'Social Media' },
-  'infographic':     { gradient: 'from-emerald-500/80 to-teal-600/80', emoji: '📊', label: 'Infographic' },
-  'youtube-thumbnail': { gradient: 'from-red-500/80 to-rose-600/80', emoji: '🎬', label: 'Thumbnail' },
-  'comic':           { gradient: 'from-orange-500/80 to-amber-600/80', emoji: '📚', label: 'Comic' },
-  'poster':          { gradient: 'from-purple-500/80 to-violet-600/80', emoji: '🎨', label: 'Poster' },
-  'app-web-design':  { gradient: 'from-sky-500/80 to-blue-600/80', emoji: '💻', label: 'UI Design' },
-  'anime_game':      { gradient: 'from-pink-500/80 to-rose-600/80', emoji: '🎮', label: 'Anime & Game' },
-  'character':       { gradient: 'from-fuchsia-500/80 to-pink-600/80', emoji: '👤', label: 'Character' },
-  'product-photography': { gradient: 'from-amber-500/80 to-yellow-600/80', emoji: '📷', label: 'Product' },
-  'fashion':         { gradient: 'from-pink-500/80 to-fuchsia-600/80', emoji: '👗', label: 'Fashion' },
-  'architecture':    { gradient: 'from-stone-500/80 to-zinc-600/80', emoji: '🏛️', label: 'Architecture' },
-  'food-drink':      { gradient: 'from-red-500/80 to-orange-600/80', emoji: '🍜', label: 'Food & Drink' },
-  'nature-landscape':{ gradient: 'from-green-500/80 to-emerald-600/80', emoji: '🌿', label: 'Landscape' },
-  'abstract-geometric': { gradient: 'from-violet-500/80 to-purple-600/80', emoji: '🔷', label: 'Abstract' },
-  'vintage-retro':   { gradient: 'from-yellow-500/80 to-amber-600/80', emoji: '📻', label: 'Vintage' },
-  // Legacy slug mappings (for data that uses old-style categories)
-  'portrait':        { gradient: 'from-rose-500/80 to-pink-600/80', emoji: '👤', label: 'Portrait' },
-  'landscape':       { gradient: 'from-emerald-500/80 to-teal-600/80', emoji: '🏔️', label: 'Landscape' },
-  'fantasy':         { gradient: 'from-violet-500/80 to-purple-600/80', emoji: '🐉', label: 'Fantasy' },
-  'sci-fi':          { gradient: 'from-blue-500/80 to-cyan-600/80', emoji: '🚀', label: 'Sci-Fi' },
-  'anime':           { gradient: 'from-pink-500/80 to-rose-600/80', emoji: '🎌', label: 'Anime' },
-  'abstract':        { gradient: 'from-amber-500/80 to-orange-600/80', emoji: '🎨', label: 'Abstract' },
-  'animal':          { gradient: 'from-lime-500/80 to-green-600/80', emoji: '🦁', label: 'Animal' },
-  'food':            { gradient: 'from-red-500/80 to-amber-600/80', emoji: '🍜', label: 'Food' },
-  'horror':          { gradient: 'from-gray-700/90 to-gray-900/90', emoji: '👻', label: 'Horror' },
-  'cyberpunk':       { gradient: 'from-yellow-500/80 to-amber-600/80', emoji: '🌆', label: 'Cyberpunk' },
-  'photography':     { gradient: 'from-teal-500/80 to-cyan-600/80', emoji: '📷', label: 'Photography' },
-  'graphic-design':  { gradient: 'from-indigo-500/80 to-blue-600/80', emoji: '✒️', label: 'Graphic Design' },
-  'novel_story':     { gradient: 'from-purple-500/80 to-indigo-600/80', emoji: '📖', label: 'Novel Story' },
-  'other':           { gradient: 'from-zinc-600/80 to-zinc-800/80', emoji: '💡', label: 'Other' },
-}
-
-const DEFAULT_CONFIG = { gradient: 'from-zinc-600/80 to-zinc-800/80', emoji: '💡', label: 'Other' }
-
+// Category visuals come from the single shared taxonomy (src/lib/categories.ts)
+// so cards, the home CategoryBar, and the underlying data never drift apart.
 function getConfig(category: string) {
-  return CATEGORY_CONFIG[category] || DEFAULT_CONFIG
+  return getCategoryConfig(category)
 }
 
 // Highlight matching text in a string

@@ -20,7 +20,7 @@ export function SearchBox() {
 
   // Load prompts data for suggestions
   useEffect(() => {
-    fetch('/data/prompts.json')
+    fetch('/data/prompts-light.json')
       .then(res => res.json())
       .then(data => {
         const items = Array.isArray(data) ? data : (data.prompts || [])

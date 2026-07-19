@@ -29,6 +29,12 @@ yarn-error.log*
 # vercel
 .vercel
 
+# upstream images (too large for git, rebuilt at deploy time)
+public/data/images/upstream/
+
+# merge backups
+public/data/prompts.json.p0-before
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
