@@ -1,6 +1,6 @@
 [
  {
-  "id": "50655681-cbfc-4880-9f9d-25b0418b153a",
+  "id": "73729ff7-13b7-4105-9b73-c393842e8c1e",
   "templateId": "ui-screenshot-system",
   "anchor": "tpl-ui",
   "title": "UI Screenshot System",
@@ -35,7 +35,7 @@
   ]
  },
  {
-  "id": "db9a3762-5fbb-403b-a1c5-a0f68f0f5d2a",
+  "id": "240a603d-d3e2-40d8-a0e2-e19e9a6e8fa6",
   "templateId": "infographic-engine",
   "anchor": "tpl-infographic",
   "title": "Infographic Engine",
@@ -71,7 +71,7 @@
   ]
  },
  {
-  "id": "6eb1d30e-3ea8-48ea-a12e-d40cbf0bc659",
+  "id": "3572be0c-3d91-40dd-9cd9-edccc29940e2",
   "templateId": "scientific-scale-diagram",
   "anchor": "tpl-infographic",
   "title": "Scientific Scale Diagram",
@@ -106,7 +106,7 @@
   ]
  },
  {
-  "id": "1828b4ca-185c-4c0f-b77f-f7a1608a417c",
+  "id": "eb421c00-6b68-44aa-bc2e-e017a2a413fc",
   "templateId": "poster-layout-system",
   "anchor": "tpl-poster",
   "title": "Poster Layout System",
@@ -141,7 +141,7 @@
   ]
  },
  {
-  "id": "39b8f204-6710-4988-a10d-522b925fb141",
+  "id": "c3454a42-d9cb-4fd0-831f-8ea33e785c4b",
   "templateId": "sports-campaign-poster",
   "anchor": "tpl-poster",
   "title": "Sports Campaign Poster",
@@ -176,7 +176,7 @@
   ]
  },
  {
-  "id": "2c9af473-f3cf-4458-aff9-7b2b72ccca36",
+  "id": "eac76cf6-fa43-4256-b474-32ef195784a3",
   "templateId": "conceptual-typography-poster",
   "anchor": "tpl-poster",
   "title": "Conceptual Typography Poster",
@@ -209,7 +209,7 @@
   ]
  },
  {
-  "id": "a443ee9b-b900-429d-8522-959b292ab0cd",
+  "id": "35587046-84f6-4c58-9f7d-97674d7fc5d2",
   "templateId": "ink-double-exposure-poster",
   "anchor": "tpl-poster",
   "title": "Ink Double Exposure Poster",
@@ -244,7 +244,7 @@
   ]
  },
  {
-  "id": "20cc9e6e-7b73-444f-99a6-ec506992531b",
+  "id": "ee5c17d6-158e-4d10-83b7-464127815d12",
   "templateId": "nature-science-poster",
   "anchor": "tpl-poster",
   "title": "Nature Science Poster",
@@ -277,7 +277,7 @@
   ]
  },
  {
-  "id": "ef9c1235-3ca1-452c-876f-ce79bfd59e57",
+  "id": "5f37d8c6-f591-44bb-a97e-da4e9dd3edb5",
   "templateId": "product-commerce-visual",
   "anchor": "tpl-product",
   "title": "Product Commerce Visual",
@@ -312,7 +312,7 @@
   ]
  },
  {
-  "id": "1ecda5e0-929e-4eea-aa97-7bc8d26b5ab8",
+  "id": "b580d91c-1873-4c74-8900-f9878ff3c479",
   "templateId": "personalized-beauty-report",
   "anchor": "tpl-product",
   "title": "Personalized Beauty Report",
@@ -346,7 +346,7 @@
   ]
  },
  {
-  "id": "e4a4a80f-d932-40ce-9582-60dd20c0305d",
+  "id": "858a9a34-47cc-4904-8bb2-da4a6ef9068c",
   "templateId": "brand-identity-package",
   "anchor": "tpl-brand",
   "title": "Brand Identity Package",
@@ -378,7 +378,7 @@
   ]
  },
  {
-  "id": "c53e3a0f-f5a7-42b6-aa7b-d8cc8b468f00",
+  "id": "fd33c4c9-cd1b-49fd-ae2c-618c3325d096",
   "templateId": "brand-touchpoint-board",
   "anchor": "tpl-brand",
   "title": "Brand Touchpoint Board",
@@ -412,7 +412,7 @@
   ]
  },
  {
-  "id": "e737cbd4-c556-454b-83ed-16924f8a9cc2",
+  "id": "e94c5be2-8e94-4159-aa9c-2dd29371438c",
   "templateId": "architecture-space",
   "anchor": "tpl-architecture",
   "title": "Architecture & Space",
@@ -446,7 +446,7 @@
   ]
  },
  {
-  "id": "ecdfcf5a-778e-41a5-b8c0-d340e025e5bd",
+  "id": "ffd5ae35-efe2-4389-adde-ba43a5056754",
   "templateId": "realistic-photography",
   "anchor": "tpl-photo",
   "title": "Realistic Photography",
@@ -480,7 +480,7 @@
   ]
  },
  {
-  "id": "fd11fbbf-2a0d-4dc4-aede-3e252af1450c",
+  "id": "e78cf679-3b1c-44c8-ae2c-cbfc00125dad",
   "templateId": "street-accident-moment",
   "anchor": "tpl-photo",
   "title": "Street Accident Moment",
@@ -514,7 +514,7 @@
   ]
  },
  {
-  "id": "783ac3c9-efcc-4318-b0b3-64d1bfaa0153",
+  "id": "7fbd6d1a-6e5a-4b3a-8586-1b782bbe5abb",
   "templateId": "illustration-art-style",
   "anchor": "tpl-illustration",
   "title": "Illustration & Art Style",
@@ -548,7 +548,7 @@
   ]
  },
  {
-  "id": "8f1b1943-ed86-4804-b7fb-4da624ef0790",
+  "id": "a7e51d16-afc3-4ba5-9114-3fff1bb4146d",
   "templateId": "character-design-sheet",
   "anchor": "tpl-character",
   "title": "Character Design Sheet",
@@ -581,7 +581,7 @@
   ]
  },
  {
-  "id": "0e8cf444-6c35-45bc-870d-7b4298b810ff",
+  "id": "467c2409-7b0f-4f21-b70c-043cdd9b7959",
   "templateId": "3d-collectible-toy",
   "anchor": "tpl-character",
   "title": "3D Collectible Toy",
@@ -615,7 +615,7 @@
   ]
  },
  {
-  "id": "e86481df-38e6-45c8-ab52-c1cd0496a06c",
+  "id": "9ef1e74d-6125-43a4-8414-4220ef7a39db",
   "templateId": "scene-storytelling",
   "anchor": "tpl-scene",
   "title": "Scene Storytelling",
@@ -649,7 +649,7 @@
   ]
  },
  {
-  "id": "0fe598fa-756d-4ea0-a91b-4bab87b0fdca",
+  "id": "a21e1c0b-3e00-456e-a5a7-d38764f1c00b",
   "templateId": "history-classical-themes",
   "anchor": "tpl-history",
   "title": "History & Classical Themes",
@@ -685,7 +685,7 @@
   ]
  },
  {
-  "id": "ff00ec1c-3d8b-466d-a8ff-b8dc563dafa3",
+  "id": "b4ccb48e-509f-41d1-b024-f9557f91036d",
   "templateId": "document-publishing",
   "anchor": "tpl-document",
   "title": "Document & Publishing",
@@ -719,7 +719,7 @@
   ]
  },
  {
-  "id": "32642c7b-b445-45c4-8a1c-e595c7de1301",
+  "id": "d108ab2e-2671-4e26-a8f0-7b62af4ef72f",
   "templateId": "concept-product-breakdown",
   "anchor": "tpl-other",
   "title": "Concept Product Breakdown",
