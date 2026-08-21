@@ -52,6 +52,9 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  alternates: {
+    canonical: '/',
+  },
   verification: {
     google: 'your-google-verification-code', // 替换为实际的 Google Search Console 验证代码
   },
@@ -65,7 +68,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="canonical" href="https://imgprompt.craftisle.com" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </head>

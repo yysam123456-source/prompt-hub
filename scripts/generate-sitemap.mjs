@@ -28,9 +28,9 @@ urls.push({ loc: `${BASE}/search`, priority: '0.5', changefreq: 'weekly' });
 urls.push({ loc: `${BASE}/category`, priority: '0.8', changefreq: 'weekly' });
 urls.push({ loc: `${BASE}/template`, priority: '0.7', changefreq: 'weekly' });
 
-// Category pages
+// Category pillar (cornerstone) pages — clean static silo URLs
 for (const cat of CATEGORY_SLUGS) {
-  urls.push({ loc: `${BASE}/category?cat=${enc(cat)}`, priority: '0.8', changefreq: 'weekly' });
+  urls.push({ loc: `${BASE}/category/${cat}/`, priority: '0.8', changefreq: 'weekly' });
 }
 
 // Template pages
