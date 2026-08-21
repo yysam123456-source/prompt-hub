@@ -406,9 +406,34 @@ export default async function HomePage() {
     loadCategoryImages(),
   ])
 
+  // ======== JSON-LD structured data (reuses same inline-script mechanism as category sub-pages) ========
+  const homeJsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Organization',
+        '@id': 'https://craftisle.com/#organization',
+        name: 'Craftisle',
+        url: 'https://craftisle.com',
+      },
+      {
+        '@type': 'WebSite',
+        '@id': 'https://imgprompt.craftisle.com/#website',
+        url: 'https://imgprompt.craftisle.com',
+        name: 'Craftisle ImgPrompt',
+        publisher: { '@id': 'https://craftisle.com/#organization' },
+      },
+    ],
+  }
+
   return (
     // ONE color for entire page — NO per-section backgrounds at all
     <main className="min-h-screen overflow-hidden" style={{ backgroundColor: BG }}>
+      {/* JSON-LD injection */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd) }}
+      />
       <NavBar />
       <HeroSection stats={statsData} />
       <StatsSection stats={statsData} />
