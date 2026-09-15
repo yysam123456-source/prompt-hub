@@ -107,6 +107,50 @@ export async function loadCategoryImages(): Promise<Record<string, string>> {
   return map
 }
 
+export interface TemplateCard {
+  id: string
+  templateId: string
+  anchor: string
+  title: string
+  description: string
+  category: string
+  cover: string
+  styles: string[]
+  scenes: string[]
+  tags: string[]
+  guidance: string[]
+  pitfalls: string[]
+  useWhen: string
+}
+
+/**
+ * 模板蓝图（服务端读取）。
+ *
+ * 首页的 TemplateSection 此前是 'use client' + 运行时 fetch('/data/templates.json')，
+ * 结果整个模板区块不在服务端输出里 —— 首页静态 HTML 中指向模板页的链接因此为 0。
+ * 改为由 Server Component 传入，让模板页拿到来自首页的静态内链。
+ *
+ * 路径回退与 getDataSync 保持一致，避免构建期与运行期读到不同副本。
+ */
+export async function loadTemplates(): Promise<TemplateCard[]> {
+  const cwd = process.cwd()
+  const candidates = [
+    path.join(cwd, 'public', 'data', 'templates.json'),
+    path.join(cwd, 'data', 'templates.json'),
+    path.join(cwd, '.next', 'server', 'public', 'data', 'templates.json'),
+  ]
+  for (const p of candidates) {
+    try {
+      if (fs.existsSync(p)) {
+        const raw = JSON.parse(fs.readFileSync(p, 'utf-8'))
+        return (Array.isArray(raw) ? raw : raw.templates || []) as TemplateCard[]
+      }
+    } catch {}
+  }
+  console.warn('[staticData-server] templates.json not found')
+  return []
+}
+
 export function parseArguments(prompt: string): PromptArgument[] {
   if (!prompt) return []
   const regex = /\{argument\s+name=["']([^"']+)["']\s+default=["']([^"']*)["']\}/g

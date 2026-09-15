@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import CategoryBar from '@/components/CategoryBar'
 import PromptGrid, { PromptCard } from '@/components/PromptGrid'
-import { loadStats, loadCategories, loadTrending, loadLatest, loadCategoryImages } from '@/lib/staticData.server'
+import { loadStats, loadCategories, loadTrending, loadLatest, loadCategoryImages, loadTemplates } from '@/lib/staticData.server'
 import type { SiteStats, Category } from '@/lib/types'
 import {
   NeonText,
@@ -398,12 +398,13 @@ function NavBar() {
 
 // ======== Main Page (Server Component) ========
 export default async function HomePage() {
-  const [statsData, catData, trendingData, latestData, catImages] = await Promise.all([
+  const [statsData, catData, trendingData, latestData, catImages, templatesData] = await Promise.all([
     loadStats(),
     loadCategories(),
     loadTrending(8),
     loadLatest(8),
     loadCategoryImages(),
+    loadTemplates(),
   ])
 
   // ======== JSON-LD structured data (reuses same inline-script mechanism as category sub-pages) ========
@@ -443,7 +444,7 @@ export default async function HomePage() {
       {trendingData.length > 0 && (
         <PromptListSection items={trendingData.slice(0, 4)} title="💎 Editor's Picks" subtitle="Curated quality prompts" />
       )}
-      <TemplateSection />
+      <TemplateSection templates={templatesData} />
       <HowToUseSection />
       <CTASection />
       <Footer />

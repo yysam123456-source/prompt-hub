@@ -1,7 +1,16 @@
 'use client'
 
+// Stays a client component because it renders framer-motion (`motion.div`) — but note
+// that 'use client' does NOT keep content out of the static HTML: client components are
+// still server-rendered, then hydrated.
+//
+// What DID keep this section out of the static HTML was fetching its own data in
+// useEffect. useEffect never runs during SSR, so the server render always had
+// `templates === []` and emitted the loading skeleton — the home page shipped with zero
+// links to any template page. Data is now passed in as a prop from the Server Component
+// (same pattern as PromptListSection / CategoryBar), so the first render already has it.
+
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { getCategoryConfig } from '@/lib/categories'
 import { ShimmerText, GlowCard } from '@/components/animata/effects/v2'
@@ -101,32 +110,11 @@ function TemplateCard({ template, index }: { template: Template; index: number }
     </AnimateOnView>
   )
 }
+export default function TemplateSection({ templates = [] }: { templates?: Template[] }) {
+  // The section shows a preview strip; the full catalogue lives at /template/.
+  const shown = templates.slice(0, 8)
 
-function TemplateGridSkeleton() {
-  return (
-    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-      {[...Array(4)].map((_, i) => (
-        <div key={i} className="rounded-2xl bg-zinc-900/50 border border-zinc-800/40 h-48 animate-pulse" />
-      ))}
-    </div>
-  )
-}
-
-export default function TemplateSection() {
-  const [templates, setTemplates] = useState<Template[]>([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    fetch('/data/templates.json')
-      .then(res => res.json())
-      .then(data => {
-        setTemplates(data.slice(0, 8))
-        setLoading(false)
-      })
-      .catch(() => setLoading(false))
-  }, [])
-
-  if (!loading && templates.length === 0) return null
+  if (shown.length === 0) return null
 
   return (
     <section className="relative px-4 py-24">
@@ -139,8 +127,10 @@ export default function TemplateSection() {
             </h2>
             <p className="mt-1.5 text-sm text-zinc-400">Prompt recipes with guidance and proven patterns</p>
           </div>
+          {/* Points at the hub, not at one arbitrary template — the old href was
+              /template/ui-screenshot-system/, which sent "View All" to a single item. */}
           <Link
-            href="/template/ui-screenshot-system/"
+            href="/template/"
             className="group text-sm text-purple-400 transition-all duration-300 hover:text-purple-300 hover:translate-x-1 inline-block"
           >
             View All →
@@ -148,15 +138,11 @@ export default function TemplateSection() {
         </div>
 
         {/* Cards grid — matches PromptListSection grid */}
-        {loading ? (
-          <TemplateGridSkeleton />
-        ) : (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {templates.map((t, i) => (
-              <TemplateCard key={t.id} template={t} index={i} />
-            ))}
-          </div>
-        )}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {shown.map((t, i) => (
+            <TemplateCard key={t.templateId} template={t} index={i} />
+          ))}
+        </div>
       </div>
     </section>
   )
