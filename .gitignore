@@ -11,6 +11,10 @@
 /out/
 .open-next/
 
+# prune-rsc-payloads.js intermediates (see scripts/prune-rsc-payloads.js)
+/.out-raw/
+/out.keep/
+
 # wrangler cache
 .wrangler/
 
