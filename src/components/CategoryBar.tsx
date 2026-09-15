@@ -21,7 +21,10 @@ function CategoryCard({ cat, idx }: { cat: CategoryWithImage; idx: number }) {
     gradient: 'from-zinc-700/90 to-zinc-900/90',
     emoji: '💡',
   }
-  const href = `/category?cat=${encodeURIComponent(cat.slug)}`
+  // Path form, not /category?cat= : that query URL is a weaker duplicate of the
+  // prerendered /category/<slug>/ pillar page, so internal links must point at
+  // the canonical one (this matches the sitemap and the /category/[slug] route).
+  const href = `/category/${encodeURIComponent(cat.slug)}/`
   const hasRealImage = !!cat.imageUrl && !imgFailed
 
   return (

@@ -12,21 +12,45 @@ const BASE = 'https://imgprompt.craftisle.com';
 const prompts = JSON.parse(readFileSync(join(root, 'public/data/prompts.json'), 'utf8'));
 const templates = JSON.parse(readFileSync(join(root, 'public/data/templates.json'), 'utf8'));
 
+// Must stay identical to CATEGORY_ORDER in src/lib/categories.ts — that list is what
+// generateStaticParams() enumerates, and the route sets `dynamicParams = false`, so a
+// slug listed here but missing there would be a hard 404 in the sitemap.
+// This file is .mjs and cannot import the .ts module, so instead of trusting the copy
+// we assert against the dataset and fail loudly on drift.
 const CATEGORY_SLUGS = [
   'other', 'graphic_design', 'photography', 'anime_game', 'character', 'ecommerce',
   'illustration', 'tech_scifi', 'branding_visual', 'novel_story', 'landscape_scene',
   'architecture_interior', 'product_design', 'food', 'cultural_products', 'creative_play',
 ];
 
+{
+  const inData = new Set(prompts.map((p) => p.category).filter(Boolean));
+  const inList = new Set(CATEGORY_SLUGS);
+  const missingFromList = [...inData].filter((s) => !inList.has(s));
+  const missingFromData = [...inList].filter((s) => !inData.has(s));
+  if (missingFromList.length || missingFromData.length) {
+    console.error('[sitemap] CATEGORY_SLUGS has drifted from the dataset.');
+    if (missingFromList.length) console.error('  in prompts.json but not in list:', missingFromList.join(', '));
+    if (missingFromData.length) console.error('  in list but not in prompts.json:', missingFromData.join(', '));
+    console.error('  Update CATEGORY_SLUGS here AND CATEGORY_ORDER in src/lib/categories.ts.');
+    process.exit(1);
+  }
+}
+
 const enc = (v) => encodeURIComponent(v);
 
 const urls = [];
 
-// Static entry points
+// Static entry points. next.config sets `trailingSlash: true`, so every canonical URL
+// ends in a slash — listing the slash-less form here would make every crawl of this
+// entry cost an extra 308 redirect hop.
+//
+// /search/ is deliberately absent: src/app/search/layout.tsx marks it `noindex, follow`
+// (all ?q= variants are near-duplicates of one static file), and a sitemap must not
+// submit URLs that are marked noindex.
 urls.push({ loc: `${BASE}/`, priority: '1.0', changefreq: 'daily' });
-urls.push({ loc: `${BASE}/search`, priority: '0.5', changefreq: 'weekly' });
-urls.push({ loc: `${BASE}/category`, priority: '0.8', changefreq: 'weekly' });
-urls.push({ loc: `${BASE}/template`, priority: '0.7', changefreq: 'weekly' });
+urls.push({ loc: `${BASE}/category/`, priority: '0.8', changefreq: 'weekly' });
+urls.push({ loc: `${BASE}/template/`, priority: '0.7', changefreq: 'weekly' });
 
 // Category pillar (cornerstone) pages — clean static silo URLs
 for (const cat of CATEGORY_SLUGS) {
@@ -62,4 +86,4 @@ const xml = [
 ].join('\n');
 
 writeFileSync(join(root, 'public/sitemap.xml'), xml, 'utf8');
-console.log(`Sitemap written: ${urls.length} URLs (${approved} approved prompts + ${templates.length} templates + ${CATEGORY_SLUGS.length} categories + 4 static).`);
+console.log(`Sitemap written: ${urls.length} URLs (${approved} approved prompts + ${templates.length} templates + ${CATEGORY_SLUGS.length} categories + 3 static).`);

@@ -11,6 +11,12 @@
 /out/
 .open-next/
 
+# a .next directory parked aside after a build hangs on its lock
+/.next-hung-*/
+
+# raw build output captured while debugging
+/build.log
+
 # prune-rsc-payloads.js intermediates (see scripts/prune-rsc-payloads.js)
 /.out-raw/
 /out.keep/

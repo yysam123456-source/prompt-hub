@@ -521,7 +521,7 @@ function SearchContent() {
             <p className="text-zinc-500 mb-6">Try different keywords or browse by category</p>
             <div className="flex justify-center gap-3">
               <Link
-                href="/category"
+                href="/category/"
                 className="rounded-xl border border-purple-500 bg-purple-500/20 px-6 py-3 text-sm text-purple-300 transition-colors hover:bg-purple-500/30"
               >
                 Browse Categories →

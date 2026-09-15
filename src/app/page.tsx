@@ -147,7 +147,7 @@ function PromptListSection({
           title={title}
           subtitle={subtitle}
           action={
-            <Link href="/category" className="group text-sm text-purple-400 transition-all duration-300 hover:text-purple-300 hover:translate-x-1 inline-block">
+            <Link href="/category/" className="group text-sm text-purple-400 transition-all duration-300 hover:text-purple-300 hover:translate-x-1 inline-block">
               View All →
             </Link>
           }
@@ -312,7 +312,7 @@ function CTASection() {
           </p>
         </AnimateOnView>
         <AnimateOnView delay={0.4}>
-          <Link href="/category">
+          <Link href="/category/">
             <MagneticBtn className="inline-block rounded-2xl px-12 py-4 text-lg font-bold">
               🚀 Start Exploring
             </MagneticBtn>

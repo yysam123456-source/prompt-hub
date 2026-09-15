@@ -209,7 +209,7 @@ export default function PromptDetailClient({
         <nav className="mb-6 flex items-center gap-2 text-sm text-zinc-500 animate-fade-in">
           <Link href="/" className="hover:text-purple-400 transition-colors">Home</Link>
           <span>/</span>
-          <Link href={`/category?cat=${category}`} className="hover:text-purple-400 transition-colors">
+          <Link href={`/category/${category}/`} className="hover:text-purple-400 transition-colors">
             {config.name}
           </Link>
           <span>/</span>
@@ -473,7 +473,7 @@ export default function PromptDetailClient({
         {/* Related actions */}
         <div className="flex flex-wrap justify-center gap-3 pt-4 border-t border-zinc-800/50 animate-fade-in-delay-4">
           <Link
-            href={`/category?cat=${category}`}
+            href={`/category/${category}/`}
             className="rounded-xl border border-zinc-800 bg-zinc-900/60 px-5 py-2.5 text-sm text-zinc-400 transition-all hover:border-purple-500/50 hover:text-purple-300"
           >
             View more {config.name} prompts →

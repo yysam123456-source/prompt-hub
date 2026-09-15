@@ -249,7 +249,7 @@ function TemplateContent() {
                 {template.exampleCases.map(caseId => (
                   <Link
                     key={caseId}
-                    href={`/category?cat=${template.category}`}
+                    href={`/category/${template.category}/`}
                     className="px-3 py-1.5 rounded-lg text-xs bg-zinc-800/60 border border-zinc-700/60 text-zinc-400 hover:border-purple-500/40 hover:text-purple-300 transition-all"
                   >
                     Case #{caseId}

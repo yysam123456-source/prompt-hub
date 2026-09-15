@@ -136,7 +136,7 @@ export default async function CategoryPage({
             </span>
           </Link>
           <div className="h-5 w-px bg-zinc-800" />
-          <Link href="/category" className="text-sm text-zinc-400 hover:text-purple-300 transition-colors">
+          <Link href="/category/" className="text-sm text-zinc-400 hover:text-purple-300 transition-colors">
             Categories
           </Link>
         </div>
@@ -147,7 +147,7 @@ export default async function CategoryPage({
         <nav className="mb-6 flex items-center gap-2 text-sm text-zinc-500" aria-label="Breadcrumb">
           <Link href="/" className="hover:text-purple-300 transition-colors">Home</Link>
           <span>/</span>
-          <Link href="/category" className="hover:text-purple-300 transition-colors">Categories</Link>
+          <Link href="/category/" className="hover:text-purple-300 transition-colors">Categories</Link>
           <span>/</span>
           <span className="text-zinc-300">{label}</span>
         </nav>
@@ -177,7 +177,7 @@ export default async function CategoryPage({
           )}
           <div className="mt-8">
             <Link
-              href="/category"
+              href="/category/"
               className="inline-block rounded-xl border border-zinc-700 bg-zinc-900/60 px-6 py-3 text-sm text-zinc-300 transition-all hover:border-purple-500/50 hover:text-purple-300"
             >
               Browse all categories →

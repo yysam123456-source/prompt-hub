@@ -1,88 +1,70 @@
-'use client'
-
+import type { Metadata } from 'next'
 import Link from 'next/link'
-import { useEffect, useState, Suspense } from 'react'
-import { motion } from 'framer-motion'
-import PromptGrid from '@/components/PromptGrid'
-import { useSearchParams } from 'next/navigation'
+import { Suspense } from 'react'
+import CategoryBrowser from '@/components/CategoryBrowser'
+import { CATEGORY_ORDER, getCategoryConfig } from '@/lib/categories'
 
-function CategoryContent() {
-  const searchParams = useSearchParams()
-  const categorySlug = searchParams.get('cat') || 'all'
-  const sortBy = searchParams.get('sort') || 'latest'
-  const [allPrompts, setAllPrompts] = useState<any[]>([])
-  const [results, setResults] = useState<any[]>([])
-  const [categories, setCategories] = useState<any[]>([])
-  const [loading, setLoading] = useState(true)
-  const [displayCount, setDisplayCount] = useState(24)
+const SITE = 'https://imgprompt.craftisle.com'
 
-  // Load all prompts on mount
-  useEffect(() => {
-    async function load() {
-      try {
-        const res = await fetch('/data/prompts-light.json')
-        const data = await res.json()
-        // 兼容两种数据格式：数组 或 { meta, categories, prompts }
-        const items = Array.isArray(data) ? data : (data.prompts || [])
-        setAllPrompts(items)
+// This hub had no metadata at all until now: it was a 'use client' file, files
+// marked 'use client' cannot export `metadata`, so the page inherited the root
+// layout's title while being linked from the home page and from all 16 pillar
+// pages. It is now a Server Component that owns its own title + canonical.
+export const metadata: Metadata = {
+  title: 'Browse AI Image Prompts by Category',
+  description:
+    'Browse AI image prompts by category — graphic design, photography, anime, character, illustration, e-commerce, sci-fi, branding and 8 more. Copy free.',
+  alternates: {
+    canonical: `${SITE}/category/`,
+  },
+  openGraph: {
+    title: 'Browse AI Image Prompts by Category | Prompt Hub',
+    description:
+      'Browse AI image prompts by category — graphic design, photography, anime, character, illustration, e-commerce, sci-fi, branding and more.',
+    url: `${SITE}/category/`,
+    type: 'website',
+  },
+  robots: { index: true, follow: true },
+}
 
-        // 提取分类
-          const catMap = new Map()
-        items.forEach((item: any) => {
-          const cat = item.category || 'other'
-          if (!catMap.has(cat)) {
-            // Format slug to readable English label
-            const label = (cat.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()))
-            catMap.set(cat, {
-              slug: cat,
-              label: label,
-            })
-          }
-        })
-        setCategories(Array.from(catMap.values()))
-      } catch (e) {
-        console.error('Failed to load prompts', e)
-      } finally {
-        setLoading(false)
+export default function CategoryHubPage() {
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` },
+      { '@type': 'ListItem', position: 2, name: 'Categories', item: `${SITE}/category/` },
+    ],
+  }
+
+  const collectionLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'AI Image Prompts by Category',
+    description:
+      'An index of every AI image prompt category on Prompt Hub, linking to each curated collection.',
+    url: `${SITE}/category/`,
+    hasPart: CATEGORY_ORDER.map((slug) => {
+      const cfg = getCategoryConfig(slug)
+      return {
+        '@type': 'CollectionPage',
+        name: `${cfg.label} Image Prompts`,
+        url: `${SITE}/category/${slug}/`,
       }
-    }
-    load()
-  }, [])
-
-  // Filter and sort
-  useEffect(() => {
-    let filtered = [...allPrompts]
-
-    // 分类筛选
-    if (categorySlug !== 'all') {
-      filtered = filtered.filter((item: any) =>
-        (item.category || '').toLowerCase() === categorySlug.toLowerCase()
-      )
-    }
-
-    // 排序
-    if (sortBy === 'trending') {
-      filtered.sort((a: any, b: any) => (b.viewCount || 0) - (a.viewCount || 0))
-    } else if (sortBy === 'most_liked') {
-      filtered.sort((a: any, b: any) => (b.likeCount || 0) - (a.likeCount || 0))
-    } else {
-      // latest
-      filtered.sort((a: any, b: any) => {
-        const aTime = a.approvedAt ? new Date(a.approvedAt).getTime() : 0
-        const bTime = b.approvedAt ? new Date(b.approvedAt).getTime() : 0
-        return bTime - aTime
-      })
-    }
-
-    setResults(filtered)
-    setDisplayCount(24)
-  }, [allPrompts, categorySlug, sortBy])
-
-  const displayedResults = results.slice(0, displayCount)
-  const hasMore = displayCount < results.length
+    }),
+  }
 
   return (
     <main className="min-h-screen bg-zinc-950">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionLd) }}
+      />
+
       <nav className="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/90 backdrop-blur-md">
         <div className="mx-auto max-w-7xl flex items-center gap-4 px-4 py-3">
           <Link href="/" className="flex items-center gap-2 shrink-0 group">
@@ -97,101 +79,68 @@ function CategoryContent() {
       </nav>
 
       <div className="mx-auto max-w-7xl px-4 py-12">
-        <div className="mb-10">
-          <h1 className="text-3xl font-bold text-zinc-100 sm:text-4xl">Browse by Category</h1>
-          <p className="mt-2 text-zinc-400">
-            {loading ? 'Loading...' : `${results.length} prompt(s) found`}
-          </p>
-        </div>
-
-        {/* Category filter */}
-        <div className="mb-6 flex flex-wrap gap-2">
-          <Link
-            href="/category"
-            className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${
-              categorySlug === 'all'
-                ? 'border-purple-500 bg-purple-500/20 text-purple-300'
-                : 'border-zinc-800 bg-zinc-900/60 text-zinc-400 hover:border-purple-500/50 hover:text-purple-300'
-            }`}
-          >
-            All ({allPrompts.length})
+        <nav
+          aria-label="Breadcrumb"
+          className="mb-8 flex items-center gap-2 text-sm text-zinc-500"
+        >
+          <Link href="/" className="transition-colors hover:text-purple-400">
+            Home
           </Link>
-          {categories.map((cat: any) => {
-            const count = allPrompts.filter((p: any) => p.category === cat.slug).length
-            return (
-              <Link
-                key={cat.slug}
-                href={`/category?cat=${cat.slug}`}
-                className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${
-                  categorySlug === cat.slug
-                    ? 'border-purple-500 bg-purple-500/20 text-purple-300'
-                    : 'border-zinc-800 bg-zinc-900/60 text-zinc-400 hover:border-purple-500/50 hover:text-purple-300'
-                }`}
-              >
-                {cat.label || cat.slug} ({count})
-              </Link>
-            )
-          })}
-        </div>
+          <span>/</span>
+          <span className="text-zinc-300">Categories</span>
+        </nav>
 
-        {/* Sort tabs */}
-        <div className="mb-10 flex gap-2">
-          {[
-            { key: 'latest', label: 'Latest' },
-            { key: 'trending', label: 'Trending' },
-            { key: 'most_liked', label: 'Most Liked' },
-          ].map(tab => (
-            <Link
-              key={tab.key}
-              href={`/category?cat=${categorySlug}&sort=${tab.key}`}
-              className={`rounded-lg border px-4 py-2 text-sm transition-colors ${
-                sortBy === tab.key
-                  ? 'border-purple-500 bg-purple-500/20 text-purple-300'
-                  : 'border-zinc-800 bg-zinc-900/60 text-zinc-400 hover:border-purple-500/50 hover:text-purple-300'
-              }`}
-            >
-              {tab.label}
-            </Link>
-          ))}
-        </div>
+        <header className="mb-10">
+          <h1 className="text-3xl font-bold text-zinc-100 sm:text-4xl">
+            Browse AI Image Prompts by Category
+          </h1>
+          {/* Static, crawlable copy. The old version of this page had a client-only
+              body, so a no-JS crawler saw an empty skeleton with zero outbound links. */}
+          <p className="mt-3 max-w-3xl text-zinc-400">
+            Every prompt on Prompt Hub is filed under one of {CATEGORY_ORDER.length} categories.
+            Pick a category to open its full curated collection — each one has a written
+            introduction, FAQ and a browsable grid — or scroll down to browse all prompts and
+            sort them by latest, trending or most liked.
+          </p>
+        </header>
 
-        {/* Results */}
-        {loading ? (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-            {[...Array(20)].map((_, i) => (
-              <div key={i} className="aspect-square rounded-2xl bg-zinc-900 animate-pulse" />
-            ))}
-          </div>
-        ) : results.length === 0 ? (
-          <div className="py-20 text-center">
-            <div className="mb-4 text-6xl">📭</div>
-            <h3 className="mb-2 text-xl font-semibold text-zinc-300">No prompts found</h3>
-            <p className="text-zinc-500">Try selecting a different category</p>
-          </div>
-        ) : (
-          <>
-            <PromptGrid items={displayedResults} />
-            {hasMore && (
-              <div className="mt-10 text-center">
-                <button
-                  onClick={() => setDisplayCount(prev => Math.min(prev + 24, results.length))}
-                  className="rounded-xl border border-zinc-700 bg-zinc-900/60 px-6 py-3 text-sm text-zinc-400 transition-all hover:border-purple-500/50 hover:text-purple-300"
+        {/* Server-rendered category index. These are plain anchors in the static HTML,
+            which is what lets the hub actually pass link equity to the 16 pillar pages. */}
+        <section className="mb-16" aria-label="Categories">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {CATEGORY_ORDER.map((slug) => {
+              const cfg = getCategoryConfig(slug)
+              return (
+                <Link
+                  key={slug}
+                  href={`/category/${slug}/`}
+                  className="group relative overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4 transition-all hover:border-purple-500/50 hover:bg-zinc-900"
                 >
-                  Load More ({results.length - displayCount} remaining)
-                </button>
-              </div>
-            )}
-          </>
-        )}
+                  <div
+                    className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${cfg.gradient} opacity-0 transition-opacity duration-300 group-hover:opacity-20`}
+                  />
+                  <div className="relative flex items-center gap-3">
+                    <span className="text-2xl" aria-hidden="true">
+                      {cfg.emoji}
+                    </span>
+                    <span className="font-medium text-zinc-200 transition-colors group-hover:text-white">
+                      {cfg.label}
+                    </span>
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        </section>
+
+        <Suspense
+          fallback={
+            <div className="py-20 text-center text-zinc-400">Loading prompts…</div>
+          }
+        >
+          <CategoryBrowser />
+        </Suspense>
       </div>
     </main>
-  )
-}
-
-export default function CategoryPage() {
-  return (
-    <Suspense fallback={<div className="min-h-screen bg-zinc-950 flex items-center justify-center text-zinc-400">Loading...</div>}>
-      <CategoryContent />
-    </Suspense>
   )
 }
