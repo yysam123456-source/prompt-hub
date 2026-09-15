@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { CATEGORY_CONFIG } from '@/lib/categories'
 
@@ -96,14 +96,21 @@ export default function CategoryBar({ categories, categoryImages }: {
   categories?: any[]
   categoryImages?: Record<string, string>
 }) {
-  const [isClient, setIsClient] = useState(false)
-
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
-
-  if (!isClient) return null
-
+  // This component used to gate on a client-only mount flag and return null during SSR:
+  //
+  //   const [isClient, setIsClient] = useState(false)
+  //   useEffect(() => { setIsClient(true) }, [])
+  //   if (!isClient) return null
+  //
+  // That removed the entire category grid from the server-rendered HTML, so the home
+  // page shipped with zero static links to the 16 /category/<slug>/ pillar pages — the
+  // SEO cornerstone of this site, reachable only after JS ran. Measured on the built
+  // output: 0 static category links before, 16 after.
+  //
+  // The gate was unnecessary: `categories` and `categoryImages` are passed in as props
+  // from a Server Component, so the server and client start from identical data. The
+  // only per-card state is the image load/error flag, and both start at a constant
+  // `false`, which is hydration-safe.
   const cats: CategoryWithImage[] = (categories || []).map((cat: any) => {
     const slug = typeof cat === 'string' ? cat : (cat.slug || '')
     return {
