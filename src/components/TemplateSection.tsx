@@ -40,7 +40,7 @@ function TemplateCard({ template, index }: { template: Template; index: number }
     <AnimateOnView delay={index * 0.06}>
       <GlowCard className="h-full rounded-2xl">
         <Link
-          href={`/template?id=${encodeURIComponent(template.templateId)}`}
+          href={`/template/${encodeURIComponent(template.templateId)}/`}
           className="group relative block overflow-hidden rounded-2xl border border-zinc-800/80 bg-zinc-900/80 transition-all duration-300 hover:border-purple-500/50 hover:shadow-2xl hover:shadow-purple-500/15 animated-border"
         >
           {/* Category gradient badge at top */}
@@ -140,7 +140,7 @@ export default function TemplateSection() {
             <p className="mt-1.5 text-sm text-zinc-400">Prompt recipes with guidance and proven patterns</p>
           </div>
           <Link
-            href="/template?id=ui-screenshot-system"
+            href="/template/ui-screenshot-system/"
             className="group text-sm text-purple-400 transition-all duration-300 hover:text-purple-300 hover:translate-x-1 inline-block"
           >
             View All →

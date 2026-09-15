@@ -275,7 +275,7 @@ function TemplateContent() {
                 return (
                   <AnimateOnView key={t.id} delay={i * 0.06}>
                     <Link
-                      href={`/template?id=${encodeURIComponent(t.templateId)}`}
+                      href={`/template/${encodeURIComponent(t.templateId)}/`}
                       className="group block p-4 rounded-2xl bg-zinc-900/50 border border-zinc-800/40 hover:border-purple-500/40 transition-all duration-300 hover:bg-zinc-900/80"
                     >
                       <span className={`inline-block px-2 py-0.5 rounded text-[10px] font-semibold mb-2 bg-gradient-to-r ${cfg.gradient} text-white`}>

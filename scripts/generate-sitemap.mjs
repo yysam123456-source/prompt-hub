@@ -37,14 +37,16 @@ for (const cat of CATEGORY_SLUGS) {
 for (const t of templates) {
   const id = t.templateId || t.id;
   if (!id) continue;
-  urls.push({ loc: `${BASE}/template?id=${enc(id)}`, priority: '0.7', changefreq: 'weekly' });
+  // 静态路径（不再是 ?id= 查询参数）：查询参数 URL 不被 Google 当作可索引内容页，
+  // 这是此前 5000+ 页面零曝光的直接原因之一。
+  urls.push({ loc: `${BASE}/template/${enc(id)}/`, priority: '0.7', changefreq: 'weekly' });
 }
 
 // Prompt detail pages (approved only)
 let approved = 0;
 for (const p of prompts) {
   if (!p.approvedAt || !p.slug) continue;
-  urls.push({ loc: `${BASE}/prompt?slug=${enc(p.slug)}`, priority: '0.5', changefreq: 'monthly' });
+  urls.push({ loc: `${BASE}/prompt/${enc(p.slug)}/`, priority: '0.5', changefreq: 'monthly' });
   approved++;
 }
 

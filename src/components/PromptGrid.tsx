@@ -66,7 +66,7 @@ export function PromptCard({ item, index, highlightQuery }: { item: any; index: 
       whileHover={{ y: -8, scale: 1.02 }}
     >
         <Link
-          href={`/prompt?slug=${item.slug}`}
+          href={`/prompt/${encodeURIComponent(item.slug)}/`}
         className="group relative block overflow-hidden rounded-2xl border border-zinc-800/80 bg-zinc-900/80 transition-all duration-300 hover:border-purple-500/50 hover:shadow-2xl hover:shadow-purple-500/15 animated-border"
       >
         {/* Image area */}

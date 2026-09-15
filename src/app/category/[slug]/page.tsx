@@ -95,7 +95,7 @@ export default async function CategoryPage({
       itemListElement: prompts.slice(0, 20).map((p: any, i: number) => ({
         '@type': 'ListItem',
         position: i + 1,
-        url: `${SITE}/prompt?slug=${encodeURIComponent(p.slug)}`,
+        url: `${SITE}/prompt/${encodeURIComponent(p.slug)}/`,
         name: p.title || p.titleEn || 'Prompt',
       })),
     },

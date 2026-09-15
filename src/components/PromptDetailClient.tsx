@@ -453,7 +453,7 @@ export default function PromptDetailClient({
               {related.map((item: any) => (
                   <Link
                     key={item.slug}
-                    href={`/prompt?slug=${item.slug}`}
+                    href={`/prompt/${encodeURIComponent(item.slug)}/`}
                     className="group rounded-2xl border border-zinc-800 bg-zinc-900/50 overflow-hidden hover:border-purple-500/30 transition-colors"
                   >
                   <div className="aspect-square overflow-hidden">
