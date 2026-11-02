@@ -1,0 +1,45 @@
+# Prompt Hub — AI Image Prompt Library
+
+> A free, copy-ready library of AI image-generation prompts, organised into 16 categories. Browse, copy, paste into your image model.
+
+## What this site is
+
+Prompt Hub (imgprompt.craftisle.com) collects image-generation prompts written for GPT Image and comparable text-to-image models. Each prompt has its own page with the full text and a preview image; prompts are grouped into categories, and a search page covers the whole library.
+
+Scope note: this is a prompt library, not an image generator. Images shown on a prompt page are examples of what the prompt produces, not a hosted generation service.
+
+## Main pages
+
+- [Home](https://imgprompt.craftisle.com/): entry point with featured prompts
+- [Categories](https://imgprompt.craftisle.com/category): all 16 categories
+- [Search](https://imgprompt.craftisle.com/search): full-library search
+- [Templates](https://imgprompt.craftisle.com/template): reusable prompt templates
+- Sitemap: https://imgprompt.craftisle.com/sitemap.xml
+
+## Categories
+
+- [Graphic design](https://imgprompt.craftisle.com/category/graphic_design)
+- [Photography](https://imgprompt.craftisle.com/category/photography)
+- [Anime & game art](https://imgprompt.craftisle.com/category/anime_game)
+- [Character](https://imgprompt.craftisle.com/category/character)
+- [E-commerce](https://imgprompt.craftisle.com/category/ecommerce)
+- [Illustration](https://imgprompt.craftisle.com/category/illustration)
+- [Tech & sci-fi](https://imgprompt.craftisle.com/category/tech_scifi)
+- [Branding & visual](https://imgprompt.craftisle.com/category/branding_visual)
+- [Novel & story](https://imgprompt.craftisle.com/category/novel_story)
+- [Landscape & scene](https://imgprompt.craftisle.com/category/landscape_scene)
+- [Architecture & interior](https://imgprompt.craftisle.com/category/architecture_interior)
+- [Product design](https://imgprompt.craftisle.com/category/product_design)
+- [Food](https://imgprompt.craftisle.com/category/food)
+- [Cultural products](https://imgprompt.craftisle.com/category/cultural_products)
+- [Creative play](https://imgprompt.craftisle.com/category/creative_play)
+- [Other](https://imgprompt.craftisle.com/category/other)
+
+## URL pattern
+
+- `https://imgprompt.craftisle.com/prompt/{slug}` — one page per prompt (full prompt text)
+- `https://imgprompt.craftisle.com/category/{slug}` — category listing
+
+## Citing
+
+`Prompt Hub, https://imgprompt.craftisle.com/`
