@@ -39,9 +39,13 @@ export function generateStaticParams() {
  *   「本分类全部提示词」的紧凑链接清单**（纯 <a>，无图、体量小）。
  *   紧凑清单本身就是这一类的真索引页，Google 可直接顺着它爬到每一个 prompt 页。
  *
- * 验证（改后实测）：清单链接去重后覆盖 5,679 / 5,679 = 100%，
- *   相比改前的 648 提升 **5,031 个页面**获得站内链接；最大分类页（graphic_design）
- *   清单 HTML 约 230 KB，纯文本无图片请求。
+ * 验证（改后**线上实测**）：清单链接去重后覆盖 5,679 / 5,679 = 100%，
+ *   相比改前的 648 提升 **5,031 个页面**获得站内链接。
+ *   最大分类页（graphic_design，1,243 条）页面体积 **916 KB** ——
+ *   其中 RSC flight payload（React hydration 用的重复数据）占 **514 KB / 56%**，
+ *   非 script HTML 402 KB，而**可见文本只有 51 KB**。
+ *   接受这个体积：它是 5,208 页里的 1 页、静态且 CDN 缓存、无额外图片请求；
+ *   换成「分页」虽然页面更轻，但要新增 ~100 个静态页 ⇒ 撞 CF 文件数上限。
  */
 function getAllPromptsForCategory(slug: string): any[] {
   try {
